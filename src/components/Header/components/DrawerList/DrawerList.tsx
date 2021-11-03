@@ -43,7 +43,7 @@ const DrawerList = (props: IDrawerList) => {
             <S.Avatar alt="Manoel" src="img/manoel.jpg" />
           </Grid>
           <Grid item>
-            <Typography variant="button" color="secondary">
+            <Typography variant="button" color="white">
               Olá, Manoel
             </Typography>
           </Grid>
@@ -56,7 +56,7 @@ const DrawerList = (props: IDrawerList) => {
         </Grid>
         <Grid container className="actions-container">
           <Grid item xs={12}>
-            <Button onClick={() => history.push('/signin')} variant="contained" color="secondary" fullWidth>
+            <Button onClick={() => history.push('/signin')} variant="contained" color="primary" fullWidth>
               SAIR
             </Button>
           </Grid>

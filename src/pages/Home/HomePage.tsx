@@ -1,21 +1,25 @@
 import React from 'react';
-import { Divider, Grid, Paper } from '@material-ui/core';
+import { Divider, Grid, IconButton } from '@material-ui/core';
 import {
-  HomeOutlined as HomeIcon,
-  RoomOutlined as Location,
-  LocalHospitalOutlined as Doctor,
-  AssignmentOutlined as Exame,
-  ExitToAppOutlined as SignOut,
-  AccountCircleOutlined as UserName,
+  Home as HomeIcon,
+  Room as Location,
+  LocalHospital as Doctor,
+  Assignment as Exame,
+  ExitToApp as SignOut,
+  AccountCircle as UserName,
   Settings as SettingIcon,
-  NotificationsActiveOutlined as Solicitation,
+  NotificationsActive as Solicitation,
 } from '@material-ui/icons';
+import { useHistory } from 'react-router';
 
 import * as S from './styles';
 import { colors } from '../../styles';
-import { Footer, Header } from 'components';
+import { Header } from 'components';
+import { FirstBar, SecondBar } from './components';
 
 const HomePage = () => {
+  const history = useHistory();
+
   return (
     <S.Container>
       <Header />
@@ -24,34 +28,57 @@ const HomePage = () => {
           <Divider />
         </Grid>
 
-        <Grid item container xs={1} spacing={2} direction="column">
+        <Grid item container xs={1} spacing={2} direction="column" alignItems="center">
           <Grid item>
-            <HomeIcon style={{ fontSize: 35 }} />
+            <IconButton>
+              <HomeIcon style={{ fontSize: 35 }} htmlColor={colors.mar} />
+            </IconButton>
           </Grid>
           <Grid item>
-            <Location style={{ fontSize: 35 }} />
+            <IconButton>
+              <Location style={{ fontSize: 35 }} htmlColor={colors.mar} />
+            </IconButton>
           </Grid>
           <Grid item>
-            <Doctor style={{ fontSize: 35 }} />
+            <IconButton>
+              <Doctor style={{ fontSize: 35 }} htmlColor={colors.mar} />
+            </IconButton>
           </Grid>
           <Grid item>
-            <Exame style={{ fontSize: 35 }} />
+            <IconButton>
+              <Exame style={{ fontSize: 35 }} htmlColor={colors.mar} />
+            </IconButton>
           </Grid>
           <Grid item>
-            <Solicitation style={{ fontSize: 35 }} />
+            <IconButton>
+              <Solicitation style={{ fontSize: 35 }} htmlColor={colors.mar} />
+            </IconButton>
           </Grid>
           <Grid item>
-            <SettingIcon style={{ fontSize: 35 }} />
+            <IconButton>
+              <SettingIcon style={{ fontSize: 35 }} htmlColor={colors.mar} />
+            </IconButton>
           </Grid>
           <Grid item>
-            <UserName style={{ fontSize: 35 }} />
+            <IconButton>
+              <UserName style={{ fontSize: 35 }} htmlColor={colors.mar} />
+            </IconButton>
           </Grid>
           <Grid item>
-            <SignOut style={{ fontSize: 35 }} />
+            <IconButton>
+              <SignOut style={{ fontSize: 35 }} htmlColor={colors.mar} onClick={() => history.push('/signin')} />
+            </IconButton>
           </Grid>
         </Grid>
-        <Grid item xs={11}>
-          <Paper elevation={3} />
+        <Divider orientation="vertical" flexItem />
+
+        <Grid item container xs={10}>
+          <Grid item xs={12}>
+            <FirstBar />
+          </Grid>
+          <Grid item xs={12}>
+            <SecondBar />
+          </Grid>
         </Grid>
       </Grid>
     </S.Container>

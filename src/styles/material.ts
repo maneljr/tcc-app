@@ -9,7 +9,7 @@ const theme = createTheme({
       contrastText: colors.white,
     },
     secondary: {
-      main: colors.marDrak,
+      main: colors.marDark,
     },
   },
 });

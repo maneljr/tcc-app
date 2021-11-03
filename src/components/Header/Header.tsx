@@ -18,7 +18,7 @@ const Header = () => {
         onClose={() => setDrawerOpen(false)}
         PaperProps={{
           style: {
-            backgroundColor: colors.mar,
+            backgroundColor: colors.marDark,
             color: colors.light,
             maxWidth: 'min(70vw,400px)',
           },

@@ -27,9 +27,9 @@ const Container = styled(Grid).attrs({ container: true })`
     margin: 4px 0;
     &:hover {
       background-color: ${colors.mar};
-      color: ${colors.marDrak};
+      color: ${colors.marDark};
       svg {
-        color: ${colors.marDrak};
+        color: ${colors.marDark};
       }
     }
   }

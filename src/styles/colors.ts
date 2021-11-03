@@ -18,7 +18,8 @@ const colors = {
   header: '#202125',
   icons: '#EDEDF0',
   mar: '#0D90AD',
-  marDrak: '#064856',
+  marDark: '#064856',
+  grey: '#5B5C57',
 };
 
 export { colors };
