@@ -1,13 +1,16 @@
-import { Checkbox, Grid, TextField, Typography } from '@material-ui/core';
 import React from 'react';
+import { Checkbox, Grid, TextField, Typography } from '@material-ui/core';
+import { useHistory } from 'react-router';
 
 import * as S from './styles';
 
 const SignIn = () => {
+  const history = useHistory();
+
   return (
     <S.Container>
       {' '}
-      <Grid container justifyContent="center" style={{ marginTop: 40 }} spacing={2}>
+      <Grid container justifyContent="center" style={{ padding: 12, marginTop: 40 }} spacing={2}>
         <Grid item>
           <S.Logo />
         </Grid>
@@ -50,8 +53,8 @@ const SignIn = () => {
           </Grid>
         </Grid>
 
-        <Grid item xs={4}>
-          <S.ButtonSend fullWidth>
+        <Grid item xs={12} md={4}>
+          <S.ButtonSend fullWidth onClick={() => history.push('/')}>
             <Typography variant="subtitle2"> Entrar </Typography>
           </S.ButtonSend>
         </Grid>

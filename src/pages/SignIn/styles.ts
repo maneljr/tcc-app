@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 import { Button, Typography } from '@material-ui/core';
 
-const Container = styled.div``;
+const Container = styled.div`
+  min-width: 'lg';
+`;
 
 const Logo = styled.img.attrs({
-  src: '/img/icon 2.0.png',
+  src: '/img/LogoTcc4.png',
 })`
   height: auto;
-  width: min(30vw, 150px);
+  width: min(30vw, 110px);
   //margin: 0 0px 0 30px;
 `;
 
@@ -22,8 +24,8 @@ const TextSmall = styled(Typography).attrs({
 const ButtonSend = styled(Button).attrs({
   variant: 'contained',
 })`
-  background-color: #292929;
-  color: #daceb6;
+  background-color: #0d90ad;
+  color: 'white';
 `;
 
 export { Container, Logo, TextSmall, ButtonSend };

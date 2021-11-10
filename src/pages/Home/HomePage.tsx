@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Grid, IconButton } from '@material-ui/core';
+import { Badge, Divider, Grid, IconButton, Paper } from '@material-ui/core';
 import {
   Home as HomeIcon,
   Room as Location,
@@ -15,7 +15,7 @@ import { useHistory } from 'react-router';
 import * as S from './styles';
 import { colors } from '../../styles';
 import { Header } from 'components';
-import { FirstBar, SecondBar } from './components';
+import { Calendar, FirstBar, SecondBar } from './components';
 
 const HomePage = () => {
   const history = useHistory();
@@ -24,11 +24,11 @@ const HomePage = () => {
     <S.Container>
       <Header />
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12}>
           <Divider />
         </Grid>
 
-        <Grid item container xs={1} spacing={2} direction="column" alignItems="center">
+        <Grid item container xs={2} md={1} spacing={2} direction="column" alignItems="center">
           <Grid item>
             <IconButton>
               <HomeIcon style={{ fontSize: 35 }} htmlColor={colors.mar} />
@@ -51,7 +51,9 @@ const HomePage = () => {
           </Grid>
           <Grid item>
             <IconButton>
-              <Solicitation style={{ fontSize: 35 }} htmlColor={colors.mar} />
+              <Badge badgeContent={4} color="error">
+                <Solicitation style={{ fontSize: 35 }} htmlColor={colors.mar} />
+              </Badge>
             </IconButton>
           </Grid>
           <Grid item>
@@ -70,14 +72,18 @@ const HomePage = () => {
             </IconButton>
           </Grid>
         </Grid>
+
         <Divider orientation="vertical" flexItem />
 
-        <Grid item container xs={10}>
+        <Grid item container xs={9} md={10}>
           <Grid item xs={12}>
             <FirstBar />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{ marginTop: 10 }}>
             <SecondBar />
+          </Grid>
+          <Grid item xs={12} style={{ marginTop: 10 }}>
+            <Calendar />
           </Grid>
         </Grid>
       </Grid>

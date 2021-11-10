@@ -22,9 +22,9 @@ const FirstBar = () => {
   };
 
   return (
-    <Grid container alignItems="center" justifyContent="flex-start">
-      <Grid item>
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
+    <Grid container alignItems="center" justifyContent="flex-start" spacing={1}>
+      <Grid item xs={12} md={3}>
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small" fullWidth>
           <InputLabel>Local</InputLabel>
           <Select value={local} label="Local" onChange={handleChangeLocal}>
             <MenuItem value="PSF Ruth Guerra">PSF Ruth Guerra</MenuItem>
@@ -35,8 +35,8 @@ const FirstBar = () => {
           <FormHelperText>Selecione o local de atedimento</FormHelperText>
         </FormControl>
       </Grid>
-      <Grid item>
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
+      <Grid item xs={12} md={3}>
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small" fullWidth>
           <InputLabel>Medico</InputLabel>
           <Select value={doctor} label="medico" onChange={handleChangeDoctor}>
             <MenuItem value="Dr. Ricardo">Dr. Ricardo Costa</MenuItem>

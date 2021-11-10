@@ -19,7 +19,7 @@ const colors = {
   icons: '#EDEDF0',
   mar: '#0D90AD',
   marDark: '#064856',
-  grey: '#5B5C57',
+  grey: '#EAEEF3',
 };
 
 export { colors };
