@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import { colors } from '../../../../styles';
+import * as S from './styles';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 40 },
@@ -59,9 +59,11 @@ const rows = [
 
 const Calendar = () => {
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={10} rowsPerPageOptions={[]} />
-    </div>
+    <S.Container>
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid rows={rows} columns={columns} pageSize={10} rowsPerPageOptions={[]} />
+      </div>
+    </S.Container>
   );
 };
 

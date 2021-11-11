@@ -5,7 +5,7 @@ const SecondBar = () => {
   return (
     <Grid item container alignItems="center" justifyContent="flex-start">
       <Grid item xs={12} md={5}>
-        <TextField type="month" fullWidth size="small" helperText="Selecione o mês e ano desejado" />
+        <TextField type="month" fullWidth size="small" />
       </Grid>
       <Grid item xs={12} style={{ marginTop: 7 }}>
         <Divider />

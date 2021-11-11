@@ -1,7 +1,14 @@
 import styled from 'styled-components';
 import { Button, Typography } from '@material-ui/core';
 
-const Container = styled.div``;
+import { colors } from '../../styles';
+
+const Container = styled.div`
+  background-color: ${colors.light};
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
 
 const Logo = styled.img.attrs({
   src: '/img/icon 2.0.png',
