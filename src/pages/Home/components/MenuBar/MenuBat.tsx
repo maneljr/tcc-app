@@ -19,47 +19,49 @@ const MenuBar = () => {
   const history = useHistory();
   return (
     <S.Container>
-      <Grid item>
-        <IconButton>
-          <HomeIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton>
-          <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton>
-          <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton>
-          <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton>
-          <Badge badgeContent={4} color="error">
-            <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </Badge>
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton>
-          <SettingIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton>
-          <UserName style={{ fontSize: 25 }} htmlColor={colors.mar} />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        <IconButton onClick={() => history.push('/signin')}>
-          <SignOut style={{ fontSize: 25 }} htmlColor={colors.mar} />
-        </IconButton>
+      <Grid item container spacing={1}>
+        <Grid item style={{ marginTop: 10 }}>
+          <IconButton>
+            <HomeIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton>
+            <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton>
+            <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton>
+            <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton>
+            <Badge badgeContent={4} color="error">
+              <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </Badge>
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton>
+            <SettingIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton>
+            <UserName style={{ fontSize: 25 }} htmlColor={colors.mar} />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton onClick={() => history.push('/signin')}>
+            <SignOut style={{ fontSize: 25 }} htmlColor={colors.mar} />
+          </IconButton>
+        </Grid>
       </Grid>
     </S.Container>
   );

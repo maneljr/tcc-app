@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { Button, Typography } from '@material-ui/core';
 
+import { colors } from '../../styles';
+
 const Container = styled.div`
   min-width: 'lg';
 `;
@@ -10,7 +12,6 @@ const Logo = styled.img.attrs({
 })`
   height: auto;
   width: min(30vw, 110px);
-  //margin: 0 0px 0 30px;
 `;
 
 const TextSmall = styled(Typography).attrs({
@@ -19,6 +20,16 @@ const TextSmall = styled(Typography).attrs({
   font-size: 12px;
   color: grey;
   text-align: center;
+
+  .text-action {
+    color: ${colors.mar};
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 14px;
+    &:hover {
+      color: ${colors.darkGreen};
+    }
+  }
 `;
 
 const ButtonSend = styled(Button).attrs({
@@ -28,4 +39,35 @@ const ButtonSend = styled(Button).attrs({
   color: 'white';
 `;
 
-export { Container, Logo, TextSmall, ButtonSend };
+const Facebook = styled(Button).attrs({
+  variant: 'outlined',
+})`
+  color: white;
+  background-color: #1194f4;
+
+  &:hover {
+    color: #0166e1;
+    background-color: #0166e1;
+  }
+`;
+
+const ButtonGoogle = styled(Button).attrs({
+  variant: 'outlined',
+})`
+  background-color: 'black';
+  color: 'white';
+
+  &:hover {
+    color: #0166e1;
+    background-color: #0166e1;
+  }
+`;
+
+const LogoGoogle = styled.img.attrs({
+  src: '/img/google.png',
+})`
+  height: auto;
+  width: min(30vw, 28px);
+`;
+
+export { Container, Logo, TextSmall, ButtonSend, Facebook, LogoGoogle, ButtonGoogle };

@@ -2,6 +2,8 @@ import React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import * as S from './styles';
+import { ModalCheck } from '../index';
+import { Grid } from '@material-ui/core';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 40 },
@@ -58,11 +60,23 @@ const rows = [
 ];
 
 const Calendar = () => {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <S.Container>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid rows={rows} columns={columns} pageSize={10} rowsPerPageOptions={[]} />
-      </div>
+      <ModalCheck open={open} onClose={() => setOpen(false)} />
+
+      <Grid item style={{ height: 450, width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[]}
+          onCellClick={() => {
+            setOpen(true);
+          }}
+        />
+      </Grid>
     </S.Container>
   );
 };
