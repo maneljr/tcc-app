@@ -46,7 +46,9 @@ const SignIn = () => {
 
               <Grid item container xs={6} justifyContent="flex-end">
                 <S.TextSmall>
-                  <span>Esqueceu sua senha?</span>
+                  <span onClick={() => history.push('/recover')} className="text-action2">
+                    Esqueceu sua senha?
+                  </span>
                 </S.TextSmall>
               </Grid>
             </Grid>
@@ -79,7 +81,10 @@ const SignIn = () => {
         <Grid item container xs={12} justifyContent="center">
           <Grid item xs={12} md={4}>
             <S.TextSmall>
-              Não possui login? <span className="text-action">CADASTRE-SE</span>
+              Não possui login?{' '}
+              <span className="text-action" onClick={() => history.push('/signup')}>
+                CADASTRE-SE
+              </span>
             </S.TextSmall>
           </Grid>
         </Grid>

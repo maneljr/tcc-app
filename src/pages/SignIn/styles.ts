@@ -27,7 +27,15 @@ const TextSmall = styled(Typography).attrs({
     cursor: pointer;
     font-size: 14px;
     &:hover {
-      color: ${colors.darkGreen};
+      color: ${colors.marDark};
+    }
+  }
+
+  .text-action2 {
+    cursor: pointer;
+
+    &:hover {
+      color: ${colors.marDark};
     }
   }
 `;
