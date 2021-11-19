@@ -1,3 +1,4 @@
 import { HomePage } from './HomePage';
+import { MenuBar } from './components';
 
-export { HomePage };
+export { HomePage, MenuBar };

@@ -13,7 +13,7 @@ import {
 import { useHistory } from 'react-router';
 
 import * as S from './styles';
-import { colors } from '../../../../styles';
+import { colors } from '../../styles';
 
 const MenuBar = () => {
   const history = useHistory();
@@ -21,22 +21,22 @@ const MenuBar = () => {
     <S.Container>
       <Grid item container spacing={1}>
         <Grid item style={{ marginTop: 10 }}>
-          <IconButton>
+          <IconButton onClick={() => history.push('/')}>
             <HomeIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
           </IconButton>
         </Grid>
         <Grid item>
-          <IconButton>
+          <IconButton onClick={() => history.push('/places')}>
             <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
           </IconButton>
         </Grid>
         <Grid item>
-          <IconButton>
+          <IconButton onClick={() => history.push('/doctors')}>
             <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
           </IconButton>
         </Grid>
         <Grid item>
-          <IconButton>
+          <IconButton onClick={() => history.push('/exams')}>
             <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
           </IconButton>
         </Grid>
