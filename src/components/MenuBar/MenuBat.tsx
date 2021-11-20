@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Grid, IconButton } from '@material-ui/core';
+import { Badge, Grid, IconButton, Tooltip } from '@material-ui/core';
 import {
   Home as HomeIcon,
   Room as Location,
@@ -17,50 +17,67 @@ import { colors } from '../../styles';
 
 const MenuBar = () => {
   const history = useHistory();
+
   return (
     <S.Container>
       <Grid item container spacing={1}>
         <Grid item style={{ marginTop: 10 }}>
-          <IconButton onClick={() => history.push('/')}>
-            <HomeIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </IconButton>
+          <Tooltip title="Home" placement="right-end">
+            <IconButton onClick={() => history.push('/')}>
+              <HomeIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton onClick={() => history.push('/places')}>
-            <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </IconButton>
+          <Tooltip title="Casdastrar Posto" placement="right-end">
+            <IconButton onClick={() => history.push('/places')}>
+              <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton onClick={() => history.push('/doctors')}>
-            <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </IconButton>
+          <Tooltip title="Cadastrar Medico" placement="right-end">
+            <IconButton onClick={() => history.push('/doctors')}>
+              <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton onClick={() => history.push('/exams')}>
-            <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </IconButton>
+          <Tooltip title="Cadastrar Exames" placement="right-end">
+            <IconButton onClick={() => history.push('/exams')}>
+              <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton>
-            <Badge badgeContent={4} color="error">
-              <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
-            </Badge>
-          </IconButton>
+          <Tooltip title="Solicitações" placement="right-end">
+            <IconButton>
+              <Badge badgeContent={4} color="error">
+                <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
+              </Badge>
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton>
-            <SettingIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </IconButton>
+          <Tooltip title="Configurações" placement="right-end">
+            <IconButton>
+              <SettingIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton>
-            <UserName style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </IconButton>
+          <Tooltip title="Usuario" placement="right-end">
+            <IconButton>
+              <UserName style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton onClick={() => history.push('/signin')}>
-            <SignOut style={{ fontSize: 25 }} htmlColor={colors.mar} />
-          </IconButton>
+          <Tooltip title="Sair" placement="right-end">
+            <IconButton onClick={() => history.push('/signin')}>
+              <SignOut style={{ fontSize: 25 }} htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
     </S.Container>

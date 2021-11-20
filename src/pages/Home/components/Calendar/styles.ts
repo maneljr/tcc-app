@@ -1,25 +1,50 @@
 import styled from 'styled-components';
 
-import { colors } from '../../../../styles';
-
 const Container = styled.div`
-  background-color: white;
+  display: flex;
+  min-height: 100%;
 
-  &:hover {
-    box-shadow: 2px 3px 12px -6px rgba(0, 0, 0, 0.75);
-    -webkit-box-shadow: 2px 3px 12px -6px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 2px 3px 12px -6px rgba(0, 0, 0, 0.75);
+  .capitalize-phrase:first-letter {
+    text-transform: uppercase;
   }
 
-  .list-item {
-    &:hover {
-      background-color: ${colors.black};
-      color: ${colors.green};
-      svg {
-        color: ${colors.green};
-      }
-    }
+  .blank {
+    background-color: #ddd;
   }
 `;
 
-export { Container };
+const CalendarContainer = styled.div`
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    '. . . . . . .'
+    '. . . . . . .'
+    '. . . . . . .'
+    '. . . . . . .'
+    '. . . . . . .'
+    '. . . . . . .';
+`;
+
+const WeekDay = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ddd;
+`;
+
+const Date = styled.div`
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+  }
+`;
+
+export { Container, CalendarContainer, Date, WeekDay };
