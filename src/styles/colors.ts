@@ -1,4 +1,5 @@
 const colors = {
+  whiteDark: '#FFFFFF',
   white: '#E1E1E6',
   opaque: '#41414D',
   purple: '#6633cc',

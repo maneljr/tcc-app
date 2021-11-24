@@ -4,10 +4,10 @@ import { Button, Typography } from '@material-ui/core';
 import { colors } from '../../styles';
 
 const Container = styled.div`
-  background-color: ${colors.light};
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 100%;
 `;
 
 const Logo = styled.img.attrs({

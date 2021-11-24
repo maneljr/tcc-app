@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { colors } from '../../../../styles';
+
 const Container = styled.div`
   display: flex;
   min-height: 100%;
@@ -9,7 +11,7 @@ const Container = styled.div`
   }
 
   .blank {
-    background-color: #ddd;
+    background-color: #edebe9;
   }
 `;
 
@@ -17,7 +19,7 @@ const CalendarContainer = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 0px 0px;
   grid-template-areas:
     '. . . . . . .'
@@ -30,17 +32,20 @@ const CalendarContainer = styled.div`
 
 const WeekDay = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ddd;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 3px;
+  background-color: ${colors.grey};
+  border: 1px solid ${colors.black};
 `;
 
 const Date = styled.div`
-  border: 1px solid #ccc;
+  border: 1px solid ${colors.grey};
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   cursor: pointer;
+  padding-left: 3px;
 
   &:hover {
     font-weight: bold;

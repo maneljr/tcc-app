@@ -16,14 +16,8 @@ const HomePage = () => {
 
         <Divider orientation="vertical" variant="middle" flexItem />
 
-        <Grid item container xs={10} md={11}>
+        <Grid item container xs={10} md={11} style={{ maxHeight: 500, minWidth: '96%' }}>
           <Grid item xs={12}>
-            <FirstBar />
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: 10, minHeight: '100%' }}>
             <Calendar />
           </Grid>
         </Grid>

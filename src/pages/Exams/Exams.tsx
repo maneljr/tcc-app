@@ -16,7 +16,7 @@ const Exams = () => {
         <Divider orientation="vertical" variant="middle" flexItem />
 
         <Grid item container xs={10} md={11}>
-          <Grid container spacing={2} style={{ padding: 16 }}>
+          <Grid container spacing={2} style={{ maxHeight: 350, padding: 16 }}>
             <Grid item container xs={12} spacing={1}>
               <Grid item xs={3} md={1}>
                 <TextField label="ID" variant="outlined" size="small" defaultValue="0001" type="number"></TextField>

@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  &:nth-child(2n-1) {
-    background: #f5f5f5;
-  }
+  min-height: 95vh;
+  background: #f5f5f5;
 
   &:hover {
     box-shadow: 2px 3px 12px -6px rgba(0, 0, 0, 0.75);

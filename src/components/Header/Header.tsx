@@ -35,7 +35,7 @@ const Header = () => {
         </Grid>
         <Grid item container justifyContent="flex-end" spacing={2} xs={6} alignItems="center">
           <Grid item>
-            <Avatar alt="Manoel" src="img/manoel.jpg" />
+            <Avatar alt="Manoel" src="img/manoel.jpg" sx={{ width: 32, height: 32 }} />
           </Grid>
           <Hidden smDown>
             <Grid item>
