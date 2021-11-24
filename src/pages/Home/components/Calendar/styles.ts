@@ -11,7 +11,11 @@ const Container = styled.div`
   }
 
   .blank {
-    background-color: #edebe9;
+    background-color: #f3f2f1;
+  }
+
+  .blankDark {
+    background-color: #e4e4e4;
   }
 `;
 
@@ -19,7 +23,7 @@ const CalendarContainer = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 0px 0px;
   grid-template-areas:
     '. . . . . . .'
@@ -30,13 +34,23 @@ const CalendarContainer = styled.div`
     '. . . . . . .';
 `;
 
+const Calendarweek = styled.div`
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas: '. . . . . . .';
+`;
+
 const WeekDay = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
-  padding: 3px;
-  background-color: ${colors.grey};
-  border: 1px solid ${colors.black};
+  padding-top: 15px;
+  padding-left: 15px;
+  background-color: white;
+  font-size: 12px;
 `;
 
 const Date = styled.div`
@@ -45,11 +59,14 @@ const Date = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   cursor: pointer;
-  padding-left: 3px;
+  padding-left: 15px;
+  padding-top: 6px;
+  font-size: 14px;
 
   &:hover {
     font-weight: bold;
+    border: 1px solid ${colors.black};
   }
 `;
 
-export { Container, CalendarContainer, Date, WeekDay };
+export { Container, CalendarContainer, Date, WeekDay, Calendarweek };

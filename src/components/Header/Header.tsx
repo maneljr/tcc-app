@@ -33,7 +33,15 @@ const Header = () => {
             <MenuIcon htmlColor={colors.icons} />
           </IconButton>
         </Grid>
-        <Grid item container justifyContent="flex-end" spacing={2} xs={6} alignItems="center">
+        <Grid
+          item
+          container
+          justifyContent="flex-end"
+          spacing={2}
+          xs={6}
+          alignItems="center"
+          style={{ paddingRight: 10 }}
+        >
           <Grid item>
             <Avatar alt="Manoel" src="img/manoel.jpg" sx={{ width: 32, height: 32 }} />
           </Grid>

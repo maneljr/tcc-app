@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   min-height: 95vh;
-  background: #f5f5f5;
+  background: #edebe9;
 
   &:hover {
     box-shadow: 2px 3px 12px -6px rgba(0, 0, 0, 0.75);
