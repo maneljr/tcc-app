@@ -1,22 +1,21 @@
-import { Avatar, Box, Button, Divider, Grid, IconButton, Modal, Typography } from '@material-ui/core';
 import React, { useCallback } from 'react';
-import { HighlightOffRounded, CheckCircleRounded, Edit } from '@material-ui/icons';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Divider,
+  Typography,
+  Avatar,
+} from '@material-ui/core';
+
+import { AddBox, CheckBox } from '@material-ui/icons';
 
 import * as S from './styles';
-import { IModalCheck } from './types';
 import { colors } from '../../../../styles';
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import { IModalCheck } from './types';
 
 const ModalCheck = (props: IModalCheck) => {
   const { open, onClose } = props;
@@ -25,61 +24,90 @@ const ModalCheck = (props: IModalCheck) => {
     onClose();
   }, [onClose]);
 
-  return (
-    <S.Container>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Grid container alignItems="center" justifyContent="center">
-            <Grid item>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                ATENDIMENTOS
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-            <Grid item container xs={12} style={{ marginTop: 10 }} alignItems="center" justifyContent="space-between">
-              <Avatar alt="fernando" src="img/Fernando.jpg" />
-              <Typography>Willard Carrol Smith</Typography>
-              <IconButton>
-                <CheckCircleRounded htmlColor={colors.green} />
-              </IconButton>
-              <IconButton>
-                <HighlightOffRounded htmlColor={colors.red} />
-              </IconButton>
-            </Grid>
-            <Grid item container xs={12} style={{ marginTop: 10 }} alignItems="center" justifyContent="space-between">
-              <Avatar alt="Pedro" src="img/Pedro.jpg" />
-              <Typography>denzel washington</Typography>
-              <IconButton>
-                <CheckCircleRounded htmlColor={colors.green} />
-              </IconButton>
-              <IconButton>
-                <HighlightOffRounded htmlColor={colors.red} />
-              </IconButton>
-            </Grid>
-            <Grid item container xs={12} style={{ marginTop: 10 }} alignItems="center" justifyContent="space-between">
-              <Avatar alt="Amanda" src="img/Amanda.jpg" />
-              <Typography>jennifer aniston</Typography>
-              <IconButton>
-                <Edit htmlColor={colors.green} />
-              </IconButton>
-            </Grid>
+  const Name = ['Maria tereza da silva', 'Isabela Caetano Moreira Lopes', 'Luana Letto Perreira'];
 
-            <Grid item style={{ marginTop: 15 }} xs={12}>
-              <Button variant="contained" color="primary" onClick={handleClose} fullWidth>
-                Ok
-              </Button>
+  const Doctor = ['Gustava Felipe', 'Alfranio Costa', 'Lucia Cristina'];
+
+  const Place = ['Posto Ruth Guerra', 'Posto Marcos Afonso', 'Posto Marcia Helena'];
+
+  const Hora = ['13:00', '14:00', '14:30'];
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Solicitações</DialogTitle>
+      <Divider />
+      <DialogContent>
+        <Grid container spacing={2}>
+          {Array.from({ length: 20 }).map((_, index) => (
+            <Grid item container xs={12} spacing={2} alignItems="center">
+              <Grid item xs={1}>
+                <Avatar src={`img/${index + 1}.jpg`} alt="name" />
+              </Grid>
+
+              <Grid item container xs={10}>
+                <Grid item container alignItems="center" spacing={1}>
+                  <Grid item>
+                    <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                      Nome:
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body2">{Name[index]}</Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid item container alignItems="center" spacing={1}>
+                  <Grid item>
+                    <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                      Medico:
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="body2">{Doctor[index]}</Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid item container alignItems="center">
+                  <Grid item container xs={6} alignItems="center" spacing={1}>
+                    <Grid item>
+                      <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                        Local:
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body2">{Place[index]}</Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item container xs={6} alignItems="center" spacing={1}>
+                    <Grid item>
+                      <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                        Horario:
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body2">{Hora[index]}</Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item container xs={1}>
+                <AddBox />
+                <CheckBox />
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
             </Grid>
-          </Grid>
-        </Box>
-      </Modal>
-    </S.Container>
+          ))}
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" onClick={handleClose}>
+          Salvar
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

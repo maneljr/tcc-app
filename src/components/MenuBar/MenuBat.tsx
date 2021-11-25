@@ -18,41 +18,45 @@ import { colors } from '../../styles';
 const MenuBar = () => {
   const history = useHistory();
 
+  function getRandom(min: number, max: number) {
+    return Math.trunc(Math.random() * (max - min) + min);
+  }
+
   return (
     <S.Container>
       <Grid item container spacing={1}>
         <Grid item style={{ marginTop: 10 }}>
           <Tooltip title="Home" placement="right-end">
-            <IconButton onClick={() => history.push('/')}>
+            <IconButton onClick={() => history.push('/')} className="Light">
               <HomeIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Casdastrar Posto" placement="right-end">
-            <IconButton onClick={() => history.push('/places')}>
+            <IconButton onClick={() => history.push('/places')} className="Light">
               <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Cadastrar Medico" placement="right-end">
-            <IconButton onClick={() => history.push('/doctors')}>
+            <IconButton onClick={() => history.push('/doctors')} className="Light">
               <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Cadastrar Exames" placement="right-end">
-            <IconButton onClick={() => history.push('/exams')}>
+            <IconButton onClick={() => history.push('/exams')} className="Light">
               <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Solicitações" placement="right-end">
-            <IconButton>
-              <Badge badgeContent={4} color="error">
+            <IconButton className="Light">
+              <Badge badgeContent={getRandom(1, 30)} color="error">
                 <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
               </Badge>
             </IconButton>
@@ -60,21 +64,21 @@ const MenuBar = () => {
         </Grid>
         <Grid item>
           <Tooltip title="Configurações" placement="right-end">
-            <IconButton>
+            <IconButton className="Light">
               <SettingIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Usuario" placement="right-end">
-            <IconButton>
+            <IconButton className="Light">
               <UserName style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Sair" placement="right-end">
-            <IconButton onClick={() => history.push('/signin')}>
+            <IconButton onClick={() => history.push('/signin')} className="Light">
               <SignOut style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
