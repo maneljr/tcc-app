@@ -7,11 +7,9 @@ import {
   Divider,
   AvatarGroup,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   SelectChangeEvent,
-  FormHelperText,
 } from '@material-ui/core';
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { getDaysInMonth, format, addDays, startOfWeek, startOfMonth, addMonths, subMonths } from 'date-fns';
