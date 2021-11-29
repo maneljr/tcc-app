@@ -13,8 +13,6 @@ import {
 
 import { AddBox, CheckBox } from '@material-ui/icons';
 
-import * as S from './styles';
-import { colors } from '../../../../styles';
 import { IModalCheck } from './types';
 
 const ModalCheck = (props: IModalCheck) => {

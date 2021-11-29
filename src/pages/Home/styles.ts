@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { Button, Typography } from '@material-ui/core';
 
-import { colors } from '../../styles';
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
