@@ -5,6 +5,10 @@ const Container = styled.div`
   padding: 16px;
   min-width: 100%;
 
+  .capitalize-phrase:first-letter {
+    text-transform: uppercase;
+  }
+
   &:hover {
     box-shadow: 2px 3px 12px -6px rgba(0, 0, 0, 0.75);
     -webkit-box-shadow: 2px 3px 12px -6px rgba(0, 0, 0, 0.75);

@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { DocumentData, onSnapshot } from '@firebase/firestore';
-
-import * as S from './styles';
-import { BancoServices, db } from 'services';
-import { IPlace } from './types';
 import { collection } from 'firebase/firestore';
+import { Delete } from '@material-ui/icons';
+
+import { BancoServices, db } from 'services';
+import * as S from './styles';
 
 const FormPlace = () => {
   const [place, setPlace] = useState<DocumentData[]>([]);
@@ -27,63 +37,42 @@ const FormPlace = () => {
 
   return (
     <S.Container>
-      <Grid container spacing={2}>
-        teste
-        {place.map((h, index) => (
-          <Grid item xs={12} key={index}>
-            <Typography>
-              {h.rua} {h.nome}
-            </Typography>
+      <Grid container>
+        <Grid item container xs={12} spacing={1} alignItems="center">
+          <Grid item xs={12} md={5}>
+            <TextField variant="outlined" size="small" label="buscar..." fullWidth />
           </Grid>
-        ))}
-        {/* <Grid item container xs={12} spacing={1}>
-          <Grid item xs={3} md={1}>
-            <TextField label="ID" variant="outlined" size="small" defaultValue="0001" type="number"></TextField>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="error">
-              Excluir
+          <Grid item xs={12} md={1}>
+            <Button variant="contained" fullWidth size="small">
+              Pesquisar
             </Button>
           </Grid>
         </Grid>
-        <Grid item container xs={12}>
-          <Grid item xs={12} md={6}>
-            <TextField label="Nome do PFS" variant="outlined" size="small" fullWidth></TextField>
-          </Grid>
+
+        <Grid item container xs={12} md={6}>
+          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            {place.map((p, index) => {
+              return (
+                <ListItem
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="comments">
+                      <Delete />
+                    </IconButton>
+                  }
+                  disablePadding
+                >
+                  <ListItemButton>
+                    <ListItemText
+                      id={`${index}`}
+                      primary={`${p.nome}`}
+                      secondary={`Rua ${''}${p.rua}, n° ${p.numero}, bairro ${p.bairro}, ${p.cidade} `}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
         </Grid>
-        <Grid item container xs={12} spacing={1}>
-          <Grid item xs={9} md={5}>
-            <TextField label="Rua" variant="outlined" size="small" fullWidth></TextField>
-          </Grid>
-          <Grid item xs={3} md={1}>
-            <TextField label="N°" variant="outlined" size="small" fullWidth></TextField>
-          </Grid>
-        </Grid>
-        <Grid item container xs={12} spacing={1}>
-          <Grid item xs={7} md={4}>
-            <TextField label="Bairro" variant="outlined" size="small" fullWidth></TextField>
-          </Grid>
-          <Grid item xs={5} md={2}>
-            <TextField label="CEP" variant="outlined" size="small" fullWidth></TextField>
-          </Grid>
-        </Grid>
-        <Grid item container xs={12}>
-          <Grid item xs={12} md={6}>
-            <TextField label="Cidade" variant="outlined" size="small" fullWidth></TextField>
-          </Grid>
-        </Grid>
-        <Grid item container xs={12} spacing={1}>
-          <Grid item>
-            <Button variant="contained" color="success">
-              salvar
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="warning">
-              editar
-            </Button>
-          </Grid>
-        </Grid> */}
       </Grid>
     </S.Container>
   );
