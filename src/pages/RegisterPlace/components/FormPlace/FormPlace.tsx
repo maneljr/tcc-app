@@ -11,22 +11,26 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Delete, Add } from '@material-ui/icons';
-import { deleteDoc, DocumentData } from '@firebase/firestore';
+import { deleteDoc } from '@firebase/firestore';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 
 import { db } from 'services';
 import { ModalAddpalce, ModalUpdatePlace } from '..';
 import * as S from './styles';
+import { IPlace } from '../ModalUpdatePlace/types';
 
 const FormPlace = () => {
-  const [place, setPlace] = useState<DocumentData[]>([]);
+  const [places, setPlaces] = useState<IPlace[]>([]);
+  const [placeToUpdate, setPlaceToUpdate] = useState<IPlace>();
   const [addOpen, setaddOpen] = useState(false);
-  const [updateOpen, setupdateOpen] = useState(false);
-  const [idUpdate, setidUpdate] = useState('');
+  const [updateOpen, setUpdateOpen] = useState(false);
 
   useEffect(() => {
     onSnapshot(collection(db, 'tblLocal'), (snapshot) => {
-      setPlace(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      const placesData = snapshot.docs.map((doc) => {
+        return Object.assign({ ...doc.data() }, { id: doc.id });
+      }) as IPlace[];
+      setPlaces(placesData);
     });
   }, []);
 
@@ -35,15 +39,15 @@ const FormPlace = () => {
     await deleteDoc(placeDoc);
   };
 
-  const refUpdate = (id: string) => {
-    setidUpdate(id);
-    setupdateOpen(true);
+  const openUpdatePlace = (place: IPlace) => {
+    setPlaceToUpdate(place);
+    setUpdateOpen(true);
   };
 
   return (
     <S.Container>
       <ModalAddpalce open={addOpen} onClose={() => setaddOpen(false)} />
-      <ModalUpdatePlace open={updateOpen} onClose={() => setupdateOpen(false)} id={idUpdate} />
+      <ModalUpdatePlace open={updateOpen} onClose={() => setUpdateOpen(false)} place={placeToUpdate} />
       <Grid container justifyContent="flex-end">
         <Grid item container xs={12} spacing={1} alignItems="center">
           <Grid item xs={12} md={5}>
@@ -59,7 +63,7 @@ const FormPlace = () => {
         <Grid item container xs={12} md={12}>
           <Grid item xs={12} md={6}>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-              {place.map((p, index) => {
+              {places.map((p, index) => {
                 return (
                   <ListItem
                     key={index}
@@ -78,7 +82,7 @@ const FormPlace = () => {
                     <ListItemButton>
                       <ListItemText
                         onClick={() => {
-                          refUpdate(p.id);
+                          openUpdatePlace(p);
                         }}
                         id={`${index}`}
                         primary={`${p.nome}`}

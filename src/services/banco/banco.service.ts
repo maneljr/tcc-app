@@ -12,6 +12,7 @@ const BancoServices = {
   getOne: async (id: string): Promise<DocumentSnapshot<DocumentData>> => {
     const placeCollectionRef = doc(db, 'tblLocal', id);
     const data = await getDoc(placeCollectionRef);
+    console.log({ data });
     return data;
   },
 };

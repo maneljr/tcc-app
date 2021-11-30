@@ -1,146 +1,143 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@material-ui/core';
 import { doc } from '@firebase/firestore';
-import { DocumentData, updateDoc } from 'firebase/firestore';
+import { updateDoc } from 'firebase/firestore';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 import * as S from './styles';
-import { IModalUpdatePlace } from './types';
-import { BancoServices, db } from 'services';
+import { IModalUpdatePlace, IPlaceUpdate } from './types';
+import { db } from 'services';
 
 const ModalUpdatePlace = (props: IModalUpdatePlace) => {
-  const { open, onClose, id } = props;
-  const [idPlace, setidPlace] = useState<DocumentData>();
-
-  const [newNome, setnewNome] = useState<string>('');
-  const [newRua, setnewRua] = useState<string>('');
-  const [newCidade, setnewCidade] = useState<string>('');
-  const [newCep, setnewCep] = useState<string>('');
-  const [newBairro, setnewBairro] = useState<string>('');
-  const [newNumero, setnewNumero] = useState<string>('');
+  const { open, onClose, place } = props;
+  const formik = useFormik<IPlaceUpdate>({
+    initialValues: {
+      bairro: place?.bairro ?? '',
+      numero: place?.numero ?? '',
+      nome: place?.nome ?? '',
+      cidade: place?.cidade ?? '',
+      cep: place?.cep ?? '',
+      rua: place?.rua ?? '',
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    enableReinitialize: true,
+    validationSchema: Yup.object().shape({
+      bairro: Yup.string().required('Campo obrigatório'),
+      numero: Yup.string().required('Campo obrigatório'),
+      nome: Yup.string().required('Campo obrigatório'),
+      cidade: Yup.string().required('Campo obrigatório'),
+      cep: Yup.string().required('Campo obrigatório'),
+      rua: Yup.string().required('Campo obrigatório'),
+    }),
+    onSubmit: async (values) => {
+      if (place?.id) {
+        const placeDoc = doc(db, 'tblLocal', place.id);
+        await updateDoc(placeDoc, values);
+        onClose();
+      }
+    },
+  });
 
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
 
-  useEffect(() => {
-    const getPlaceid = async () => {
-      const resp = await BancoServices.getOne(id);
-      setidPlace(resp.data());
-    };
-    getPlaceid();
-  }, [id]);
-
-  const updatePlace = async () => {
-    const placeDoc = doc(db, 'tblLocal', id);
-    const newFields = {
-      bairro: newBairro,
-      cep: newCep,
-      cidade: newCidade,
-      nome: newNome,
-      numero: newNumero,
-      rua: newRua,
-    };
-    await updateDoc(placeDoc, newFields);
-    onClose();
-  };
+  const { getFieldProps } = formik;
 
   return (
     <S.Container>
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Editar Posto de Saude</DialogTitle>
-        <Divider />
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item container spacing={1}>
-              <Grid item container xs={12} md={6}>
-                <TextField
-                  label="Nome do Posto"
-                  value={idPlace?.nome}
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  onChange={(event) => {
-                    setnewNome(event.target.value);
-                  }}
-                ></TextField>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Rua"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  onChange={(event) => {
-                    setnewRua(event.target.value);
-                  }}
-                ></TextField>
-              </Grid>
-              <Grid item container xs={12} spacing={1}>
-                <Grid item xs={12} md={8}>
+        <form onSubmit={formik.handleSubmit}>
+          <DialogTitle>Editar Posto de Saude</DialogTitle>
+          <Divider />
+          <DialogContent>
+            <Grid container spacing={2}>
+              <Grid item container spacing={1}>
+                <Grid item container xs={12} md={6}>
                   <TextField
-                    label="Bairro"
+                    label="Nome do Posto"
                     variant="outlined"
                     size="small"
                     fullWidth
-                    onChange={(event) => {
-                      setnewBairro(event.target.value);
-                    }}
+                    {...getFieldProps('nome')}
+                    error={!!formik.errors.nome}
+                    helperText={formik.errors.nome}
                   ></TextField>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={6}>
                   <TextField
-                    label="Numero"
+                    label="Rua"
                     variant="outlined"
                     size="small"
                     fullWidth
-                    onChange={(event) => {
-                      setnewNumero(event.target.value);
-                    }}
+                    {...getFieldProps('rua')}
+                    error={!!formik.errors.rua}
+                    helperText={formik.errors.rua}
                   ></TextField>
                 </Grid>
-              </Grid>
-              <Grid item container xs={12} spacing={1}>
-                <Grid item xs={12} md={5}>
-                  <TextField
-                    label="CEP"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    onChange={(event) => {
-                      setnewCep(event.target.value);
-                    }}
-                  />
+                <Grid item container xs={12} spacing={1}>
+                  <Grid item xs={12} md={8}>
+                    <TextField
+                      label="Bairro"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...getFieldProps('bairro')}
+                      error={!!formik.errors.bairro}
+                      helperText={formik.errors.bairro}
+                    ></TextField>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      label="Numero"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...getFieldProps('numero')}
+                      error={!!formik.errors.numero}
+                      helperText={formik.errors.numero}
+                    ></TextField>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={7}>
-                  <TextField
-                    label="Cidade"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    onChange={(event) => {
-                      setnewCidade(event.target.value);
-                    }}
-                  />
+                <Grid item container xs={12} spacing={1}>
+                  <Grid item xs={12} md={5}>
+                    <TextField
+                      label="CEP"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...getFieldProps('cep')}
+                      error={!!formik.errors.cep}
+                      helperText={formik.errors.cep}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={7}>
+                    <TextField
+                      label="Cidade"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...getFieldProps('cidade')}
+                      error={!!formik.errors.cidade}
+                      helperText={formik.errors.cidade}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" color="error" onClick={handleClose}>
-            Cancelar
-          </Button>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" color="error" onClick={handleClose}>
+              Cancelar
+            </Button>
 
-          <Button
-            variant="contained"
-            onClick={() => {
-              updatePlace();
-            }}
-            color="success"
-          >
-            Salvar
-          </Button>
-        </DialogActions>
+            <Button variant="contained" type="submit" color="success">
+              Salvar
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </S.Container>
   );
