@@ -10,7 +10,6 @@ import {
   Typography,
   Avatar,
 } from '@material-ui/core';
-
 import { AddBox, CheckBox } from '@material-ui/icons';
 
 import { IModalCheck } from './types';

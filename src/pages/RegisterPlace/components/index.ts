@@ -1,3 +1,4 @@
 import { FormPlace } from './FormPlace';
+import { ModalAddpalce } from './ModalPlace';
 
-export { FormPlace };
+export { FormPlace, ModalAddpalce };
