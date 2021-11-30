@@ -1,4 +1,5 @@
 import { FormPlace } from './FormPlace';
-import { ModalAddpalce } from './ModalPlace';
+import { ModalAddpalce } from './ModalAddPlace';
+import { ModalUpdatePlace } from './ModalUpdatePlace';
 
-export { FormPlace, ModalAddpalce };
+export { FormPlace, ModalAddpalce, ModalUpdatePlace };

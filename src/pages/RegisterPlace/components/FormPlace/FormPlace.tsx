@@ -10,27 +10,40 @@ import {
   ListItemText,
   TextField,
 } from '@material-ui/core';
-import { DocumentData } from '@firebase/firestore';
 import { Delete, Add } from '@material-ui/icons';
+import { deleteDoc, DocumentData } from '@firebase/firestore';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 
 import { db } from 'services';
-import { ModalAddpalce } from '..';
+import { ModalAddpalce, ModalUpdatePlace } from '..';
 import * as S from './styles';
-import { collection, onSnapshot } from 'firebase/firestore';
 
 const FormPlace = () => {
   const [place, setPlace] = useState<DocumentData[]>([]);
-  const [rulesOpen, setRulesOpen] = useState(false);
+  const [addOpen, setaddOpen] = useState(false);
+  const [updateOpen, setupdateOpen] = useState(false);
+  const [idUpdate, setidUpdate] = useState('');
 
   useEffect(() => {
     onSnapshot(collection(db, 'tblLocal'), (snapshot) => {
-      setPlace(snapshot.docs.map((doc) => doc.data()));
+      setPlace(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   }, []);
 
+  const deletePlace = async (id: string) => {
+    const placeDoc = doc(db, 'tblLocal', id);
+    await deleteDoc(placeDoc);
+  };
+
+  const refUpdate = (id: string) => {
+    setidUpdate(id);
+    setupdateOpen(true);
+  };
+
   return (
     <S.Container>
-      <ModalAddpalce open={rulesOpen} onClose={() => setRulesOpen(false)} />
+      <ModalAddpalce open={addOpen} onClose={() => setaddOpen(false)} />
+      <ModalUpdatePlace open={updateOpen} onClose={() => setupdateOpen(false)} id={idUpdate} />
       <Grid container justifyContent="flex-end">
         <Grid item container xs={12} spacing={1} alignItems="center">
           <Grid item xs={12} md={5}>
@@ -51,7 +64,12 @@ const FormPlace = () => {
                   <ListItem
                     key={index}
                     secondaryAction={
-                      <IconButton edge="end">
+                      <IconButton
+                        edge="end"
+                        onClick={() => {
+                          deletePlace(p.id);
+                        }}
+                      >
                         <Delete />
                       </IconButton>
                     }
@@ -59,6 +77,9 @@ const FormPlace = () => {
                   >
                     <ListItemButton>
                       <ListItemText
+                        onClick={() => {
+                          refUpdate(p.id);
+                        }}
                         id={`${index}`}
                         primary={`${p.nome}`}
                         secondary={`Rua ${''}${p.rua}, n° ${p.numero}, bairro ${p.bairro}, ${p.cidade} `}
@@ -71,7 +92,7 @@ const FormPlace = () => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={6} style={{ marginRight: 50 }}>
-          <Fab size="small" color="primary" onClick={() => setRulesOpen(true)}>
+          <Fab size="small" color="primary" onClick={() => setaddOpen(true)}>
             <Add />
           </Fab>
         </Grid>
