@@ -1,12 +1,55 @@
-import React from 'react';
-import { Button, Divider, Grid, TextField } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  Divider,
+  Fab,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  TextField,
+} from '@material-ui/core';
+import { Delete, Add } from '@material-ui/icons';
+import { collection, deleteDoc, doc } from 'firebase/firestore';
+import { onSnapshot } from '@firebase/firestore';
 
 import * as S from './styles';
 import { Header, MenuBar } from 'components';
+import { db } from 'services';
+import { IDoctor } from './types';
+import { ModalAddDoctor, ModalUpdateDoctor } from './components';
 
 const RegisterDoctor = () => {
+  const [doctors, setDoctors] = useState<IDoctor[]>([]);
+  const [doctorToUpdate, setDoctorToUpdate] = useState<IDoctor>();
+  const [addOpen, setaddOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
+
+  useEffect(() => {
+    onSnapshot(collection(db, 'tblDoctor'), (snapshot) => {
+      const doctorsData = snapshot.docs.map((doc) => {
+        return Object.assign({ ...doc.data() }, { id: doc.id });
+      }) as IDoctor[];
+      setDoctors(doctorsData);
+    });
+  }, []);
+
+  const deleteDoctor = async (id: string) => {
+    const doctorDoc = doc(db, 'tblDoctor', id);
+    await deleteDoc(doctorDoc);
+  };
+
+  const openUpdateDoctor = (doctor: IDoctor) => {
+    setDoctorToUpdate(doctor);
+    setUpdateOpen(true);
+  };
+
   return (
     <S.Container>
+      <ModalAddDoctor open={addOpen} onClose={() => setaddOpen(false)} />
+      <ModalUpdateDoctor open={updateOpen} onClose={() => setUpdateOpen(false)} doctor={doctorToUpdate} />
       <Header />
       <Grid container spacing={1}>
         <Grid item container xs={2} md={1} style={{ maxWidth: 50 }}>
@@ -15,64 +58,59 @@ const RegisterDoctor = () => {
 
         <Divider orientation="vertical" variant="middle" flexItem />
 
-        <Grid item container xs={10} md={11}>
-          <Grid container spacing={2} style={{ maxHeight: 300, padding: 16 }}>
-            <Grid item container xs={12} spacing={1}>
-              <Grid item xs={3} md={1}>
-                <TextField label="ID" variant="outlined" size="small" defaultValue="0001" type="number"></TextField>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="error">
-                  excluir
-                </Button>
-              </Grid>
+        <Grid item container xs={10} md={11} justifyContent="flex-end" style={{ maxHeight: '30vh', padding: '16px' }}>
+          <Grid item container xs={12} spacing={1} alignItems="center">
+            <Grid item xs={12} md={5}>
+              <TextField variant="outlined" size="small" label="buscar..." fullWidth />
             </Grid>
-            <Grid item container xs={12}>
-              <Grid item xs={12} md={6}>
-                <TextField label="Nome Completo" variant="outlined" size="small" fullWidth></TextField>
-              </Grid>
+            <Grid item xs={12} md={1}>
+              <Button variant="contained" fullWidth size="small">
+                Pesquisar
+              </Button>
             </Grid>
-            <Grid item container xs={12} spacing={1}>
-              <Grid item xs={6} md={4}>
-                <TextField label="CPF" variant="outlined" size="small" fullWidth></TextField>
-              </Grid>
-              <Grid item xs={6} md={2}>
-                <TextField label="" variant="outlined" size="small" fullWidth type="date"></TextField>
-              </Grid>
+          </Grid>
+
+          <Grid item container xs={12} md={12}>
+            <Grid item xs={12} md={6}>
+              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                {doctors.map((p, index) => {
+                  return (
+                    <ListItem
+                      key={index}
+                      secondaryAction={
+                        <IconButton
+                          edge="end"
+                          onClick={() => {
+                            deleteDoctor(p.id);
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      }
+                      disablePadding
+                    >
+                      <ListItemButton>
+                        <ListItemText
+                          onClick={() => {
+                            openUpdateDoctor(p);
+                          }}
+                          id={`${index}`}
+                          primary={`${p.nome}`}
+                          secondary={`CRM ${''}${p.crm}, Especialidade ${
+                            p.especialidade
+                          }, horario de atendimento ${''}${p.atendimento} `}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
             </Grid>
-            <Grid item container xs={12}>
-              <Grid item xs={12} md={6}>
-                <TextField label="Endereço" variant="outlined" size="small" fullWidth />
-              </Grid>
-            </Grid>
-            <Grid item container xs={12} spacing={1}>
-              <Grid item xs={7} md={4}>
-                <TextField label="Especialidade" variant="outlined" size="small" fullWidth />
-              </Grid>
-              <Grid item xs={5} md={2}>
-                <TextField label="CRM" variant="outlined" size="small" fullWidth />
-              </Grid>
-            </Grid>
-            <Grid item container xs={12} spacing={1}>
-              <Grid item xs={12} md={3}>
-                <TextField label="Horario de atendimento" variant="outlined" size="small" fullWidth />
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <TextField label="Celular" variant="outlined" size="small" fullWidth type="tel" />
-              </Grid>
-            </Grid>
-            <Grid item container xs={12} spacing={1}>
-              <Grid item>
-                <Button variant="contained" color="success">
-                  salvar
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="warning">
-                  editar
-                </Button>
-              </Grid>
-            </Grid>
+          </Grid>
+          <Grid item xs={12} md={6} style={{ marginRight: 50 }}>
+            <Fab size="small" color="primary" onClick={() => setaddOpen(true)}>
+              <Add />
+            </Fab>
           </Grid>
         </Grid>
       </Grid>

@@ -1,131 +1,222 @@
 import React, { useState } from 'react';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { addDoc, collection } from 'firebase/firestore';
 
 import * as S from './styles';
+import { ISignUp } from './types';
+import { db } from 'services';
 
 const SignUp = () => {
   const history = useHistory();
   const [gender, setGender] = useState<string>();
+  const dadosCollectionRef = collection(db, 'DadosUsers');
+
+  const formik = useFormik<ISignUp>({
+    initialValues: {
+      celular: 31994330909,
+      cpf: 0,
+      email: '',
+      genero: '',
+      nascimento: '',
+      nome: '',
+      senha: '',
+      sobrenome: '',
+      sus: 0,
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    enableReinitialize: true,
+    validationSchema: Yup.object().shape({
+      celular: Yup.string().required('Campo obrigatório').min(9, 'numero muito curto').max(11, 'numero muito grande'),
+      cpf: Yup.string().required('Campo obrigatório').min(11, 'CFP Invalido').max(11, 'CFP Invalido'),
+      email: Yup.string().required('Campo obrigatório').email('Email Ivalido'),
+      genero: Yup.string().required('Campo obrigatório'),
+      nascimento: Yup.string().required('Campo obrigatório'),
+      nome: Yup.string().required('Campo obrigatório'),
+      senha: Yup.string().required('Campo obrigatório').min(8, 'minimo 8 caracteres'),
+      sobrenome: Yup.string().required('Campo obrigatório'),
+      sus: Yup.string().required('Campo obrigatório').min(15, 'cartão invalido'),
+    }),
+    onSubmit: async (values) => {
+      await addDoc(dadosCollectionRef, values);
+      console.log('chuegei');
+    },
+  });
+
+  console.log('teste');
+  const { getFieldProps } = formik;
 
   return (
     <S.Container>
-      <Grid container alignItems="center" justifyContent="center" spacing={2}>
-        <Grid item>
-          <S.Logo onClick={() => history.push('/')} />
-        </Grid>
+      <form onSubmit={formik.handleSubmit}>
+        <Grid container alignItems="center" justifyContent="center" spacing={2}>
+          <Grid item>
+            <S.Logo onClick={() => history.push('/')} />
+          </Grid>
 
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField label="Endereço de e-mail" type="email" variant="outlined" size="small" fullWidth />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="Endereço de e-mail"
+                type="email"
+                variant="outlined"
+                size="small"
+                fullWidth
+                {...getFieldProps('email')}
+                error={!!formik.errors.email}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField type="password" label="Senha" variant="outlined" size="small" fullWidth />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                type="password"
+                label="Senha"
+                variant="outlined"
+                size="small"
+                fullWidth
+                {...getFieldProps('senha')}
+                error={formik.touched.senha && Boolean(formik.errors.senha)}
+                helperText={formik.touched.senha && formik.errors.senha}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField label="Nome" variant="outlined" size="small" fullWidth />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="Nome"
+                variant="outlined"
+                size="small"
+                fullWidth
+                {...getFieldProps('nome')}
+                error={formik.touched.nome && Boolean(formik.errors.nome)}
+                helperText={formik.touched.nome && formik.errors.nome}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField label="Sobrenome" variant="outlined" size="small" fullWidth />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="Sobrenome"
+                variant="outlined"
+                size="small"
+                fullWidth
+                {...getFieldProps('sobrenome')}
+                error={formik.touched.sobrenome && Boolean(formik.errors.sobrenome)}
+                helperText={formik.touched.sobrenome && formik.errors.sobrenome}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField
-              label="CPF"
-              variant="outlined"
-              size="small"
-              fullWidth
-              type="text"
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-            />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="CPF"
+                variant="outlined"
+                size="small"
+                fullWidth
+                type="text"
+                {...getFieldProps('cpf')}
+                error={formik.touched.cpf && Boolean(formik.errors.cpf)}
+                helperText={formik.touched.cpf && formik.errors.cpf}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField
-              label="Cartão SUS"
-              variant="outlined"
-              size="small"
-              fullWidth
-              type="text"
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-            />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="Cartão SUS"
+                variant="outlined"
+                size="small"
+                fullWidth
+                type="text"
+                {...getFieldProps('sus')}
+                error={formik.touched.sus && Boolean(formik.errors.sus)}
+                helperText={formik.touched.sus && formik.errors.sus}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField
-              label="Celular"
-              variant="outlined"
-              size="small"
-              fullWidth
-              type="text"
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-            />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="Celular"
+                variant="outlined"
+                size="small"
+                fullWidth
+                type="text"
+                {...getFieldProps('celular')}
+                error={formik.touched.celular && Boolean(formik.errors.celular)}
+                helperText={formik.touched.celular && formik.errors.celular}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <TextField type="date" variant="outlined" size="small" fullWidth />
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <TextField
+                type="date"
+                variant="outlined"
+                size="small"
+                fullWidth
+                {...getFieldProps('nascimento')}
+                error={formik.touched.nascimento && Boolean(formik.errors.nascimento)}
+                helperText={formik.touched.nascimento && formik.errors.nascimento}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item container xs={12} md={3} justifyContent="center" spacing={1}>
-          <Grid item xs={12} md={6}>
-            <Button
-              variant="contained"
-              fullWidth
-              color={gender === 'M' ? 'primary' : 'inherit'}
-              onClick={() => {
-                setGender('M');
-              }}
-            >
-              <Typography variant="subtitle2"> Masculino </Typography>
+          <Grid item container xs={12} md={3} justifyContent="center" spacing={1}>
+            <Grid item xs={12} md={6}>
+              <Button
+                variant="contained"
+                fullWidth
+                color={gender === 'M' ? 'primary' : 'inherit'}
+                onClick={() => {
+                  setGender('M');
+                }}
+              >
+                <Typography variant="subtitle2"> Masculino </Typography>
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Button
+                variant="contained"
+                fullWidth
+                color={gender === 'F' ? 'primary' : 'inherit'}
+                onClick={() => {
+                  setGender('F');
+                }}
+              >
+                <Typography variant="subtitle2"> Femino</Typography>
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={3}>
+              <S.TextSmall>
+                Ao cadastrar-se, você concorda com a Política de privacidade e com os Termos de uso da plataforma
+              </S.TextSmall>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <Button variant="contained" color="primary" type="submit" fullWidth>
+              <Typography variant="subtitle2"> Cadastrar </Typography>
             </Button>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Button
-              variant="contained"
-              fullWidth
-              color={gender === 'F' ? 'primary' : 'inherit'}
-              onClick={() => {
-                setGender('F');
-              }}
-            >
-              <Typography variant="subtitle2"> Femino</Typography>
-            </Button>
+          <Grid item container xs={12} justifyContent="center">
+            <Grid item xs={12} md={4}>
+              <S.TextSmall>
+                Não possui cadastro?{' '}
+                <span onClick={() => history.push('/signin')} className="text-action">
+                  FAZER LOGIN
+                </span>
+              </S.TextSmall>
+            </Grid>
           </Grid>
         </Grid>
-
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={3}>
-            <S.TextSmall>
-              Ao cadastrar-se, você concorda com a Política de privacidade e com os Termos de uso da plataforma
-            </S.TextSmall>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Button variant="contained" color="primary" fullWidth>
-            <Typography variant="subtitle2"> Cadastrar </Typography>
-          </Button>
-        </Grid>
-        <Grid item container xs={12} justifyContent="center">
-          <Grid item xs={12} md={4}>
-            <S.TextSmall>
-              Não possui cadastro?{' '}
-              <span onClick={() => history.push('/signin')} className="text-action">
-                FAZER LOGIN
-              </span>
-            </S.TextSmall>
-          </Grid>
-        </Grid>
-      </Grid>
+      </form>
     </S.Container>
   );
 };
