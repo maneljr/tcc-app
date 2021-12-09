@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Checkbox, Grid, TextField, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { Facebook } from '@material-ui/icons';
 
 import * as S from './styles';
+import { signInWithEmailAndPassword } from '@firebase/auth';
+import { auth } from 'services';
 
 const SignIn = () => {
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
   const history = useHistory();
+
+  const SignInUser = async () => {
+    await signInWithEmailAndPassword(auth, email, senha)
+      .then((user) => {
+        history.push('/');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <S.Container>
@@ -22,6 +36,9 @@ const SignIn = () => {
               type="email"
               variant="outlined"
               size="small"
+              onChange={(event) => {
+                setEmail(event.target.value);
+              }}
               fullWidth
               style={{ borderRadius: 18 }}
             />
@@ -30,7 +47,16 @@ const SignIn = () => {
 
         <Grid item container xs={12} justifyContent="center">
           <Grid item xs={12} md={4}>
-            <TextField type="password" label="Senha" variant="outlined" size="small" fullWidth />
+            <TextField
+              type="password"
+              label="Senha"
+              variant="outlined"
+              size="small"
+              fullWidth
+              onChange={(event) => {
+                setSenha(event.target.value);
+              }}
+            />
           </Grid>
         </Grid>
 
@@ -56,7 +82,7 @@ const SignIn = () => {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <S.ButtonSend fullWidth onClick={() => history.push('/')}>
+          <S.ButtonSend fullWidth onClick={SignInUser}>
             <Typography variant="subtitle2"> Entrar </Typography>
           </S.ButtonSend>
         </Grid>

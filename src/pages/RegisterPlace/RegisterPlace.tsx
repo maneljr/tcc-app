@@ -1,11 +1,23 @@
 import React from 'react';
 import { Divider, Grid } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 import * as S from './styles';
 import { Header, MenuBar } from 'components';
 import { FormPlace } from './components';
+import { auth } from 'services';
 
 const RegisterPlace = () => {
+  const history = useHistory();
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log(user);
+    } else {
+      history.push('/signin');
+    }
+  });
+
   return (
     <S.Container>
       <Header />

@@ -14,12 +14,24 @@ import { useHistory } from 'react-router';
 
 import * as S from './styles';
 import { colors } from '../../styles';
+import { auth } from 'services';
 
 const MenuBar = () => {
   const history = useHistory();
 
   function getRandom(min: number, max: number) {
     return Math.trunc(Math.random() * (max - min) + min);
+  }
+
+  function logOut() {
+    auth
+      .signOut()
+      .then(() => {
+        history.push('/signin');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   return (
@@ -78,7 +90,7 @@ const MenuBar = () => {
         </Grid>
         <Grid item>
           <Tooltip title="Sair" placement="right-end">
-            <IconButton onClick={() => history.push('/signin')} className="Light">
+            <IconButton onClick={() => logOut()} className="Light">
               <SignOut style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>

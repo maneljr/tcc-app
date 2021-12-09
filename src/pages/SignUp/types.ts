@@ -3,9 +3,8 @@ export interface ISignUp {
   senha: string;
   nome: string;
   sobrenome: string;
-  cpf: number;
-  sus: number;
-  celular: number;
+  cpf: string;
+  sus: string;
+  celular: string;
   nascimento: string;
-  genero: string;
 }

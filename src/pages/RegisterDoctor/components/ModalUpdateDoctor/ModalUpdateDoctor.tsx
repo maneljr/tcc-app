@@ -12,6 +12,7 @@ import { IModalUpdateDoctor, IDoctorUpdate } from 'pages/RegisterDoctor/types';
 
 const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
   const { open, onClose, doctor } = props;
+
   const formik = useFormik<IDoctorUpdate>({
     initialValues: {
       atendimento: doctor?.atendimento ?? '',
@@ -34,9 +35,17 @@ const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
     }),
     onSubmit: async (values) => {
       if (doctor?.id) {
-        const doctorDoc = doc(db, 'tblDocotor', doctor.id);
-        await updateDoc(doctorDoc, values);
+        const doctorDoc = doc(db, 'tblDoctor', doctor.id);
+        await updateDoc(doctorDoc, values)
+          .then(() => {
+            console.log('Atualizado');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         onClose();
+      } else {
+        console.log('id do medico null');
       }
     },
   });

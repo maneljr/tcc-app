@@ -1,3 +1,3 @@
-import { db } from './Firebase.conf';
+import { db, auth } from './Firebase.conf';
 
-export { db };
+export { db, auth };

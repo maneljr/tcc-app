@@ -4,27 +4,26 @@ import { useHistory } from 'react-router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { addDoc, collection } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import * as S from './styles';
 import { ISignUp } from './types';
-import { db } from 'services';
+import { auth, db } from 'services';
 
 const SignUp = () => {
   const history = useHistory();
   const [gender, setGender] = useState<string>();
   const dadosCollectionRef = collection(db, 'DadosUsers');
-
   const formik = useFormik<ISignUp>({
     initialValues: {
-      celular: 31994330909,
-      cpf: 0,
+      celular: '',
+      cpf: '',
       email: '',
-      genero: '',
       nascimento: '',
       nome: '',
       senha: '',
       sobrenome: '',
-      sus: 0,
+      sus: '',
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -41,12 +40,22 @@ const SignUp = () => {
       sus: Yup.string().required('Campo obrigatório').min(15, 'cartão invalido'),
     }),
     onSubmit: async (values) => {
+      console.log('cheguei');
       await addDoc(dadosCollectionRef, values);
-      console.log('chuegei');
+      CreatUser();
     },
   });
 
-  console.log('teste');
+  const CreatUser = async () => {
+    await createUserWithEmailAndPassword(auth, formik.values.email, formik.values.senha)
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const { getFieldProps } = formik;
 
   return (
@@ -67,7 +76,7 @@ const SignUp = () => {
                 fullWidth
                 {...getFieldProps('email')}
                 error={!!formik.errors.email}
-                helperText={formik.touched.email && formik.errors.email}
+                helperText={formik.errors.email}
               />
             </Grid>
           </Grid>
@@ -80,8 +89,8 @@ const SignUp = () => {
                 size="small"
                 fullWidth
                 {...getFieldProps('senha')}
-                error={formik.touched.senha && Boolean(formik.errors.senha)}
-                helperText={formik.touched.senha && formik.errors.senha}
+                error={!!formik.errors.senha}
+                helperText={formik.errors.senha}
               />
             </Grid>
           </Grid>
@@ -93,8 +102,8 @@ const SignUp = () => {
                 size="small"
                 fullWidth
                 {...getFieldProps('nome')}
-                error={formik.touched.nome && Boolean(formik.errors.nome)}
-                helperText={formik.touched.nome && formik.errors.nome}
+                error={!!formik.errors.nome}
+                helperText={formik.errors.nome}
               />
             </Grid>
           </Grid>
@@ -106,8 +115,8 @@ const SignUp = () => {
                 size="small"
                 fullWidth
                 {...getFieldProps('sobrenome')}
-                error={formik.touched.sobrenome && Boolean(formik.errors.sobrenome)}
-                helperText={formik.touched.sobrenome && formik.errors.sobrenome}
+                error={!!formik.errors.sobrenome}
+                helperText={formik.errors.sobrenome}
               />
             </Grid>
           </Grid>
@@ -120,8 +129,8 @@ const SignUp = () => {
                 fullWidth
                 type="text"
                 {...getFieldProps('cpf')}
-                error={formik.touched.cpf && Boolean(formik.errors.cpf)}
-                helperText={formik.touched.cpf && formik.errors.cpf}
+                error={!!formik.errors.cpf}
+                helperText={formik.errors.cpf}
               />
             </Grid>
           </Grid>
@@ -134,7 +143,7 @@ const SignUp = () => {
                 fullWidth
                 type="text"
                 {...getFieldProps('sus')}
-                error={formik.touched.sus && Boolean(formik.errors.sus)}
+                error={!!formik.errors.sus}
                 helperText={formik.touched.sus && formik.errors.sus}
               />
             </Grid>
@@ -148,7 +157,7 @@ const SignUp = () => {
                 fullWidth
                 type="text"
                 {...getFieldProps('celular')}
-                error={formik.touched.celular && Boolean(formik.errors.celular)}
+                error={!!formik.errors.celular}
                 helperText={formik.touched.celular && formik.errors.celular}
               />
             </Grid>
@@ -161,7 +170,7 @@ const SignUp = () => {
                 size="small"
                 fullWidth
                 {...getFieldProps('nascimento')}
-                error={formik.touched.nascimento && Boolean(formik.errors.nascimento)}
+                error={!!formik.errors.nascimento}
                 helperText={formik.touched.nascimento && formik.errors.nascimento}
               />
             </Grid>

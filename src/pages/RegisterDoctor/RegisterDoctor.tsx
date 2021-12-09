@@ -14,18 +14,28 @@ import {
 import { Delete, Add } from '@material-ui/icons';
 import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { onSnapshot } from '@firebase/firestore';
+import { useHistory } from 'react-router-dom';
 
 import * as S from './styles';
-import { Header, MenuBar } from 'components';
-import { db } from 'services';
-import { IDoctor } from './types';
 import { ModalAddDoctor, ModalUpdateDoctor } from './components';
+import { Header, MenuBar } from 'components';
+import { auth, db } from 'services';
+import { IDoctor } from './types';
 
 const RegisterDoctor = () => {
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [doctorToUpdate, setDoctorToUpdate] = useState<IDoctor>();
   const [addOpen, setaddOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
+  const history = useHistory();
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log(user);
+    } else {
+      history.push('/signin');
+    }
+  });
 
   useEffect(() => {
     onSnapshot(collection(db, 'tblDoctor'), (snapshot) => {

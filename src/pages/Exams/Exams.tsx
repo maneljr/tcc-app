@@ -3,8 +3,20 @@ import { Button, Divider, Grid, TextField } from '@material-ui/core';
 
 import * as S from './styles';
 import { Header, MenuBar } from 'components';
+import { useHistory } from 'react-router-dom';
+import { auth } from 'services';
 
 const Exams = () => {
+  const history = useHistory();
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log(user);
+    } else {
+      history.push('/signin');
+    }
+  });
+
   return (
     <S.Container>
       <Header />
