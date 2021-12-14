@@ -1,15 +1,29 @@
 import React, { useState } from 'react';
 import { Avatar, Drawer, Grid, Hidden, IconButton, Typography } from '@material-ui/core';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, Menu as MenuIcon } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 
 import * as S from './styles';
 import { colors } from '../../styles';
 import { DrawerList } from './components';
+import { auth } from 'services';
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-
   const toggleDrawer = () => setDrawerOpen((prev) => !prev);
+  const history = useHistory();
+  const [photo, setPhoto] = useState<string | null>('');
+  const [userName, setUserName] = useState<string | null>('');
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      setPhoto(user.photoURL);
+      setUserName(user.displayName);
+    } else {
+      history.push('/signin');
+    }
+  });
+
   return (
     <S.Container>
       <Drawer
@@ -43,12 +57,12 @@ const Header = () => {
           style={{ paddingRight: 10 }}
         >
           <Grid item>
-            <Avatar alt="Manoel" src="img/manoel.jpg" sx={{ width: 32, height: 32 }} />
+            <Avatar alt={`${userName}`} src={`${photo}`} sx={{ width: 32, height: 32 }} />
           </Grid>
           <Hidden smDown>
             <Grid item>
-              <Typography variant="button" color="white">
-                Olá, Manoel
+              <Typography variant="subtitle2" color="white">
+                {userName !== null ? userName : 'Bem Vindo'}
               </Typography>
             </Grid>
             <Grid item>

@@ -13,6 +13,7 @@ const HomePage = () => {
   auth.onAuthStateChanged((user) => {
     if (user) {
       console.log(user);
+      console.log('tem alguem locado');
     } else {
       history.push('/signin');
     }
@@ -25,9 +26,7 @@ const HomePage = () => {
         <Grid item container xs={2} md={1} style={{ maxWidth: 53 }}>
           <MenuBar />
         </Grid>
-
         <Divider orientation="vertical" variant="middle" flexItem />
-
         <Grid item container xs={10} md={11} style={{ maxHeight: 500, minWidth: '96%' }}>
           <Grid item xs={12}>
             <Calendar />

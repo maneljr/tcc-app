@@ -31,7 +31,7 @@ const RegisterDoctor = () => {
 
   auth.onAuthStateChanged((user) => {
     if (user) {
-      console.log(user);
+      console.log('tem alguem logado');
     } else {
       history.push('/signin');
     }

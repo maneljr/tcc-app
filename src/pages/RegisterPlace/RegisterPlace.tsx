@@ -12,7 +12,7 @@ const RegisterPlace = () => {
 
   auth.onAuthStateChanged((user) => {
     if (user) {
-      console.log(user);
+      console.log('tem alguem locado');
     } else {
       history.push('/signin');
     }

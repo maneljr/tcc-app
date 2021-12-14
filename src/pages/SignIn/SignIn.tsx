@@ -2,24 +2,47 @@ import React, { useState } from 'react';
 import { Checkbox, Grid, TextField, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { Facebook } from '@material-ui/icons';
+import { signInWithEmailAndPassword } from '@firebase/auth';
+import { signInWithPopup } from 'firebase/auth';
 
 import * as S from './styles';
-import { signInWithEmailAndPassword } from '@firebase/auth';
-import { auth } from 'services';
+import { auth, authFacebook, authGoogle } from 'services';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+
   const history = useHistory();
 
   const SignInUser = async () => {
     await signInWithEmailAndPassword(auth, email, senha)
-      .then((user) => {
+      .then(() => {
+        console.log('Usuario logado com sucesso');
         history.push('/');
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const signInWithGoogle = async () => {
+    await signInWithPopup(auth, authGoogle)
+      .then(() => {
+        console.log('Usuario logado com sucesso');
+        history.push('/');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const signInWithFacebook = async () => {
+    await signInWithPopup(auth, authFacebook)
+      .then(() => {
+        console.log('Usuario logado com sucesso');
+        history.push('/');
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -88,7 +111,7 @@ const SignIn = () => {
         </Grid>
         <Grid item container xs={12} justifyContent="center" spacing={1} alignItems="center">
           <Grid item xs={12} md={2}>
-            <S.Facebook fullWidth startIcon={<Facebook />}>
+            <S.Facebook fullWidth startIcon={<Facebook />} onClick={signInWithFacebook}>
               <Typography variant="subtitle2" style={{ fontSize: 10 }}>
                 {' '}
                 Logar com Facebook{' '}
@@ -97,7 +120,7 @@ const SignIn = () => {
           </Grid>
 
           <Grid item xs={12} md={2}>
-            <S.ButtonGoogle fullWidth startIcon={<S.LogoGoogle />}>
+            <S.ButtonGoogle fullWidth startIcon={<S.LogoGoogle />} onClick={signInWithGoogle}>
               <Typography variant="subtitle2" style={{ fontSize: 10 }}>
                 Logar com Google
               </Typography>

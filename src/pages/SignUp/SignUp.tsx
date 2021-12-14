@@ -14,6 +14,7 @@ const SignUp = () => {
   const history = useHistory();
   const [gender, setGender] = useState<string>();
   const dadosCollectionRef = collection(db, 'DadosUsers');
+
   const formik = useFormik<ISignUp>({
     initialValues: {
       celular: '',
@@ -29,27 +30,32 @@ const SignUp = () => {
     validateOnChange: false,
     enableReinitialize: true,
     validationSchema: Yup.object().shape({
-      celular: Yup.string().required('Campo obrigatório').min(9, 'numero muito curto').max(11, 'numero muito grande'),
-      cpf: Yup.string().required('Campo obrigatório').min(11, 'CFP Invalido').max(11, 'CFP Invalido'),
+      celular: Yup.string().required('Campo obrigatório').min(9, 'Número muito curto'),
+      cpf: Yup.string().required('Campo obrigatório').min(11, 'CFP Invalido'),
       email: Yup.string().required('Campo obrigatório').email('Email Ivalido'),
-      genero: Yup.string().required('Campo obrigatório'),
       nascimento: Yup.string().required('Campo obrigatório'),
       nome: Yup.string().required('Campo obrigatório'),
-      senha: Yup.string().required('Campo obrigatório').min(8, 'minimo 8 caracteres'),
+      senha: Yup.string().required('Campo obrigatório').min(8, 'Mínimo 8 caracteres'),
       sobrenome: Yup.string().required('Campo obrigatório'),
-      sus: Yup.string().required('Campo obrigatório').min(15, 'cartão invalido'),
+      sus: Yup.string().required('Campo obrigatório').min(15, 'Cartão invalido'),
     }),
     onSubmit: async (values) => {
-      console.log('cheguei');
-      await addDoc(dadosCollectionRef, values);
-      CreatUser();
+      await addDoc(dadosCollectionRef, values)
+        .then(() => {
+          console.log('Dados cadastrados com sucesso');
+          CreatUser();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   });
 
   const CreatUser = async () => {
     await createUserWithEmailAndPassword(auth, formik.values.email, formik.values.senha)
-      .then((user) => {
-        console.log(user);
+      .then(() => {
+        console.log('Usuario criado com sucesso');
+        history.push('/signin');
       })
       .catch((error) => {
         console.log(error);
@@ -144,7 +150,7 @@ const SignUp = () => {
                 type="text"
                 {...getFieldProps('sus')}
                 error={!!formik.errors.sus}
-                helperText={formik.touched.sus && formik.errors.sus}
+                helperText={formik.errors.sus}
               />
             </Grid>
           </Grid>
@@ -158,7 +164,7 @@ const SignUp = () => {
                 type="text"
                 {...getFieldProps('celular')}
                 error={!!formik.errors.celular}
-                helperText={formik.touched.celular && formik.errors.celular}
+                helperText={formik.errors.celular}
               />
             </Grid>
           </Grid>
@@ -171,7 +177,7 @@ const SignUp = () => {
                 fullWidth
                 {...getFieldProps('nascimento')}
                 error={!!formik.errors.nascimento}
-                helperText={formik.touched.nascimento && formik.errors.nascimento}
+                helperText={formik.errors.nascimento}
               />
             </Grid>
           </Grid>
@@ -197,7 +203,7 @@ const SignUp = () => {
                   setGender('F');
                 }}
               >
-                <Typography variant="subtitle2"> Femino</Typography>
+                <Typography variant="subtitle2"> Feminino </Typography>
               </Button>
             </Grid>
           </Grid>

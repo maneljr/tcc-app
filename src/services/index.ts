@@ -1,5 +1,4 @@
-import { db } from './Firebase';
+import { db, auth, authGoogle, authFacebook } from './Firebase';
 import { BancoServices } from './banco';
-import { auth } from './Firebase';
 
-export { db, BancoServices, auth };
+export { db, BancoServices, auth, authGoogle, authFacebook };

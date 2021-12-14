@@ -1,3 +1,3 @@
-import { db, auth } from './Firebase.conf';
+import { db, auth, authGoogle, authFacebook } from './Firebase.conf';
 
-export { db, auth };
+export { db, auth, authGoogle, authFacebook };
