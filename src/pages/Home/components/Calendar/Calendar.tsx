@@ -138,12 +138,12 @@ const Calendar = () => {
                     <Grid item>
                       <AvatarGroup max={5} spacing={1}>
                         {getRandom(1, 7) === 2
-                          ? Array.from({ length: getRandom(1, 30) }).map(() => (
+                          ? Array.from({ length: getRandom(1, 30) }).map((_, avatarKey) => (
                               <Avatar
                                 src={`img/${getRandom(1, 4)}.jpg`}
                                 alt="Name"
                                 sx={{ width: 25, height: 25 }}
-                                key={index}
+                                key={`${index}-${avatarKey}`}
                               />
                             ))
                           : ''}

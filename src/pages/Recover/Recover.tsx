@@ -1,33 +1,14 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
-import { Alert, AlertTitle, Button, Grid, Snackbar, SnackbarOrigin, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import { sendPasswordResetEmail } from 'firebase/auth';
 
 import * as S from './styles';
 import { auth } from 'services';
 
-export interface State extends SnackbarOrigin {
-  open: boolean;
-}
-
 const Recover = () => {
   const history = useHistory();
   const [email, setEmail] = useState('');
-
-  const [state, setState] = React.useState<State>({
-    open: false,
-    vertical: 'top',
-    horizontal: 'center',
-  });
-  const { vertical, horizontal, open } = state;
-
-  const handleClick = (newState: SnackbarOrigin) => () => {
-    setState({ open: true, ...newState });
-  };
-
-  const handleClose = () => {
-    setState({ ...state, open: false });
-  };
 
   const forgotPassword = async () => {
     await sendPasswordResetEmail(auth, email, {
@@ -35,10 +16,6 @@ const Recover = () => {
     })
       .then(() => {
         console.log('email enviado com instruções');
-        handleClick({
-          vertical: 'top',
-          horizontal: 'left',
-        });
       })
       .catch((error) => {
         console.log(error.message);
@@ -47,13 +24,6 @@ const Recover = () => {
 
   return (
     <S.Container>
-      <Snackbar anchorOrigin={{ vertical, horizontal }} open={open} onClose={handleClose} key={vertical + horizontal}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '50%' }}>
-          <AlertTitle>SUCESSO</AlertTitle>
-          This is a success message!
-        </Alert>
-      </Snackbar>
-
       <Grid container alignItems="center" justifyContent="center" spacing={2}>
         <Grid item container justifyContent="center" xs={12} md={12}>
           <S.Logo onClick={() => history.push('/')} />

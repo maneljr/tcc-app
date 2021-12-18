@@ -1,24 +1,12 @@
 import React from 'react';
 import { Divider, Grid } from '@material-ui/core';
-import { useHistory } from 'react-router';
 
 import * as S from './styles';
 import { Header, MenuBar } from 'components';
 import { Calendar } from './components';
-import { auth } from 'services';
+import { withAuth } from 'hocs';
 
-const HomePage = () => {
-  const history = useHistory();
-
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      console.log(user);
-      console.log('tem alguem locado');
-    } else {
-      history.push('/signin');
-    }
-  });
-
+const HomePageComponent = () => {
   return (
     <S.Container>
       <Header />
@@ -36,5 +24,7 @@ const HomePage = () => {
     </S.Container>
   );
 };
+
+const HomePage = withAuth(HomePageComponent);
 
 export { HomePage };

@@ -1,15 +1,16 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { environment } from 'configs';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAvhj7HmNRyplLoflMSlYXk3XcwJKUL8hc',
-  authDomain: 'tcc-app-60603.firebaseapp.com',
-  databaseURL: 'https://tcc-app-60603-default-rtdb.firebaseio.com',
-  projectId: 'tcc-app-60603',
-  storageBucket: 'tcc-app-60603.appspot.com',
-  messagingSenderId: '332120749747',
-  appId: '1:332120749747:web:d6c97eabc564b3a242a2c6',
+  apiKey: environment.apiKey,
+  authDomain: environment.authDomain,
+  databaseURL: environment.databaseURL,
+  projectId: environment.projectId,
+  storageBucket: environment.storageBucket,
+  messagingSenderId: environment.messagingSenderId,
+  appId: environment.appId,
 };
 
 const firebaseApp = initializeApp(firebaseConfig);

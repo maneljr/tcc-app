@@ -26,9 +26,7 @@ const MenuBar = () => {
   function logOut() {
     auth
       .signOut()
-      .then(() => {
-        history.push('/signin');
-      })
+      .then(() => {})
       .catch((error) => {
         console.log(error);
       });

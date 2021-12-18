@@ -14,12 +14,11 @@ import {
 import { Delete, Add } from '@material-ui/icons';
 import { collection, deleteDoc, doc } from 'firebase/firestore';
 import { onSnapshot } from '@firebase/firestore';
-import { useHistory } from 'react-router-dom';
 
 import * as S from './styles';
 import { ModalAddDoctor, ModalUpdateDoctor } from './components';
 import { Header, MenuBar } from 'components';
-import { auth, db } from 'services';
+import { db } from 'services';
 import { IDoctor } from './types';
 
 const RegisterDoctor = () => {
@@ -27,15 +26,6 @@ const RegisterDoctor = () => {
   const [doctorToUpdate, setDoctorToUpdate] = useState<IDoctor>();
   const [addOpen, setaddOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
-  const history = useHistory();
-
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      console.log('tem alguem logado');
-    } else {
-      history.push('/signin');
-    }
-  });
 
   useEffect(() => {
     onSnapshot(collection(db, 'tblDoctor'), (snapshot) => {

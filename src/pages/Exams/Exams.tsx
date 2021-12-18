@@ -1,12 +1,13 @@
 import React from 'react';
 import { Button, Divider, Grid, TextField } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 import * as S from './styles';
 import { Header, MenuBar } from 'components';
-import { useHistory } from 'react-router-dom';
 import { auth } from 'services';
+import { withAuth } from 'hocs';
 
-const Exams = () => {
+const ExamsComponent = () => {
   const history = useHistory();
 
   auth.onAuthStateChanged((user) => {
@@ -76,5 +77,7 @@ const Exams = () => {
     </S.Container>
   );
 };
+
+const Exams = withAuth(ExamsComponent);
 
 export { Exams };

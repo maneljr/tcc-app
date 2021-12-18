@@ -4,7 +4,9 @@ import { useHistory } from 'react-router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { addDoc, collection } from 'firebase/firestore';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import ReactInputMask from 'react-input-mask';
+import { toast } from 'react-toastify';
 
 import * as S from './styles';
 import { ISignUp } from './types';
@@ -40,26 +42,27 @@ const SignUp = () => {
       sus: Yup.string().required('Campo obrigatório').min(15, 'Cartão invalido'),
     }),
     onSubmit: async (values) => {
-      await addDoc(dadosCollectionRef, values)
-        .then(() => {
-          console.log('Dados cadastrados com sucesso');
-          CreatUser();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      const createdUser = await creatUser();
+      if (createdUser) {
+        let userDoc: Partial<ISignUp> & { uid: string } = { ...values, uid: createdUser.user.uid };
+        delete userDoc.senha;
+        await addDoc(dadosCollectionRef, userDoc);
+        toast.success('Usuário cadastrado com sucesso');
+      } else {
+        toast.error('Erro ao cadastrar usuário');
+      }
     },
   });
 
-  const CreatUser = async () => {
-    await createUserWithEmailAndPassword(auth, formik.values.email, formik.values.senha)
-      .then(() => {
-        console.log('Usuario criado com sucesso');
-        history.push('/signin');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const creatUser = async (): Promise<UserCredential | null> => {
+    try {
+      const createdUser = await createUserWithEmailAndPassword(auth, formik.values.email, formik.values.senha);
+      console.log('Usuario criado com sucesso');
+      return createdUser;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   };
 
   const { getFieldProps } = formik;
@@ -128,16 +131,20 @@ const SignUp = () => {
           </Grid>
           <Grid item container xs={12} justifyContent="center">
             <Grid item xs={12} md={3}>
-              <TextField
-                label="CPF"
-                variant="outlined"
-                size="small"
-                fullWidth
-                type="text"
-                {...getFieldProps('cpf')}
-                error={!!formik.errors.cpf}
-                helperText={formik.errors.cpf}
-              />
+              <ReactInputMask mask="999.999.999-99" {...getFieldProps('cpf')}>
+                {(inputProps: any) => (
+                  <TextField
+                    label="CPF"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    type="text"
+                    {...inputProps}
+                    error={!!formik.errors.cpf}
+                    helperText={formik.errors.cpf}
+                  />
+                )}
+              </ReactInputMask>
             </Grid>
           </Grid>
           <Grid item container xs={12} justifyContent="center">
