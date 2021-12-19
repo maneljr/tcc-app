@@ -9,6 +9,7 @@ import * as S from './styles';
 
 import { db } from 'services';
 import { IModalUpdateDoctor, IDoctorUpdate } from 'pages/RegisterDoctor/types';
+import { toast } from 'react-toastify';
 
 const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
   const { open, onClose, doctor } = props;
@@ -35,17 +36,17 @@ const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
     }),
     onSubmit: async (values) => {
       if (doctor?.id) {
-        const doctorDoc = doc(db, 'tblDoctor', doctor.id);
-        await updateDoc(doctorDoc, values)
-          .then(() => {
-            console.log('Atualizado');
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        onClose();
+        try {
+          const doctorDoc = doc(db, 'tblDoctor', doctor.id);
+          await updateDoc(doctorDoc, values);
+          toast.success('Registro alterado!');
+          onClose();
+        } catch (error: any) {
+          toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Falha na alteração'}`);
+          console.log({ error });
+        }
       } else {
-        console.log('id do medico null');
+        toast.error('ID do medico é Null');
       }
     },
   });

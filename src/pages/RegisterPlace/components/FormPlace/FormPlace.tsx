@@ -18,6 +18,7 @@ import { db } from 'services';
 import { ModalAddpalce, ModalUpdatePlace } from '..';
 import * as S from './styles';
 import { IPlace } from '../ModalUpdatePlace/types';
+import { toast } from 'react-toastify';
 
 const FormPlace = () => {
   const [places, setPlaces] = useState<IPlace[]>([]);
@@ -35,8 +36,14 @@ const FormPlace = () => {
   }, []);
 
   const deletePlace = async (id: string) => {
-    const placeDoc = doc(db, 'tblLocal', id);
-    await deleteDoc(placeDoc);
+    try {
+      const placeDoc = doc(db, 'tblLocal', id);
+      await deleteDoc(placeDoc);
+      toast.success('Registro deletado com sucesso!');
+    } catch (error: any) {
+      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao tentar deletar.'}`);
+      console.log({ error });
+    }
   };
 
   const openUpdatePlace = (place: IPlace) => {

@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import * as S from './styles';
 import { IModalUpdatePlace, IPlaceUpdate } from './types';
 import { db } from 'services';
+import { toast } from 'react-toastify';
 
 const ModalUpdatePlace = (props: IModalUpdatePlace) => {
   const { open, onClose, place } = props;
@@ -33,9 +34,15 @@ const ModalUpdatePlace = (props: IModalUpdatePlace) => {
     }),
     onSubmit: async (values) => {
       if (place?.id) {
-        const placeDoc = doc(db, 'tblLocal', place.id);
-        await updateDoc(placeDoc, values);
-        onClose();
+        try {
+          const placeDoc = doc(db, 'tblLocal', place.id);
+          await updateDoc(placeDoc, values);
+          toast.success('Registro alterado!');
+          onClose();
+        } catch (error: any) {
+          toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Falha na alteração'}`);
+          console.log({ error });
+        }
       }
     },
   });

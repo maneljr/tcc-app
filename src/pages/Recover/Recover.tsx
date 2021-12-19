@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 import * as S from './styles';
 import { auth } from 'services';
@@ -11,15 +12,16 @@ const Recover = () => {
   const [email, setEmail] = useState('');
 
   const forgotPassword = async () => {
-    await sendPasswordResetEmail(auth, email, {
-      url: `http://localhost:3000/signin`,
-    })
-      .then(() => {
-        console.log('email enviado com instruções');
-      })
-      .catch((error) => {
-        console.log(error.message);
+    try {
+      await sendPasswordResetEmail(auth, email, {
+        url: `http://localhost:3000/signin`,
       });
+      toast.success(`As instruções para alterar a senha foram enviadas para ${email}`);
+      history.push('/signin');
+    } catch (error: any) {
+      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Falha na alteração da senha'}`);
+      console.log({ error });
+    }
   };
 
   return (

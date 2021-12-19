@@ -32,23 +32,23 @@ const SignIn = () => {
   };
 
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, authGoogle)
-      .then(() => {
-        console.log('Usuario logado com sucesso');
-        history.push('/');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      await signInWithPopup(auth, authGoogle);
+      console.log('Usuario logado com sucesso');
+    } catch (error: any) {
+      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao realizar login'}`);
+      console.log({ error });
+    }
   };
 
   const signInWithFacebook = async () => {
-    await signInWithPopup(auth, authFacebook)
-      .then(() => {
-        console.log('Usuario logado com sucesso');
-        history.push('/');
-      })
-      .catch((error) => console.log(error));
+    try {
+      await signInWithPopup(auth, authFacebook);
+      console.log('Usuario logado com sucesso');
+    } catch (error: any) {
+      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao realizar login'}`);
+      console.log({ error });
+    }
   };
 
   return (

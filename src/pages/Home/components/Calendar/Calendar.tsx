@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Grid,
   Typography,
@@ -17,11 +17,14 @@ import ptBR from 'date-fns/locale/pt-BR';
 
 import * as S from './styles';
 import { ModalCheck } from '../ModalCheck/ModalCheck';
+import { SessionContext } from 'contexts';
 
 const Calendar = () => {
+  const { user } = useContext(SessionContext);
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const [rulesOpen, setRulesOpen] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
 
   const [local, setLocal] = React.useState('');
   const handleChangeLocal = (event: SelectChangeEvent) => {
@@ -35,6 +38,22 @@ const Calendar = () => {
 
   function getRandom(min: number, max: number) {
     return Math.trunc(Math.random() * (max - min) + min);
+  }
+
+  function verify() {
+    if (user?.email?.split('@').slice(-1)[0].trim() === 'admin.com') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function check() {
+    if (verify()) {
+      setOpenRegister(true);
+    } else {
+      setRulesOpen(true);
+    }
   }
 
   return (
@@ -129,25 +148,29 @@ const Calendar = () => {
               <S.Date className="blankDark" key={index}></S.Date>
             ))}
             {Array.from({ length: getDaysInMonth(date) }).map((_, index) => (
-              <S.Date key={index} className="blank" onClick={() => setRulesOpen(true)}>
+              <S.Date key={index} className="blank" onClick={check}>
                 <Grid container>
                   <Grid item xs={12}>
                     {index + 1}
                   </Grid>
                   <Grid item container spacing={1} alignItems="center" justifyContent="flex-start">
                     <Grid item>
-                      <AvatarGroup max={5} spacing={1}>
-                        {getRandom(1, 7) === 2
-                          ? Array.from({ length: getRandom(1, 30) }).map((_, avatarKey) => (
-                              <Avatar
-                                src={`img/${getRandom(1, 4)}.jpg`}
-                                alt="Name"
-                                sx={{ width: 25, height: 25 }}
-                                key={`${index}-${avatarKey}`}
-                              />
-                            ))
-                          : ''}
-                      </AvatarGroup>
+                      {verify() ? (
+                        <AvatarGroup max={5} spacing={1}>
+                          {getRandom(1, 7) === 2
+                            ? Array.from({ length: getRandom(1, 30) }).map((_, avatarKey) => (
+                                <Avatar
+                                  src={`img/${getRandom(1, 4)}.jpg`}
+                                  alt="Name"
+                                  sx={{ width: 25, height: 25 }}
+                                  key={`${index}-${avatarKey}`}
+                                />
+                              ))
+                            : ''}
+                        </AvatarGroup>
+                      ) : (
+                        ''
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>

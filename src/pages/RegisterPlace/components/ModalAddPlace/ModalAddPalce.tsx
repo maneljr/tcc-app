@@ -5,6 +5,7 @@ import * as S from './styles';
 import { ImodalAddPlace } from './types';
 import { addDoc, collection } from '@firebase/firestore';
 import { db } from 'services';
+import { toast } from 'react-toastify';
 
 const ModalAddpalce = (props: ImodalAddPlace) => {
   const { open, onClose } = props;
@@ -22,15 +23,21 @@ const ModalAddpalce = (props: ImodalAddPlace) => {
   }, [onClose]);
 
   const creatPlace = async () => {
-    await addDoc(placesCollectionRef, {
-      bairro: newBairro,
-      cep: newCep,
-      cidade: newCidade,
-      nome: newNome,
-      numero: newNumero,
-      rua: newRua,
-    });
-    onClose();
+    try {
+      await addDoc(placesCollectionRef, {
+        bairro: newBairro,
+        cep: newCep,
+        cidade: newCidade,
+        nome: newNome,
+        numero: newNumero,
+        rua: newRua,
+      });
+      toast.success('Cadastro realizado!');
+      onClose();
+    } catch (error: any) {
+      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao criar registro'}`);
+      console.log({ error });
+    }
   };
 
   return (

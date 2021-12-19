@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@material-ui/core';
+import { toast } from 'react-toastify';
 
 import * as S from './styles';
 import { ImodalAddDoctor } from './types';
@@ -22,15 +23,21 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
   }, [onClose]);
 
   const creatDoctor = async () => {
-    await addDoc(doctorsCollectionRef, {
-      nome: NovoNome,
-      especialidade: NovoEspecialidade,
-      cpf: NovoCpf,
-      crm: NovoCrm,
-      celular: NovoCelular,
-      atendimento: NovoAtendimento,
-    });
-    onClose();
+    try {
+      await addDoc(doctorsCollectionRef, {
+        nome: NovoNome,
+        especialidade: NovoEspecialidade,
+        cpf: NovoCpf,
+        crm: NovoCrm,
+        celular: NovoCelular,
+        atendimento: NovoAtendimento,
+      });
+      toast.success('Cadastro realizado!');
+      onClose();
+    } catch (error: any) {
+      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao criar registro'}`);
+      console.log({ error });
+    }
   };
 
   return (

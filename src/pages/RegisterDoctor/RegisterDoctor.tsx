@@ -20,6 +20,7 @@ import { ModalAddDoctor, ModalUpdateDoctor } from './components';
 import { Header, MenuBar } from 'components';
 import { db } from 'services';
 import { IDoctor } from './types';
+import { toast } from 'react-toastify';
 
 const RegisterDoctor = () => {
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
@@ -37,8 +38,14 @@ const RegisterDoctor = () => {
   }, []);
 
   const deleteDoctor = async (id: string) => {
-    const doctorDoc = doc(db, 'tblDoctor', id);
-    await deleteDoc(doctorDoc);
+    try {
+      const doctorDoc = doc(db, 'tblDoctor', id);
+      await deleteDoc(doctorDoc);
+      toast.success('Registro deletado com sucesso!');
+    } catch (error: any) {
+      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao tentar deletar.'}`);
+      console.log({ error });
+    }
   };
 
   const openUpdateDoctor = (doctor: IDoctor) => {

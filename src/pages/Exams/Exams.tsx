@@ -1,23 +1,11 @@
 import React from 'react';
 import { Button, Divider, Grid, TextField } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
 
 import * as S from './styles';
 import { Header, MenuBar } from 'components';
-import { auth } from 'services';
 import { withAuth } from 'hocs';
 
 const ExamsComponent = () => {
-  const history = useHistory();
-
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      console.log(user);
-    } else {
-      history.push('/signin');
-    }
-  });
-
   return (
     <S.Container>
       <Header />
