@@ -18,6 +18,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import * as S from './styles';
 import { ModalCheck } from '../ModalCheck/ModalCheck';
 import { SessionContext } from 'contexts';
+import { ModalRegister } from '../ModalRegister/ModalRegister';
 
 const Calendar = () => {
   const { user } = useContext(SessionContext);
@@ -50,15 +51,16 @@ const Calendar = () => {
 
   function check() {
     if (verify()) {
-      setOpenRegister(true);
-    } else {
       setRulesOpen(true);
+    } else {
+      setOpenRegister(true);
     }
   }
 
   return (
     <S.Container>
       <ModalCheck open={rulesOpen} onClose={() => setRulesOpen(false)} />
+      <ModalRegister open={openRegister} onClose={() => setOpenRegister(false)} />
       <Grid container>
         <Grid item container justifyContent="flex-start" alignItems="center" xs={2}>
           <Grid item>

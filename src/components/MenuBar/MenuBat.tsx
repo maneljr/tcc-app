@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Badge, Grid, IconButton, Tooltip } from '@material-ui/core';
 import {
   Home as HomeIcon,
@@ -15,9 +15,11 @@ import { useHistory } from 'react-router';
 import * as S from './styles';
 import { colors } from '../../styles';
 import { auth } from 'services';
+import { SessionContext } from 'contexts';
 
 const MenuBar = () => {
   const history = useHistory();
+  const { user } = useContext(SessionContext);
 
   function getRandom(min: number, max: number) {
     return Math.trunc(Math.random() * (max - min) + min);
@@ -32,6 +34,14 @@ const MenuBar = () => {
       });
   }
 
+  function verify() {
+    if (user?.email?.split('@').slice(-1)[0].trim() === 'admin.com') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <S.Container>
       <Grid item container spacing={1}>
@@ -44,31 +54,35 @@ const MenuBar = () => {
         </Grid>
         <Grid item>
           <Tooltip title="Casdastrar Posto" placement="right-end">
-            <IconButton onClick={() => history.push('/places')} className="Light">
+            <IconButton onClick={() => history.push('/places')} className="Light" disabled={verify() ? false : true}>
               <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Cadastrar Medico" placement="right-end">
-            <IconButton onClick={() => history.push('/doctors')} className="Light">
+            <IconButton onClick={() => history.push('/doctors')} className="Light" disabled={verify() ? false : true}>
               <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Cadastrar Exames" placement="right-end">
-            <IconButton onClick={() => history.push('/exams')} className="Light">
+            <IconButton onClick={() => history.push('/exams')} className="Light" disabled={verify() ? false : true}>
               <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Solicitações" placement="right-end">
-            <IconButton className="Light">
-              <Badge badgeContent={getRandom(1, 30)} color="error">
+            <IconButton className="Light" disabled={verify() ? false : true}>
+              {verify() ? (
+                <Badge badgeContent={getRandom(1, 30)} color="error">
+                  <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
+                </Badge>
+              ) : (
                 <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
-              </Badge>
+              )}
             </IconButton>
           </Tooltip>
         </Grid>
