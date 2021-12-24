@@ -21,14 +21,12 @@ const MenuBar = () => {
   const history = useHistory();
   const { user } = useContext(SessionContext);
 
-  function getRandom(min: number, max: number) {
-    return Math.trunc(Math.random() * (max - min) + min);
-  }
-
   function logOut() {
     auth
       .signOut()
-      .then(() => {})
+      .then(() => {
+        console.log('Usuario deslogado');
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -77,7 +75,7 @@ const MenuBar = () => {
           <Tooltip title="Solicitações" placement="right-end">
             <IconButton className="Light" disabled={verify() ? false : true}>
               {verify() ? (
-                <Badge badgeContent={getRandom(1, 30)} color="error">
+                <Badge badgeContent={4} color="error">
                   <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
                 </Badge>
               ) : (

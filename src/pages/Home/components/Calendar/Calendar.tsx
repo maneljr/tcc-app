@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Grid,
   Typography,
@@ -19,6 +19,9 @@ import * as S from './styles';
 import { ModalCheck } from '../ModalCheck/ModalCheck';
 import { SessionContext } from 'contexts';
 import { ModalRegister } from '../ModalRegister/ModalRegister';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from 'services';
+import { ISolicitation } from './types';
 
 const Calendar = () => {
   const { user } = useContext(SessionContext);
@@ -26,6 +29,8 @@ const Calendar = () => {
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
+  const [day, setDay] = useState<number>(0);
+  const [solicitations, setSolicitations] = useState<ISolicitation[]>([]);
 
   const [local, setLocal] = React.useState('');
   const handleChangeLocal = (event: SelectChangeEvent) => {
@@ -37,10 +42,6 @@ const Calendar = () => {
     setDoctor(event.target.value);
   };
 
-  function getRandom(min: number, max: number) {
-    return Math.trunc(Math.random() * (max - min) + min);
-  }
-
   function verify() {
     if (user?.email?.split('@').slice(-1)[0].trim() === 'admin.com') {
       return true;
@@ -49,18 +50,28 @@ const Calendar = () => {
     }
   }
 
-  function check() {
+  function check(index: number) {
     if (verify()) {
       setRulesOpen(true);
     } else {
       setOpenRegister(true);
+      setDay(index);
     }
   }
 
+  useEffect(() => {
+    onSnapshot(collection(db, 'solicitation'), (snapshot) => {
+      const solicitationsData = snapshot.docs.map((doc) => {
+        return Object.assign({ ...doc.data() }, { id: doc.id });
+      }) as unknown as ISolicitation[];
+      setSolicitations(solicitationsData);
+    });
+  }, []);
+
   return (
     <S.Container>
-      <ModalCheck open={rulesOpen} onClose={() => setRulesOpen(false)} />
-      <ModalRegister open={openRegister} onClose={() => setOpenRegister(false)} />
+      <ModalCheck open={rulesOpen} onClose={() => setRulesOpen(false)} solicitations={solicitations} />
+      <ModalRegister open={openRegister} onClose={() => setOpenRegister(false)} day={day} month={date} />
       <Grid container>
         <Grid item container justifyContent="flex-start" alignItems="center" xs={2}>
           <Grid item>
@@ -150,7 +161,13 @@ const Calendar = () => {
               <S.Date className="blankDark" key={index}></S.Date>
             ))}
             {Array.from({ length: getDaysInMonth(date) }).map((_, index) => (
-              <S.Date key={index} className="blank" onClick={check}>
+              <S.Date
+                key={index}
+                className="blank"
+                onClick={() => {
+                  check(index + 1);
+                }}
+              >
                 <Grid container>
                   <Grid item xs={12}>
                     {index + 1}
@@ -159,16 +176,13 @@ const Calendar = () => {
                     <Grid item>
                       {verify() ? (
                         <AvatarGroup max={5} spacing={1}>
-                          {getRandom(1, 7) === 2
-                            ? Array.from({ length: getRandom(1, 30) }).map((_, avatarKey) => (
-                                <Avatar
-                                  src={`img/${getRandom(1, 4)}.jpg`}
-                                  alt="Name"
-                                  sx={{ width: 25, height: 25 }}
-                                  key={`${index}-${avatarKey}`}
-                                />
-                              ))
-                            : ''}
+                          {solicitations.map((p) =>
+                            p.dia === index + 1 ? (
+                              <Avatar src={p.foto} alt={p.nome} sx={{ width: 25, height: 25 }} />
+                            ) : (
+                              ''
+                            )
+                          )}
                         </AvatarGroup>
                       ) : (
                         ''
