@@ -17,7 +17,6 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
         setUser(userData);
         console.log('tem alguem locado');
         history.push('/');
-        console.log({ user: userData.toJSON() });
       } else {
         setUser(null);
         history.push('/signin');

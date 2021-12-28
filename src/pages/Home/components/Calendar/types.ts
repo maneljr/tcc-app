@@ -7,4 +7,7 @@ export interface ISolicitation {
   mes: Date;
   nome: string;
   uid: string;
+  id: string;
+  status: boolean;
+  verificado: boolean;
 }

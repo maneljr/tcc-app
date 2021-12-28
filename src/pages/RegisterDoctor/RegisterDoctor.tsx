@@ -81,6 +81,7 @@ const RegisterDoctor = () => {
             <Grid item xs={12} md={6}>
               <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {doctors.map((p, index) => {
+                  console.log(p.id);
                   return (
                     <ListItem
                       key={index}

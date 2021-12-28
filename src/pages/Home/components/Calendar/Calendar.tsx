@@ -177,7 +177,7 @@ const Calendar = () => {
                       {verify() ? (
                         <AvatarGroup max={5} spacing={1}>
                           {solicitations.map((p) =>
-                            p.dia === index + 1 ? (
+                            p.dia === index + 1 && p.status ? (
                               <Avatar src={p.foto} alt={p.nome} sx={{ width: 25, height: 25 }} />
                             ) : (
                               ''

@@ -11,7 +11,7 @@ import { SessionProvider } from 'contexts';
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <ToastContainer autoClose={3000} position="bottom-right" />
+      <ToastContainer autoClose={4000} position="bottom-right" />
       <CssBaseline />
       <GlobalStyle />
       <BrowserRouter>

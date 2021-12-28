@@ -70,6 +70,8 @@ const ModalRegister = (props: IModalRegister) => {
           nome: user?.displayName,
           dia: day,
           mes: month,
+          status: true,
+          verificado: false,
         };
         await addDoc(dadosCollectionRef, userDoc);
         toast.success('Solicitação enviada com sucesso');
