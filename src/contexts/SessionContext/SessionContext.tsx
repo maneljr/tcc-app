@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { User } from 'firebase/auth';
 
@@ -15,7 +15,7 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [dataCurrentUser, setDataCurrentUser] = useState<IDataUsers | null>(null);
   const [solicitations, setSolicitations] = useState<ISolicitation[]>([]);
-  const [badge, setBadge] = useState(0);
+  const badge = useMemo(() => solicitations.filter((s) => !!s.verificado).length, [solicitations]);
 
   useEffect(() => {
     auth.onAuthStateChanged((userData) => {
@@ -51,10 +51,6 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
       setSolicitations(solicitationsData);
     });
   }, []);
-
-  useEffect(() => {
-    setBadge(solicitations.filter((s) => !!s.verificado).length);
-  }, [solicitations]);
 
   return (
     <SessionContext.Provider value={{ user, dataCurrentUser, solicitations, badge }}>
