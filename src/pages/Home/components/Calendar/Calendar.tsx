@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Grid,
   Typography,
@@ -19,18 +19,14 @@ import * as S from './styles';
 import { ModalCheck } from '../ModalCheck/ModalCheck';
 import { SessionContext } from 'contexts';
 import { ModalRegister } from '../ModalRegister/ModalRegister';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from 'services';
-import { ISolicitation } from './types';
 
 const Calendar = () => {
-  const { user } = useContext(SessionContext);
+  const { user, solicitations } = useContext(SessionContext);
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
-  const [solicitations, setSolicitations] = useState<ISolicitation[]>([]);
 
   const [local, setLocal] = React.useState('');
   const handleChangeLocal = (event: SelectChangeEvent) => {
@@ -52,26 +48,29 @@ const Calendar = () => {
 
   function check(index: number) {
     if (verify()) {
+      setDay(index);
       setRulesOpen(true);
     } else {
-      setOpenRegister(true);
       setDay(index);
+      setOpenRegister(true);
     }
   }
 
-  useEffect(() => {
-    onSnapshot(collection(db, 'solicitation'), (snapshot) => {
-      const solicitationsData = snapshot.docs.map((doc) => {
-        return Object.assign({ ...doc.data() }, { id: doc.id });
-      }) as unknown as ISolicitation[];
-      setSolicitations(solicitationsData);
-    });
-  }, []);
-
   return (
     <S.Container>
-      <ModalCheck open={rulesOpen} onClose={() => setRulesOpen(false)} solicitations={solicitations} />
-      <ModalRegister open={openRegister} onClose={() => setOpenRegister(false)} day={day} month={date} />
+      <ModalCheck
+        open={rulesOpen}
+        onClose={() => setRulesOpen(false)}
+        solicitations={solicitations}
+        day={day}
+        month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
+      />
+      <ModalRegister
+        open={openRegister}
+        onClose={() => setOpenRegister(false)}
+        day={day}
+        month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
+      />
       <Grid container>
         <Grid item container justifyContent="flex-start" alignItems="center" xs={2}>
           <Grid item>
@@ -177,8 +176,17 @@ const Calendar = () => {
                       {verify() ? (
                         <AvatarGroup max={5} spacing={1}>
                           {solicitations.map((p) =>
-                            p.dia === index + 1 && p.status ? (
-                              <Avatar src={p.foto} alt={p.nome} sx={{ width: 25, height: 25 }} />
+                            p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
+                              <Avatar
+                                src={p.foto}
+                                alt={p.nome}
+                                sx={{ width: 25, height: 25 }}
+                                style={{
+                                  borderStyle: 'solid',
+                                  borderColor:
+                                    p.status && p.verificado ? 'green' : !p.status && p.verificado ? 'red' : 'yellow',
+                                }}
+                              />
                             ) : (
                               ''
                             )

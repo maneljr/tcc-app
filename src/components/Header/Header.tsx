@@ -1,28 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Avatar, Drawer, Grid, Hidden, IconButton, Typography } from '@material-ui/core';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, Menu as MenuIcon } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
 
 import * as S from './styles';
 import { colors } from '../../styles';
 import { DrawerList } from './components';
-import { auth } from 'services';
+import { SessionContext } from 'contexts';
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const toggleDrawer = () => setDrawerOpen((prev) => !prev);
-  const history = useHistory();
-  const [photo, setPhoto] = useState<string | null>('');
-  const [userName, setUserName] = useState<string | null>('');
 
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      setPhoto(user.photoURL);
-      setUserName(user.displayName);
-    } else {
-      history.push('/signin');
-    }
-  });
+  const { user, dataCurrentUser } = useContext(SessionContext);
 
   return (
     <S.Container>
@@ -57,12 +46,12 @@ const Header = () => {
           style={{ paddingRight: 10 }}
         >
           <Grid item>
-            <Avatar alt={`${userName}`} src={`${photo}`} sx={{ width: 32, height: 32 }} />
+            <Avatar alt={`${user?.displayName}`} src={`${user?.photoURL}`} sx={{ width: 32, height: 32 }} />
           </Grid>
           <Hidden smDown>
             <Grid item>
               <Typography variant="subtitle2" color="white">
-                {userName !== null ? userName : 'Bem Vindo'}
+                {user?.displayName ? user?.displayName : `Olá ${dataCurrentUser?.nome}`}
               </Typography>
             </Grid>
             <Grid item>

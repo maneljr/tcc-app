@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Badge, Grid, IconButton, Tooltip } from '@material-ui/core';
 import {
   Home as HomeIcon,
@@ -16,10 +16,12 @@ import * as S from './styles';
 import { colors } from '../../styles';
 import { auth } from 'services';
 import { SessionContext } from 'contexts';
+import { ModalSolicitations } from './components';
 
 const MenuBar = () => {
   const history = useHistory();
-  const { user } = useContext(SessionContext);
+  const { user, badge } = useContext(SessionContext);
+  const [openModal, setOpenModal] = useState(false);
 
   function logOut() {
     auth
@@ -42,6 +44,7 @@ const MenuBar = () => {
 
   return (
     <S.Container>
+      <ModalSolicitations open={openModal} onClose={() => setOpenModal(false)} />
       <Grid item container spacing={1}>
         <Grid item style={{ marginTop: 10 }}>
           <Tooltip title="Home" placement="right-end">
@@ -73,9 +76,9 @@ const MenuBar = () => {
         </Grid>
         <Grid item>
           <Tooltip title="Solicitações" placement="right-end">
-            <IconButton className="Light" disabled={verify() ? false : true}>
+            <IconButton className="Light" disabled={verify() ? false : true} onClick={() => setOpenModal(true)}>
               {verify() ? (
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={badge} color="error">
                   <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
                 </Badge>
               ) : (

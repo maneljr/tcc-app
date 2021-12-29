@@ -4,7 +4,7 @@ export interface ISolicitation {
   horario: string;
   local: string;
   medico: string;
-  mes: Date;
+  mes: string;
   nome: string;
   uid: string;
   id: string;

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import {
   Button,
   Dialog,
@@ -12,30 +12,20 @@ import {
   IconButton,
 } from '@material-ui/core';
 import { toast } from 'react-toastify';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { ThumbDownAlt, ThumbUpAlt, Edit, Delete } from '@material-ui/icons';
-import { updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
+import { ThumbDownAlt, ThumbUpAlt } from '@material-ui/icons';
 
-import { IModalCheck } from './types';
 import { db } from 'services';
+import { IModalSolicitations } from './types';
+import { SessionContext } from 'contexts';
 
-const ModalCheck = (props: IModalCheck) => {
-  const { open, onClose, solicitations, day, month } = props;
+const ModalSolicitations = (props: IModalSolicitations) => {
+  const { open, onClose } = props;
+  const { solicitations } = useContext(SessionContext);
 
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
-
-  const deleteRegister = async (id: string) => {
-    try {
-      const doctorDoc = doc(db, 'solicitation', id);
-      await deleteDoc(doctorDoc);
-      toast.error('Paciente excluido');
-    } catch (error: any) {
-      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao tentar deletar.'}`);
-      console.log({ error });
-    }
-  };
 
   const updateConfirmed = async (id: string) => {
     try {
@@ -61,17 +51,6 @@ const ModalCheck = (props: IModalCheck) => {
     }
   };
 
-  const updateEdit = async (id: string) => {
-    try {
-      const registerDoc = doc(db, 'solicitation', id);
-      let fild = { verificado: false };
-      await updateDoc(registerDoc, fild);
-    } catch (error: any) {
-      toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Falha na confirmação'}`);
-      console.log({ error });
-    }
-  };
-
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Solicitações</DialogTitle>
@@ -79,7 +58,9 @@ const ModalCheck = (props: IModalCheck) => {
       <DialogContent>
         <Grid container spacing={2}>
           {solicitations.map((s, index) =>
-            s.dia === day && s.mes === month ? (
+            s.verificado ? (
+              ''
+            ) : (
               <Grid item container xs={12} spacing={2} alignItems="center" key={index}>
                 <Grid item xs={1}>
                   <Avatar src={s.foto} alt={s.nome} />
@@ -132,31 +113,20 @@ const ModalCheck = (props: IModalCheck) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                {s.verificado ? (
-                  <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
-                    <IconButton onClick={() => updateEdit(s.id)}>
-                      <Edit htmlColor={s.status ? '#316F3D' : '#E75A5F'} />
-                    </IconButton>
-                    <IconButton onClick={() => deleteRegister(s.id)}>
-                      <Delete htmlColor="black" />
-                    </IconButton>
-                  </Grid>
-                ) : (
-                  <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
-                    <IconButton onClick={() => updateConfirmed(s.id)}>
-                      <ThumbUpAlt htmlColor="#316F3D" />
-                    </IconButton>
-                    <IconButton onClick={() => updateDenied(s.id)}>
-                      <ThumbDownAlt htmlColor="#E75A5F" />
-                    </IconButton>
-                  </Grid>
-                )}
+
+                <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
+                  <IconButton onClick={() => updateConfirmed(s.id)}>
+                    <ThumbUpAlt htmlColor="#316F3D" />
+                  </IconButton>
+                  <IconButton onClick={() => updateDenied(s.id)}>
+                    <ThumbDownAlt htmlColor="#E75A5F" />
+                  </IconButton>
+                </Grid>
+
                 <Grid item xs={12}>
                   <Divider />
                 </Grid>
               </Grid>
-            ) : (
-              ''
             )
           )}
         </Grid>
@@ -170,4 +140,4 @@ const ModalCheck = (props: IModalCheck) => {
   );
 };
 
-export { ModalCheck };
+export { ModalSolicitations };

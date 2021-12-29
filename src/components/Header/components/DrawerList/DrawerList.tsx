@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { Grid, List, ListItem, ListItemIcon, ListItemText, Typography, Button } from '@material-ui/core';
 import {
   RecordVoiceOverOutlined as RecordVoiceOverOutlinedIcon,
@@ -12,21 +12,13 @@ import * as S from './styles';
 import { IDrawerList, IDrawerListItem } from './types';
 import { colors } from '../../../../styles';
 import { auth } from 'services';
+import { SessionContext } from 'contexts';
 
 const DrawerList = (props: IDrawerList) => {
   const { toggleDrawer } = props;
   const history = useHistory();
-  const [photo, setPhoto] = useState<string | null>('');
-  const [userName, setUserName] = useState<string | null>('');
 
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      setPhoto(user.photoURL);
-      setUserName(user.displayName);
-    } else {
-      history.push('/signin');
-    }
-  });
+  const { user, dataCurrentUser } = useContext(SessionContext);
 
   function logOut() {
     auth
@@ -63,11 +55,12 @@ const DrawerList = (props: IDrawerList) => {
       <List onClick={toggleDrawer} className="list-container">
         <Grid container alignItems="center" spacing={2}>
           <Grid item>
-            <S.Avatar alt={`${userName}`} src={`${photo}`} />
+            <S.Avatar alt={`${user?.displayName}`} src={`${user?.photoURL}`} />
           </Grid>
           <Grid item>
             <Typography variant="subtitle2" color="white">
-              Olá {userName !== null ? userName : 'Bem Vindo'}
+              Bem vindo,{' '}
+              {user?.displayName ? user?.displayName : `${dataCurrentUser?.nome}${' '}${dataCurrentUser?.sobrenome}`}
             </Typography>
           </Grid>
           {menuItems.map((item, index) => (

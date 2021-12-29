@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { User } from 'firebase/auth';
 
-import { auth } from 'services';
+import { auth, db } from 'services';
 import { ISessionContext } from './types';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { IDataUsers } from 'util/types';
+import { ISolicitation } from 'pages/Home/components/Calendar/types';
 
 const SessionContext = React.createContext({} as ISessionContext);
 
 const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   const history = useHistory();
   const [user, setUser] = useState<User | null>(null);
+  const [dataCurrentUser, setDataCurrentUser] = useState<IDataUsers | null>(null);
+  const [solicitations, setSolicitations] = useState<ISolicitation[]>([]);
+  const [badge, setBadge] = useState(0);
 
   useEffect(() => {
     auth.onAuthStateChanged((userData) => {
@@ -24,7 +30,41 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
     });
   }, [history]);
 
-  return <SessionContext.Provider value={{ user }}>{children}</SessionContext.Provider>;
+  useEffect(() => {
+    onSnapshot(collection(db, 'DadosUsers'), (snapshot) => {
+      const Users = snapshot.docs.map((doc) => {
+        return Object.assign({ ...doc.data() }, { id: doc.id });
+      }) as unknown as IDataUsers[];
+      Users.forEach((s) => {
+        if (s.uid === user?.uid) {
+          setDataCurrentUser(s);
+        }
+      });
+    });
+  }, [user?.uid]);
+
+  useEffect(() => {
+    onSnapshot(collection(db, 'solicitation'), (snapshot) => {
+      const solicitationsData = snapshot.docs.map((doc) => {
+        return Object.assign({ ...doc.data() }, { id: doc.id });
+      }) as unknown as ISolicitation[];
+      setSolicitations(solicitationsData);
+    });
+  }, []);
+
+  useEffect(() => {
+    setBadge(0);
+    solicitations.map((s) => {
+      s.verificado ? console.log('verdadeiro') : setBadge(badge + 1);
+      console.log(badge);
+    });
+  }, [solicitations]);
+
+  return (
+    <SessionContext.Provider value={{ user, dataCurrentUser, solicitations, badge }}>
+      {children}
+    </SessionContext.Provider>
+  );
 };
 
 export { SessionContext, SessionProvider };

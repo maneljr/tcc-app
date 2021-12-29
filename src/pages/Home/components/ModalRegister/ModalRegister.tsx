@@ -24,9 +24,9 @@ import { db } from 'services';
 import { SessionContext } from 'contexts/SessionContext/SessionContext';
 
 const ModalRegister = (props: IModalRegister) => {
-  const { open, onClose, day, month } = props;
   const dadosCollectionRef = collection(db, 'solicitation');
-  const { user } = useContext(SessionContext);
+  const { open, onClose, day, month } = props;
+  const { user, dataCurrentUser } = useContext(SessionContext);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -67,7 +67,7 @@ const ModalRegister = (props: IModalRegister) => {
           ...values,
           uid: user?.uid,
           foto: user?.photoURL,
-          nome: user?.displayName,
+          nome: user?.displayName ? user?.displayName : `${dataCurrentUser?.nome}${' '}${dataCurrentUser?.sobrenome}`,
           dia: day,
           mes: month,
           status: true,

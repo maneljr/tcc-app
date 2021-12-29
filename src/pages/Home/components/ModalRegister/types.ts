@@ -2,7 +2,7 @@ export interface IModalRegister {
   open: boolean;
   onClose: () => void;
   day: number;
-  month: Date;
+  month: string;
 }
 
 export interface IRegister {

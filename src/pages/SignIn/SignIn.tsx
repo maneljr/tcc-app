@@ -22,7 +22,6 @@ const SignIn = () => {
       const resp = await signInWithEmailAndPassword(auth, email, senha);
       console.log('Usuario logado com sucesso');
       history.push('/');
-      console.log({ resp });
     } catch (error: any) {
       toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao realizar login'}`);
       console.log({ error });
