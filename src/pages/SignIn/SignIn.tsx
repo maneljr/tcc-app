@@ -19,7 +19,7 @@ const SignIn = () => {
   const SignInUser = async () => {
     try {
       setLoading(true);
-      const resp = await signInWithEmailAndPassword(auth, email, senha);
+      await signInWithEmailAndPassword(auth, email, senha);
       console.log('Usuario logado com sucesso');
       history.push('/');
     } catch (error: any) {

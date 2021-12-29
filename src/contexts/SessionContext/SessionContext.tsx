@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { User } from 'firebase/auth';
 
@@ -53,11 +53,7 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    setBadge(0);
-    solicitations.map((s) => {
-      s.verificado ? console.log('verdadeiro') : setBadge(badge + 1);
-      console.log(badge);
-    });
+    setBadge(solicitations.filter((s) => !!s.verificado).length);
   }, [solicitations]);
 
   return (
