@@ -35,7 +35,7 @@ const ModalUpdatePlace = (props: IModalUpdatePlace) => {
     onSubmit: async (values) => {
       if (place?.id) {
         try {
-          const placeDoc = doc(db, 'tblLocal', place.id);
+          const placeDoc = doc(db, 'place', place.id);
           await updateDoc(placeDoc, values);
           toast.success('Registro alterado!');
           onClose();

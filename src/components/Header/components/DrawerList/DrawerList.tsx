@@ -59,7 +59,6 @@ const DrawerList = (props: IDrawerList) => {
           </Grid>
           <Grid item>
             <Typography variant="subtitle2" color="white">
-              Bem vindo,{' '}
               {user?.displayName ? user?.displayName : `${dataCurrentUser?.nome}${' '}${dataCurrentUser?.sobrenome}`}
             </Typography>
           </Grid>

@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 const ModalAddpalce = (props: ImodalAddPlace) => {
   const { open, onClose } = props;
-  const placesCollectionRef = collection(db, 'tblLocal');
+  const placesCollectionRef = collection(db, 'place');
 
   const [newNome, setnewNome] = useState<string>('');
   const [newRua, setnewRua] = useState<string>('');

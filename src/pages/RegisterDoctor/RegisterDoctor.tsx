@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Button,
   Divider,
@@ -12,34 +12,25 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Delete, Add } from '@material-ui/icons';
-import { collection, deleteDoc, doc } from 'firebase/firestore';
-import { onSnapshot } from '@firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 
 import * as S from './styles';
 import { ModalAddDoctor, ModalUpdateDoctor } from './components';
 import { Header, MenuBar } from 'components';
 import { db } from 'services';
 import { IDoctor } from './types';
-import { toast } from 'react-toastify';
+import { SessionContext } from 'contexts';
 
 const RegisterDoctor = () => {
-  const [doctors, setDoctors] = useState<IDoctor[]>([]);
+  const { doctors } = useContext(SessionContext);
   const [doctorToUpdate, setDoctorToUpdate] = useState<IDoctor>();
   const [addOpen, setaddOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
 
-  useEffect(() => {
-    onSnapshot(collection(db, 'tblDoctor'), (snapshot) => {
-      const doctorsData = snapshot.docs.map((doc) => {
-        return Object.assign({ ...doc.data() }, { id: doc.id });
-      }) as IDoctor[];
-      setDoctors(doctorsData);
-    });
-  }, []);
-
   const deleteDoctor = async (id: string) => {
     try {
-      const doctorDoc = doc(db, 'tblDoctor', id);
+      const doctorDoc = doc(db, 'doctor', id);
       await deleteDoc(doctorDoc);
       toast.success('Registro deletado com sucesso!');
     } catch (error: any) {

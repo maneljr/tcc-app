@@ -15,7 +15,7 @@ import { auth, db } from 'services';
 const SignUp = () => {
   const history = useHistory();
   const [gender, setGender] = useState<string>();
-  const dadosCollectionRef = collection(db, 'DadosUsers');
+  const dadosCollectionRef = collection(db, 'users');
 
   const formik = useFormik<ISignUp>({
     initialValues: {

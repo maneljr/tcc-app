@@ -7,6 +7,8 @@ import { ISessionContext } from './types';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { IDataUsers } from 'util/types';
 import { ISolicitation } from 'pages/Home/components/Calendar/types';
+import { IDoctor } from 'pages/RegisterDoctor/types';
+import { IPlace } from 'pages/RegisterPlace/components/ModalUpdatePlace/types';
 
 const SessionContext = React.createContext({} as ISessionContext);
 
@@ -15,7 +17,10 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [dataCurrentUser, setDataCurrentUser] = useState<IDataUsers | null>(null);
   const [solicitations, setSolicitations] = useState<ISolicitation[]>([]);
-  const badge = useMemo(() => solicitations.filter((s) => !!s.verificado).length, [solicitations]);
+  const [doctors, setDoctors] = useState<IDoctor[]>([]);
+  const [places, setPlaces] = useState<IPlace[]>([]);
+
+  const badge = useMemo(() => solicitations.filter((s) => !s.verificado).length, [solicitations]);
 
   useEffect(() => {
     auth.onAuthStateChanged((userData) => {
@@ -31,11 +36,11 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   }, [history]);
 
   useEffect(() => {
-    onSnapshot(collection(db, 'DadosUsers'), (snapshot) => {
-      const Users = snapshot.docs.map((doc) => {
+    onSnapshot(collection(db, 'users'), (snapshot) => {
+      const users = snapshot.docs.map((doc) => {
         return Object.assign({ ...doc.data() }, { id: doc.id });
       }) as unknown as IDataUsers[];
-      Users.forEach((s) => {
+      users.forEach((s) => {
         if (s.uid === user?.uid) {
           setDataCurrentUser(s);
         }
@@ -52,8 +57,26 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
     });
   }, []);
 
+  useEffect(() => {
+    onSnapshot(collection(db, 'doctor'), (snapshot) => {
+      const dataDoctors = snapshot.docs.map((doc) => {
+        return Object.assign({ ...doc.data() }, { id: doc.id });
+      }) as unknown as IDoctor[];
+      setDoctors(dataDoctors);
+    });
+  }, []);
+
+  useEffect(() => {
+    onSnapshot(collection(db, 'place'), (snapshot) => {
+      const dataPlaces = snapshot.docs.map((doc) => {
+        return Object.assign({ ...doc.data() }, { id: doc.id });
+      }) as unknown as IPlace[];
+      setPlaces(dataPlaces);
+    });
+  }, []);
+
   return (
-    <SessionContext.Provider value={{ user, dataCurrentUser, solicitations, badge }}>
+    <SessionContext.Provider value={{ user, dataCurrentUser, solicitations, badge, doctors, places }}>
       {children}
     </SessionContext.Provider>
   );

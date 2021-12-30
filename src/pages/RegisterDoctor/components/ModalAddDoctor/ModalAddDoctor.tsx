@@ -9,7 +9,7 @@ import { db } from 'services';
 
 const ModalAddDoctor = (props: ImodalAddDoctor) => {
   const { open, onClose } = props;
-  const doctorsCollectionRef = collection(db, 'tblDoctor');
+  const doctorsCollectionRef = collection(db, 'doctor');
 
   const [NovoNome, setNovoNome] = useState<string>('');
   const [NovoEspecialidade, setNovoEspecialidade] = useState<string>('');

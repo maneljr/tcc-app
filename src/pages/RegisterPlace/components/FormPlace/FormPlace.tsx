@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Fab,
@@ -12,32 +12,24 @@ import {
 } from '@material-ui/core';
 import { Delete, Add } from '@material-ui/icons';
 import { deleteDoc } from '@firebase/firestore';
-import { collection, doc, onSnapshot } from 'firebase/firestore';
+import { toast } from 'react-toastify';
+import { doc } from 'firebase/firestore';
 
 import { db } from 'services';
 import { ModalAddpalce, ModalUpdatePlace } from '..';
 import * as S from './styles';
 import { IPlace } from '../ModalUpdatePlace/types';
-import { toast } from 'react-toastify';
+import { SessionContext } from 'contexts';
 
 const FormPlace = () => {
-  const [places, setPlaces] = useState<IPlace[]>([]);
+  const { places } = useContext(SessionContext);
   const [placeToUpdate, setPlaceToUpdate] = useState<IPlace>();
   const [addOpen, setaddOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
 
-  useEffect(() => {
-    onSnapshot(collection(db, 'tblLocal'), (snapshot) => {
-      const placesData = snapshot.docs.map((doc) => {
-        return Object.assign({ ...doc.data() }, { id: doc.id });
-      }) as IPlace[];
-      setPlaces(placesData);
-    });
-  }, []);
-
   const deletePlace = async (id: string) => {
     try {
-      const placeDoc = doc(db, 'tblLocal', id);
+      const placeDoc = doc(db, 'place', id);
       await deleteDoc(placeDoc);
       toast.success('Registro deletado com sucesso!');
     } catch (error: any) {
