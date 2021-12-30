@@ -26,7 +26,7 @@ import { SessionContext } from 'contexts/SessionContext/SessionContext';
 const ModalRegister = (props: IModalRegister) => {
   const dadosCollectionRef = collection(db, 'solicitation');
   const { open, onClose, day, month } = props;
-  const { user, dataCurrentUser } = useContext(SessionContext);
+  const { user, dataCurrentUser, doctors, places } = useContext(SessionContext);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -95,18 +95,13 @@ const ModalRegister = (props: IModalRegister) => {
               <FormControl sx={{ m: 1, minWidth: 150 }} variant="outlined" size="small" fullWidth>
                 <InputLabel>Local</InputLabel>
                 <Select value={formik.values.local} label="Local" onChange={handleChangePlace}>
-                  <MenuItem value="PSF Ruth Guerra">
-                    <Typography variant="body2"> PSF Ruth Guerra </Typography>
-                  </MenuItem>
-                  <MenuItem value="PSF Eusio Gauvão">
-                    <Typography variant="body2">PSF Eusio Gauvão</Typography>
-                  </MenuItem>
-                  <MenuItem value="PSF Ana Dulce">
-                    <Typography variant="body2">PSF Ana Dulce</Typography>
-                  </MenuItem>
-                  <MenuItem value="PSF Antonio Andrade">
-                    <Typography variant="body2">PSF Antonio Andrade</Typography>
-                  </MenuItem>
+                  {places.map((p, index) => {
+                    return (
+                      <MenuItem value={p.nome} key={index}>
+                        <Typography variant="body2"> {p.nome} </Typography>
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </FormControl>
             </Grid>
@@ -114,18 +109,13 @@ const ModalRegister = (props: IModalRegister) => {
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Médico</InputLabel>
                 <Select value={formik.values.medico} label="medico" onChange={handleChangeDoctor}>
-                  <MenuItem value="Dr. Ricardo">
-                    <Typography variant="body2">Dr. Ricardo Costa</Typography>
-                  </MenuItem>
-                  <MenuItem value="Dr. Pedro Ribeiro">
-                    <Typography variant="body2">Dr. Pedro Ribeiro</Typography>
-                  </MenuItem>
-                  <MenuItem value="Dr. Alfredo Sampaio">
-                    <Typography variant="body2">Dr. Alfredo Sampaio</Typography>
-                  </MenuItem>
-                  <MenuItem value="Dr. George Silva">
-                    <Typography variant="body2">Dr. George Silva</Typography>
-                  </MenuItem>
+                  {doctors.map((d, index) => {
+                    return (
+                      <MenuItem value={d.nome} key={index}>
+                        <Typography variant="body2">{d.nome}</Typography>
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </FormControl>
             </Grid>

@@ -1,5 +1,19 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@material-ui/core';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  Grid,
+  TextField,
+} from '@material-ui/core';
 import { toast } from 'react-toastify';
 
 import * as S from './styles';
@@ -109,15 +123,16 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                   />
                 </Grid>
                 <Grid item xs={12} md={7}>
-                  <TextField
-                    label="Horario de atendimento"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    onChange={(event) => {
-                      setNovoAtendimento(event.target.value);
-                    }}
-                  />
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend">horarios de atendimento</FormLabel>
+                    <FormGroup row>
+                      <FormControlLabel value="top" control={<Checkbox />} label="13h" labelPlacement="top" />
+                      <FormControlLabel value="top" control={<Checkbox />} label="14h" labelPlacement="top" />
+                      <FormControlLabel value="top" control={<Checkbox />} label="15h" labelPlacement="top" />
+                      <FormControlLabel value="top" control={<Checkbox />} label="16h" labelPlacement="top" />
+                      <FormControlLabel value="top" control={<Checkbox />} label="17h" labelPlacement="top" />
+                    </FormGroup>
+                  </FormControl>
                 </Grid>
               </Grid>
             </Grid>
