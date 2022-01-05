@@ -26,7 +26,6 @@ import { db } from 'services';
 const ModalAddDoctor = (props: ImodalAddDoctor) => {
   const { open, onClose } = props;
   const doctorsCollectionRef = collection(db, 'doctor');
-  const timeCollectionRef = collection(db, 'time');
 
   const handleClose = useCallback(() => {
     onClose();
