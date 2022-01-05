@@ -14,7 +14,7 @@ const Recover = () => {
   const forgotPassword = async () => {
     try {
       await sendPasswordResetEmail(auth, email, {
-        url: `http://localhost:3000/signin`,
+        url: `https://tcc-app-9g295uhel-manoeljunim.vercel.app/signin`,
       });
       toast.success(`As instruções para alterar a senha foram enviadas para ${email}`);
       history.push('/signin');
