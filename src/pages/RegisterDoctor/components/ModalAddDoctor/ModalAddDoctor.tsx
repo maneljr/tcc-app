@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import {
+  Autocomplete,
   Button,
   Checkbox,
   Dialog,
@@ -7,10 +8,6 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
   Grid,
   TextField,
 } from '@material-ui/core';
@@ -18,6 +15,8 @@ import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ReactInputMask from 'react-input-mask';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 import * as S from './styles';
 import { IAddDoctor, ImodalAddDoctor } from './types';
@@ -67,6 +66,21 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
 
   const { getFieldProps } = formik;
 
+  const availableTime = [
+    { horario: '13:00' },
+    { horario: '13:30' },
+    { horario: '14:00' },
+    { horario: '14:30' },
+    { horario: '15:00' },
+    { horario: '15:30' },
+    { horario: '16:00' },
+    { horario: '16:30' },
+    { horario: '17:00' },
+  ];
+
+  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+  const checkedIcon = <CheckBoxIcon />;
+
   return (
     <S.Container>
       <Dialog open={open} onClose={onClose}>
@@ -74,8 +88,8 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
           <DialogTitle>Cadastrar Medico</DialogTitle>
           <Divider />
           <DialogContent>
-            <Grid container spacing={2}>
-              <Grid item container spacing={1}>
+            <Grid container>
+              <Grid item container spacing={2}>
                 <Grid item container xs={12} md={12}>
                   <TextField
                     label="Nome do Medico"
@@ -133,22 +147,27 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                   ></TextField>
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">horarios de atendimento: </FormLabel>
-                    <FormGroup row>
-                      <FormControlLabel
+                  <Autocomplete
+                    multiple
+                    options={availableTime}
+                    disableCloseOnSelect
+                    getOptionLabel={(option) => option.horario}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
+                        {option.horario}
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
                         {...getFieldProps('atendimento')}
-                        control={<Checkbox />}
-                        value={13}
-                        label="13h"
-                        labelPlacement="bottom"
+                        label="Horario de Atendimento"
+                        fullWidth
+                        size="small"
                       />
-                      <FormControlLabel value="14h" control={<Checkbox />} label="14h" labelPlacement="bottom" />
-                      <FormControlLabel value="15h" control={<Checkbox />} label="15h" labelPlacement="bottom" />
-                      <FormControlLabel value="16h" control={<Checkbox />} label="16h" labelPlacement="bottom" />
-                      <FormControlLabel value="17h" control={<Checkbox />} label="17h" labelPlacement="bottom" />
-                    </FormGroup>
-                  </FormControl>
+                    )}
+                  />
                 </Grid>
               </Grid>
             </Grid>

@@ -108,27 +108,28 @@ const ModalCheck = (props: IModalCheck) => {
                     </Grid>
                   </Grid>
 
-                  <Grid item container alignItems="center">
-                    <Grid item container xs={6} alignItems="center" spacing={1}>
-                      <Grid item>
-                        <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-                          Local:
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2">{s.local}</Typography>
-                      </Grid>
+                  <Grid item container xs={12} alignItems="center" spacing={1}>
+                    <Grid item>
+                      <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                        Local:
+                      </Typography>
                     </Grid>
+                    <Grid item>
+                      <Typography variant="body2">{s.local}</Typography>
+                    </Grid>
+                  </Grid>
 
-                    <Grid item container xs={6} alignItems="center" spacing={1}>
-                      <Grid item>
-                        <Typography variant="body1" style={{ fontWeight: 'bold' }}>
-                          Horario:
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="body2">{s.horario}</Typography>
-                      </Grid>
+                  <Grid item container xs={12} alignItems="center" spacing={1}>
+                    <Grid item>
+                      <Typography variant="body1" style={{ fontWeight: 'bold' }}>
+                        Atendimento:
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body2">
+                        {s.horario} dia {s.dia} de {''}
+                        {s.mes}
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Grid>

@@ -39,7 +39,7 @@ const SignUp = () => {
       nome: Yup.string().required('Campo obrigatório'),
       senha: Yup.string().required('Campo obrigatório').min(8, 'Mínimo 8 caracteres'),
       sobrenome: Yup.string().required('Campo obrigatório'),
-      sus: Yup.string().required('Campo obrigatório').min(15, 'Cartão invalido'),
+      sus: Yup.string().min(15, 'Cartão invalido'),
     }),
     onSubmit: async (values) => {
       const createdUser = await creatUser();
@@ -149,30 +149,38 @@ const SignUp = () => {
           </Grid>
           <Grid item container xs={12} justifyContent="center">
             <Grid item xs={12} md={3}>
-              <TextField
-                label="Cartão SUS"
-                variant="outlined"
-                size="small"
-                fullWidth
-                type="text"
-                {...getFieldProps('sus')}
-                error={!!formik.errors.sus}
-                helperText={formik.errors.sus}
-              />
+              <ReactInputMask mask="999.9999.9999.9999" {...getFieldProps('sus')}>
+                {(inputProps: any) => (
+                  <TextField
+                    label="Cartão SUS"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    type="text"
+                    {...inputProps}
+                    error={!!formik.errors.sus}
+                    helperText={formik.errors.sus}
+                  />
+                )}
+              </ReactInputMask>
             </Grid>
           </Grid>
           <Grid item container xs={12} justifyContent="center">
             <Grid item xs={12} md={3}>
-              <TextField
-                label="Celular"
-                variant="outlined"
-                size="small"
-                fullWidth
-                type="text"
-                {...getFieldProps('celular')}
-                error={!!formik.errors.celular}
-                helperText={formik.errors.celular}
-              />
+              <ReactInputMask mask="(99)99999-9999" {...getFieldProps('celular')}>
+                {(inputProps: any) => (
+                  <TextField
+                    label="Celular"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    type="text"
+                    {...inputProps}
+                    error={!!formik.errors.celular}
+                    helperText={formik.errors.celular}
+                  />
+                )}
+              </ReactInputMask>
             </Grid>
           </Grid>
           <Grid item container xs={12} justifyContent="center">
