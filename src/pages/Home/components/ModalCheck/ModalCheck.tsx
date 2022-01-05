@@ -164,7 +164,7 @@ const ModalCheck = (props: IModalCheck) => {
       </DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={handleClose}>
-          Salvar
+          Voltar
         </Button>
       </DialogActions>
     </Dialog>
