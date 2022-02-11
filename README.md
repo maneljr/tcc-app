@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Quality of the code
+
+[![DeepScan grade](https://deepscan.io/api/teams/16848/projects/20146/branches/540897/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=16848&pid=20146&bid=540897)
+
 ## Available Scripts
 
 In the project directory, you can run:
