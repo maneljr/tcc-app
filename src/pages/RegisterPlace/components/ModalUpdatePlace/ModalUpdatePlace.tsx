@@ -4,11 +4,12 @@ import { doc } from '@firebase/firestore';
 import { updateDoc } from 'firebase/firestore';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import ReactInputMask from 'react-input-mask';
 
 import * as S from './styles';
 import { IModalUpdatePlace, IPlaceUpdate } from './types';
 import { db } from 'services';
-import { toast } from 'react-toastify';
 
 const ModalUpdatePlace = (props: IModalUpdatePlace) => {
   const { open, onClose, place } = props;
@@ -110,15 +111,19 @@ const ModalUpdatePlace = (props: IModalUpdatePlace) => {
                 </Grid>
                 <Grid item container xs={12} spacing={1}>
                   <Grid item xs={12} md={5}>
-                    <TextField
-                      label="CEP"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      {...getFieldProps('cep')}
-                      error={!!formik.errors.cep}
-                      helperText={formik.errors.cep}
-                    />
+                    <ReactInputMask mask="99999-999" {...getFieldProps('cep')}>
+                      {(inputProps: any) => (
+                        <TextField
+                          label="CEP"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          {...getFieldProps('cep')}
+                          error={!!formik.errors.cep}
+                          helperText={formik.errors.cep}
+                        />
+                      )}
+                    </ReactInputMask>
                   </Grid>
                   <Grid item xs={12} md={7}>
                     <TextField
