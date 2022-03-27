@@ -53,40 +53,43 @@ const MenuBar = () => {
             </IconButton>
           </Tooltip>
         </Grid>
-        <Grid item>
-          <Tooltip title="Casdastrar Posto" placement="right-end">
-            <IconButton onClick={() => history.push('/places')} className="Light" disabled={verify() ? false : true}>
-              <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid item>
-          <Tooltip title="Cadastrar Medico" placement="right-end">
-            <IconButton onClick={() => history.push('/doctors')} className="Light" disabled={verify() ? false : true}>
-              <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid item>
-          <Tooltip title="Cadastrar Exames" placement="right-end">
-            <IconButton onClick={() => history.push('/exams')} className="Light" disabled={verify() ? false : true}>
-              <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid item>
-          <Tooltip title="Solicitações" placement="right-end">
-            <IconButton className="Light" disabled={verify() ? false : true} onClick={() => setOpenModal(true)}>
-              {verify() ? (
-                <Badge badgeContent={badge} color="error">
-                  <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
-                </Badge>
-              ) : (
-                <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
-              )}
-            </IconButton>
-          </Tooltip>
-        </Grid>
+        {verify() ? (
+          <Grid item container spacing={1}>
+            <Grid item>
+              <Tooltip title="Casdastrar Posto" placement="right-end">
+                <IconButton onClick={() => history.push('/places')} className="Light">
+                  <Location style={{ fontSize: 25 }} htmlColor={colors.mar} />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Cadastrar Medico" placement="right-end">
+                <IconButton onClick={() => history.push('/doctors')} className="Light">
+                  <Doctor style={{ fontSize: 25 }} htmlColor={colors.mar} />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Cadastrar Exames" placement="right-end">
+                <IconButton onClick={() => history.push('/exams')} className="Light">
+                  <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Solicitações" placement="right-end">
+                <IconButton className="Light" onClick={() => setOpenModal(true)}>
+                  <Badge badgeContent={badge} color="error">
+                    <Solicitation style={{ fontSize: 25 }} htmlColor={colors.mar} />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        ) : (
+          ''
+        )}
+
         <Grid item>
           <Tooltip title="Configurações" placement="right-end">
             <IconButton className="Light">
