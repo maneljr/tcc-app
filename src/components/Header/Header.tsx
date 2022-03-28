@@ -1,40 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { Avatar, Drawer, Grid, Hidden, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
-import { KeyboardArrowDown as KeyboardArrowDownIcon, Menu as MenuIcon } from '@material-ui/icons';
+import { Avatar, Drawer, Grid, Hidden, IconButton, Typography } from '@material-ui/core';
+import { Menu as MenuIcon } from '@material-ui/icons';
 
 import * as S from './styles';
 import { colors } from '../../styles';
 import { DrawerList } from './components';
 import { SessionContext } from 'contexts';
-import { auth } from 'services';
-import { useHistory } from 'react-router';
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const history = useHistory();
   const toggleDrawer = () => setDrawerOpen((prev) => !prev);
 
   const { user, dataCurrentUser } = useContext(SessionContext);
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  function logOut() {
-    auth
-      .signOut()
-      .then(() => {
-        history.push('/signin');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   return (
     <S.Container>
