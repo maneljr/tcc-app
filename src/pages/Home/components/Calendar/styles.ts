@@ -1,3 +1,4 @@
+import { Grid } from '@material-ui/core';
 import styled from 'styled-components';
 
 import { colors } from '../../../../styles';
@@ -16,6 +17,7 @@ const Container = styled.div`
 
   .blankDark {
     background-color: #e4e4e4;
+    disable: true;
   }
 `;
 

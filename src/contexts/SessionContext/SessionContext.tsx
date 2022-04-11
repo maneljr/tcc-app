@@ -27,6 +27,7 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
       if (userData) {
         setUser(userData);
         console.log('tem alguem locado');
+        console.log(userData);
         history.push('/');
       } else {
         setUser(null);

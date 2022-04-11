@@ -10,10 +10,12 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  InputLabel,
 } from '@material-ui/core';
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { getDaysInMonth, format, addDays, startOfWeek, startOfMonth, addMonths, subMonths } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import { toast } from 'react-toastify';
 
 import * as S from './styles';
 import { ModalCheck } from '../ModalCheck/ModalCheck';
@@ -21,9 +23,10 @@ import { SessionContext } from 'contexts';
 import { ModalRegister } from '../ModalRegister/ModalRegister';
 
 const Calendar = () => {
-  const { user, solicitations } = useContext(SessionContext);
+  const { user, solicitations, places } = useContext(SessionContext);
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
+  const currentMonth = React.useMemo(() => date.getMonth(), [date]);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
@@ -33,12 +36,7 @@ const Calendar = () => {
     setLocal(event.target.value);
   };
 
-  const [doctor, setDoctor] = React.useState('');
-  const handleChangeDoctor = (event: SelectChangeEvent) => {
-    setDoctor(event.target.value);
-  };
-
-  function verify() {
+  function verifyUser() {
     if (user?.email?.split('@').slice(-1)[0].trim() === 'admin.com') {
       return true;
     } else {
@@ -47,9 +45,13 @@ const Calendar = () => {
   }
 
   function check(index: number) {
-    if (verify()) {
+    if (verifyUser()) {
       setDay(index);
       setRulesOpen(true);
+    } else if (currentMonth < new Date().getMonth()) {
+      toast.warning('não pode marcar consulta antes da data atual!');
+    } else if (index < new Date().getDate() && currentMonth <= new Date().getMonth()) {
+      toast.warning('Marque um dia valido');
     } else {
       setDay(index);
       setOpenRegister(true);
@@ -100,38 +102,14 @@ const Calendar = () => {
           style={{ paddingRight: 13 }}
         >
           <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 150 }} variant="standard" size="small" fullWidth>
+            <FormControl sx={{ m: 1, minWidth: 200 }} variant="standard" size="small" fullWidth>
+              <InputLabel>filtrar por local</InputLabel>
               <Select value={local} label="Local" onChange={handleChangeLocal}>
-                <MenuItem value="PSF Ruth Guerra">
-                  <Typography variant="body2"> PSF Ruth Guerra </Typography>
-                </MenuItem>
-                <MenuItem value="PSF Eusio Gauvão">
-                  <Typography variant="body2">PSF Eusio Gauvão</Typography>
-                </MenuItem>
-                <MenuItem value="PSF Ana Dulce">
-                  <Typography variant="body2">PSF Ana Dulce</Typography>
-                </MenuItem>
-                <MenuItem value="PSF Antonio Andrade">
-                  <Typography variant="body2">PSF Antonio Andrade</Typography>
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="standard" fullWidth>
-              <Select value={doctor} label="medico" onChange={handleChangeDoctor}>
-                <MenuItem value="Dr. Ricardo">
-                  <Typography variant="body2">Dr. Ricardo Costa</Typography>
-                </MenuItem>
-                <MenuItem value="Dr. Pedro Ribeiro">
-                  <Typography variant="body2">Dr. Pedro Ribeiro</Typography>
-                </MenuItem>
-                <MenuItem value="Dr. Alfredo Sampaio">
-                  <Typography variant="body2">Dr. Alfredo Sampaio</Typography>
-                </MenuItem>
-                <MenuItem value="Dr. George Silva">
-                  <Typography variant="body2">Dr. George Silva</Typography>
-                </MenuItem>
+                {places.map((p, index) => (
+                  <MenuItem value={p.nome} key={index}>
+                    <Typography variant="body2"> {p.nome}</Typography>
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -157,12 +135,18 @@ const Calendar = () => {
         <Grid item xs={12} style={{ minHeight: '100%', display: 'flex' }}>
           <S.CalendarContainer>
             {Array.from({ length: weekDayStart }).map((_, index) => (
-              <S.Date className="blankDark" key={index}></S.Date>
+              <S.Date className="blankDark" key={index} />
             ))}
             {Array.from({ length: getDaysInMonth(date) }).map((_, index) => (
               <S.Date
                 key={index}
-                className="blank"
+                className={
+                  currentMonth < new Date().getMonth()
+                    ? 'blankDark'
+                    : index + 1 < new Date().getDate() && currentMonth <= new Date().getMonth()
+                    ? 'blankDark'
+                    : 'blank'
+                }
                 onClick={() => {
                   check(index + 1);
                 }}
@@ -173,20 +157,36 @@ const Calendar = () => {
                   </Grid>
                   <Grid item container spacing={1} alignItems="center" justifyContent="flex-start">
                     <Grid item>
-                      {verify() ? (
+                      {console.log(local)}
+                      {verifyUser() ? (
                         <AvatarGroup max={5} spacing={1}>
                           {solicitations.map((p) =>
                             p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
-                              <Avatar
-                                src={p.foto}
-                                alt={p.nome}
-                                sx={{ width: 25, height: 25 }}
-                                style={{
-                                  borderStyle: 'solid',
-                                  borderColor:
-                                    p.status && p.verificado ? 'green' : !p.status && p.verificado ? 'red' : 'yellow',
-                                }}
-                              />
+                              local === p.local ? (
+                                <Avatar
+                                  src={p.foto}
+                                  alt={p.nome}
+                                  sx={{ width: 25, height: 25 }}
+                                  style={{
+                                    borderStyle: 'solid',
+                                    borderColor:
+                                      p.status && p.verificado ? 'green' : !p.status && p.verificado ? 'red' : 'yellow',
+                                  }}
+                                />
+                              ) : local === '' ? (
+                                <Avatar
+                                  src={p.foto}
+                                  alt={p.nome}
+                                  sx={{ width: 25, height: 25 }}
+                                  style={{
+                                    borderStyle: 'solid',
+                                    borderColor:
+                                      p.status && p.verificado ? 'green' : !p.status && p.verificado ? 'red' : 'yellow',
+                                  }}
+                                />
+                              ) : (
+                                ''
+                              )
                             ) : (
                               ''
                             )

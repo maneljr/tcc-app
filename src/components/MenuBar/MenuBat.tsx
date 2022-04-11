@@ -7,7 +7,6 @@ import {
   Assignment as Exame,
   ExitToApp as SignOut,
   AccountCircle as UserName,
-  Settings as SettingIcon,
   NotificationsActive as Solicitation,
 } from '@material-ui/icons';
 import { useHistory } from 'react-router';
@@ -90,13 +89,6 @@ const MenuBar = () => {
           ''
         )}
 
-        <Grid item>
-          <Tooltip title="Configurações" placement="right-end">
-            <IconButton className="Light">
-              <SettingIcon style={{ fontSize: 25 }} htmlColor={colors.mar} />
-            </IconButton>
-          </Tooltip>
-        </Grid>
         <Grid item>
           <Tooltip title="Usuario" placement="right-end">
             <IconButton className="Light">
