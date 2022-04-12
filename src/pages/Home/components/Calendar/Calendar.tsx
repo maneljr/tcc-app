@@ -102,16 +102,20 @@ const Calendar = () => {
           style={{ paddingRight: 13 }}
         >
           <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 200 }} variant="standard" size="small" fullWidth>
-              <InputLabel>filtrar por local</InputLabel>
-              <Select value={local} label="Local" onChange={handleChangeLocal}>
-                {places.map((p, index) => (
-                  <MenuItem value={p.nome} key={index}>
-                    <Typography variant="body2"> {p.nome}</Typography>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {verifyUser() ? (
+              <FormControl sx={{ m: 1, minWidth: 200 }} variant="standard" size="small" fullWidth>
+                <InputLabel>filtrar por local</InputLabel>
+                <Select value={local} label="Local" onChange={handleChangeLocal}>
+                  {places.map((p, index) => (
+                    <MenuItem value={p.nome} key={index}>
+                      <Typography variant="body2"> {p.nome}</Typography>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : (
+              ''
+            )}
           </Grid>
         </Grid>
 
