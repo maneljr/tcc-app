@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -10,6 +10,11 @@ import {
   Typography,
   Avatar,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from '@material-ui/core';
 import { toast } from 'react-toastify';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -21,7 +26,11 @@ import { SessionContext } from 'contexts';
 
 const ModalSolicitations = (props: IModalSolicitations) => {
   const { open, onClose } = props;
-  const { solicitations } = useContext(SessionContext);
+  const { solicitations, places, local, setLocal } = useContext(SessionContext);
+
+  const handleChangeLocal = (event: SelectChangeEvent) => {
+    setLocal(event.target.value);
+  };
 
   const handleClose = useCallback(() => {
     onClose();
@@ -53,7 +62,23 @@ const ModalSolicitations = (props: IModalSolicitations) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Solicitações</DialogTitle>
+      <Grid container justifyContent={'space-between'}>
+        <Grid item>
+          <DialogTitle>Solicitações</DialogTitle>
+        </Grid>
+        <Grid item style={{ marginRight: 25 }}>
+          <FormControl sx={{ m: 1, minWidth: 200 }} variant="standard" size="small" fullWidth>
+            <InputLabel>Posto</InputLabel>
+            <Select value={local} label="Local" onChange={handleChangeLocal}>
+              {places.map((p, index) => (
+                <MenuItem value={p.nome} key={index}>
+                  <Typography variant="body2"> {p.nome}</Typography>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
       <Divider />
       <DialogContent>
         <Grid container spacing={2}>
@@ -134,7 +159,7 @@ const ModalSolicitations = (props: IModalSolicitations) => {
       </DialogContent>
       <DialogActions>
         <Button variant="contained" onClick={handleClose}>
-          Salvar
+          Sair
         </Button>
       </DialogActions>
     </Dialog>

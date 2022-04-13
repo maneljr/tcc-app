@@ -10,7 +10,6 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  InputLabel,
 } from '@material-ui/core';
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { getDaysInMonth, format, addDays, startOfWeek, startOfMonth, addMonths, subMonths } from 'date-fns';
@@ -23,7 +22,7 @@ import { SessionContext } from 'contexts';
 import { ModalRegister } from '../ModalRegister/ModalRegister';
 
 const Calendar = () => {
-  const { user, solicitations, places } = useContext(SessionContext);
+  const { user, solicitations, places, local, setLocal } = useContext(SessionContext);
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const currentMonth = React.useMemo(() => date.getMonth(), [date]);
@@ -31,7 +30,6 @@ const Calendar = () => {
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
 
-  const [local, setLocal] = React.useState('');
   const handleChangeLocal = (event: SelectChangeEvent) => {
     setLocal(event.target.value);
   };
@@ -92,19 +90,16 @@ const Calendar = () => {
           </Grid>
         </Grid>
 
-        <Grid
-          item
-          container
-          alignItems="center"
-          justifyContent="flex-end"
-          xs={10}
-          spacing={2}
-          style={{ paddingRight: 13 }}
-        >
+        <Grid item container alignItems="center" justifyContent="flex-end" xs={10} style={{ paddingRight: 13 }}>
+          <Grid item>
+            <Typography className="capitalize-phrase" variant="body2" style={{ fontWeight: 'bold' }}>
+              {' '}
+              Local:
+            </Typography>
+          </Grid>
           <Grid item>
             {verifyUser() ? (
-              <FormControl sx={{ m: 1, minWidth: 200 }} variant="standard" size="small" fullWidth>
-                <InputLabel>filtrar por local</InputLabel>
+              <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
                 <Select value={local} label="Local" onChange={handleChangeLocal}>
                   {places.map((p, index) => (
                     <MenuItem value={p.nome} key={index}>
@@ -166,18 +161,7 @@ const Calendar = () => {
                         <AvatarGroup max={5} spacing={1}>
                           {solicitations.map((p) =>
                             p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
-                              local === p.local ? (
-                                <Avatar
-                                  src={p.foto}
-                                  alt={p.nome}
-                                  sx={{ width: 25, height: 25 }}
-                                  style={{
-                                    borderStyle: 'solid',
-                                    borderColor:
-                                      p.status && p.verificado ? 'green' : !p.status && p.verificado ? 'red' : 'yellow',
-                                  }}
-                                />
-                              ) : local === '' ? (
+                              local === p.local || local === '' ? (
                                 <Avatar
                                   src={p.foto}
                                   alt={p.nome}

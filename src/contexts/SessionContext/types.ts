@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react';
+
 import { User } from 'firebase/auth';
 import { ISolicitation } from 'pages/Home/components/Calendar/types';
 import { IDoctor } from 'pages/RegisterDoctor/types';
@@ -15,4 +17,6 @@ export interface ISessionContext {
   doctors: IDoctor[];
   places: IPlace[];
   badge: number;
+  local: string;
+  setLocal: Dispatch<SetStateAction<string>>;
 }

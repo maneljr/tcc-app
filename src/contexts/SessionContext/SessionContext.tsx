@@ -19,6 +19,7 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   const [solicitations, setSolicitations] = useState<ISolicitation[]>([]);
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [places, setPlaces] = useState<IPlace[]>([]);
+  const [local, setLocal] = useState<string>('');
 
   const badge = useMemo(() => solicitations.filter((s) => !s.verificado).length, [solicitations]);
 
@@ -77,7 +78,7 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   }, []);
 
   return (
-    <SessionContext.Provider value={{ user, dataCurrentUser, solicitations, badge, doctors, places }}>
+    <SessionContext.Provider value={{ user, dataCurrentUser, solicitations, badge, doctors, places, local, setLocal }}>
       {children}
     </SessionContext.Provider>
   );
