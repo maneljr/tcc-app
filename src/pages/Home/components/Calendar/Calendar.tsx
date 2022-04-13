@@ -10,8 +10,9 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Tooltip,
 } from '@material-ui/core';
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Delete } from '@material-ui/icons';
 import { getDaysInMonth, format, addDays, startOfWeek, startOfMonth, addMonths, subMonths } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { toast } from 'react-toastify';
@@ -20,6 +21,7 @@ import * as S from './styles';
 import { ModalCheck } from '../ModalCheck/ModalCheck';
 import { SessionContext } from 'contexts';
 import { ModalRegister } from '../ModalRegister/ModalRegister';
+import { colors } from './../../../../styles';
 
 const Calendar = () => {
   const { user, solicitations, places, local, setLocal } = useContext(SessionContext);
@@ -90,28 +92,44 @@ const Calendar = () => {
           </Grid>
         </Grid>
 
-        <Grid item container alignItems="center" justifyContent="flex-end" xs={10} style={{ paddingRight: 13 }}>
-          <Grid item>
-            <Typography className="capitalize-phrase" variant="body2" style={{ fontWeight: 'bold' }}>
-              {' '}
-              Local:
-            </Typography>
-          </Grid>
-          <Grid item>
-            {verifyUser() ? (
-              <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-                <Select value={local} label="Local" onChange={handleChangeLocal}>
-                  {places.map((p, index) => (
-                    <MenuItem value={p.nome} key={index}>
-                      <Typography variant="body2"> {p.nome}</Typography>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : (
-              ''
-            )}
-          </Grid>
+        <Grid
+          item
+          container
+          alignItems="center"
+          justifyContent="flex-end"
+          xs={10}
+          style={{ paddingRight: 13 }}
+          spacing={1}
+        >
+          {verifyUser() ? (
+            <>
+              <Grid item>
+                <Typography className="capitalize-phrase" variant="body2" style={{ fontWeight: 'bold' }}>
+                  Local:
+                </Typography>
+              </Grid>
+              <Grid item>
+                <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
+                  <Select value={local} label="Local" onChange={handleChangeLocal}>
+                    {places.map((p, index) => (
+                      <MenuItem value={p.nome} key={index}>
+                        <Typography variant="body2"> {p.nome}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Limpar filtro" placement="bottom" className="Light">
+                  <IconButton onClick={() => setLocal('')}>
+                    <Delete htmlColor={colors.mar} />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </>
+          ) : (
+            ''
+          )}
         </Grid>
 
         <Grid item xs={12}>
@@ -146,6 +164,7 @@ const Calendar = () => {
                     ? 'blankDark'
                     : 'blank'
                 }
+                style={{ borderColor: index + 1 === new Date().getDate() ? 'black' : '' }}
                 onClick={() => {
                   check(index + 1);
                 }}
@@ -156,7 +175,6 @@ const Calendar = () => {
                   </Grid>
                   <Grid item container spacing={1} alignItems="center" justifyContent="flex-start">
                     <Grid item>
-                      {console.log(local)}
                       {verifyUser() ? (
                         <AvatarGroup max={5} spacing={1}>
                           {solicitations.map((p) =>

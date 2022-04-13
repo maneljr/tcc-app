@@ -19,6 +19,16 @@ const Container = styled.div`
     background-color: #e4e4e4;
     disable: true;
   }
+
+  .Light {
+    &:hover {
+      background-color: ${colors.mar};
+
+      svg {
+        color: ${colors.whiteDark};
+      }
+    }
+  }
 `;
 
 const CalendarContainer = styled.div`

@@ -66,7 +66,7 @@ const ModalSolicitations = (props: IModalSolicitations) => {
         <Grid item>
           <DialogTitle>Solicitações</DialogTitle>
         </Grid>
-        <Grid item style={{ marginRight: 25 }}>
+        {/* <Grid item style={{ marginRight: 25 }}>
           <FormControl sx={{ m: 1, minWidth: 200 }} variant="standard" size="small" fullWidth>
             <InputLabel>Posto</InputLabel>
             <Select value={local} label="Local" onChange={handleChangeLocal}>
@@ -77,7 +77,7 @@ const ModalSolicitations = (props: IModalSolicitations) => {
               ))}
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
       </Grid>
       <Divider />
       <DialogContent>
