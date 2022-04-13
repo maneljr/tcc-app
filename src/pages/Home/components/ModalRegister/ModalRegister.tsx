@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import { IModalRegister, IRegister } from './types';
 import { db } from 'services';
 import { SessionContext } from 'contexts/SessionContext/SessionContext';
+import { setHours } from 'date-fns/esm';
 
 const ModalRegister = (props: IModalRegister) => {
   const dadosCollectionRef = collection(db, 'solicitation');
@@ -75,6 +76,9 @@ const ModalRegister = (props: IModalRegister) => {
         };
         await addDoc(dadosCollectionRef, userDoc);
         toast.success('Solicitação enviada com sucesso');
+        setPlace('');
+        setDoctor('');
+        setTime('');
       } catch (error: any) {
         toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro na solicitação'}`);
         console.log({ error });
