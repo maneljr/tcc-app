@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import {
   Button,
   Dialog,
@@ -15,14 +15,16 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Tooltip,
 } from '@material-ui/core';
 import { toast } from 'react-toastify';
 import { doc, updateDoc } from 'firebase/firestore';
-import { ThumbDownAlt, ThumbUpAlt } from '@material-ui/icons';
+import { Delete, ThumbDownAlt, ThumbUpAlt } from '@material-ui/icons';
 
 import { db } from 'services';
 import { IModalSolicitations } from './types';
 import { SessionContext } from 'contexts';
+import { colors } from './../../../../styles';
 
 const ModalSolicitations = (props: IModalSolicitations) => {
   const { open, onClose } = props;
@@ -62,13 +64,14 @@ const ModalSolicitations = (props: IModalSolicitations) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <Grid container justifyContent={'space-between'}>
-        <Grid item>
+      <Grid container justifyItems={'center'} spacing={1}>
+        <Grid item xs={7}>
           <DialogTitle>Solicitações</DialogTitle>
         </Grid>
-        {/* <Grid item style={{ marginRight: 25 }}>
-          <FormControl sx={{ m: 1, minWidth: 200 }} variant="standard" size="small" fullWidth>
-            <InputLabel>Posto</InputLabel>
+
+        <Grid item xs={4}>
+          <FormControl sx={{ m: 1, minWidth: 150 }} variant="standard" size="small" fullWidth>
+            <InputLabel>POSTO</InputLabel>
             <Select value={local} label="Local" onChange={handleChangeLocal}>
               {places.map((p, index) => (
                 <MenuItem value={p.nome} key={index}>
@@ -77,7 +80,14 @@ const ModalSolicitations = (props: IModalSolicitations) => {
               ))}
             </Select>
           </FormControl>
-        </Grid> */}
+        </Grid>
+        <Grid item container xs={1} justifyItems="center">
+          <Tooltip title="Limpar filtro" placement="bottom" className="Light">
+            <IconButton onClick={() => setLocal('')}>
+              <Delete htmlColor={colors.mar} />
+            </IconButton>
+          </Tooltip>
+        </Grid>
       </Grid>
       <Divider />
       <DialogContent>
@@ -85,7 +95,7 @@ const ModalSolicitations = (props: IModalSolicitations) => {
           {solicitations.map((s, index) =>
             s.verificado ? (
               ''
-            ) : (
+            ) : local === s.local || local === '' ? (
               <Grid item container xs={12} spacing={2} alignItems="center" key={index}>
                 <Grid item xs={1}>
                   <Avatar src={s.foto} alt={s.nome} />
@@ -153,6 +163,8 @@ const ModalSolicitations = (props: IModalSolicitations) => {
                   <Divider />
                 </Grid>
               </Grid>
+            ) : (
+              ''
             )
           )}
         </Grid>

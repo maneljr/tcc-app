@@ -21,7 +21,10 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   const [places, setPlaces] = useState<IPlace[]>([]);
   const [local, setLocal] = useState<string>('');
 
-  const badge = useMemo(() => solicitations.filter((s) => !s.verificado).length, [solicitations]);
+  const badge = useMemo(
+    () => solicitations.filter((s) => (local !== '' ? !s.verificado && s.local === local : !s.verificado)).length,
+    [local, solicitations]
+  );
 
   useEffect(() => {
     auth.onAuthStateChanged((userData) => {
