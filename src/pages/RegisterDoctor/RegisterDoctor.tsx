@@ -59,7 +59,7 @@ const RegisterDoctor = () => {
         <Grid item container xs={10} md={11} justifyContent="flex-end" style={{ maxHeight: '30vh', padding: '16px' }}>
           <Grid item container xs={12} spacing={1} alignItems="center">
             <Grid item xs={12} md={5}>
-              <TextField variant="outlined" size="small" label="buscar..." fullWidth />
+              <TextField variant="outlined" size="small" label="Buscar..." fullWidth />
             </Grid>
             <Grid item xs={12} md={1}>
               <Button variant="contained" fullWidth size="small">
@@ -105,10 +105,10 @@ const RegisterDoctor = () => {
               </List>
             </Grid>
           </Grid>
-          <Grid item xs={12} md={6} style={{ marginRight: 50 }}>
-            <Fab size="small" color="primary" onClick={() => setaddOpen(true)}>
-              <Add />
-            </Fab>
+          <Grid item xs={12} md={6} style={{ marginRight: 95 }}>
+            <Button variant="contained" size="small" onClick={() => setaddOpen(true)}>
+              Adicionar
+            </Button>
           </Grid>
         </Grid>
       </Grid>

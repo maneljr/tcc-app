@@ -130,7 +130,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                 <Grid item xs={12} md={6}>
                   <ReactInputMask mask="(99)99999-9999" {...getFieldProps('celular')}>
                     {(inputProps: any) => (
-                      <TextField label="celular" variant="outlined" size="small" fullWidth {...inputProps} />
+                      <TextField label="Celular" variant="outlined" size="small" fullWidth {...inputProps} />
                     )}
                   </ReactInputMask>
                 </Grid>
