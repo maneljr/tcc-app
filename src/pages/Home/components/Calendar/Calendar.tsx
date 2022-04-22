@@ -53,10 +53,23 @@ const Calendar = () => {
       toast.warning('não pode marcar consulta antes da data atual!');
     } else if (index < new Date().getDate() && currentMonth <= new Date().getMonth()) {
       toast.warning('Marque um dia valido');
-    } else {
+    } else if (!verifySolicitations(index)) {
       setDay(index);
       setOpenRegister(true);
+    } else {
+      toast.warning('Já existe solicitação para este dia!');
     }
+  }
+
+  function verifySolicitations(daySelected: number) {
+    for (const s of solicitations) {
+      if (s.dia === daySelected) {
+        if (s.uid === user?.uid) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   return (
