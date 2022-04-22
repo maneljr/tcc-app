@@ -206,7 +206,11 @@ const Calendar = () => {
                               {solicitations.map((p) =>
                                 p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
                                   local === p.local || local === '' ? (
-                                    <Avatar sx={{ width: 25, height: 25 }} />
+                                    <Avatar
+                                      src={`${user?.photoURL}` === `${p.foto}` ? `${p.foto}` : ''}
+                                      alt={p.nome}
+                                      sx={{ width: 25, height: 25 }}
+                                    />
                                   ) : (
                                     ''
                                   )
