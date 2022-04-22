@@ -200,7 +200,23 @@ const Calendar = () => {
                           )}
                         </AvatarGroup>
                       ) : (
-                        ''
+                        <>
+                          <Tooltip title="Pacientes agendados" placement="right-end">
+                            <AvatarGroup max={5} spacing={1}>
+                              {solicitations.map((p) =>
+                                p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
+                                  local === p.local || local === '' ? (
+                                    <Avatar sx={{ width: 25, height: 25 }} />
+                                  ) : (
+                                    ''
+                                  )
+                                ) : (
+                                  ''
+                                )
+                              )}
+                            </AvatarGroup>
+                          </Tooltip>
+                        </>
                       )}
                     </Grid>
                   </Grid>
