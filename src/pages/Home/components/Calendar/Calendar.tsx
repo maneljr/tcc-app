@@ -28,6 +28,7 @@ const Calendar = () => {
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const currentMonth = React.useMemo(() => date.getMonth(), [date]);
+  const currentYear = React.useMemo(() => date.getFullYear(), [date]);
   const [rulesOpen, setRulesOpen] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
@@ -48,7 +49,7 @@ const Calendar = () => {
     if (verifyUser()) {
       setDay(index);
       setRulesOpen(true);
-    } else if (currentMonth < new Date().getMonth()) {
+    } else if (currentMonth < new Date().getMonth() || currentYear < new Date().getFullYear()) {
       toast.warning('não pode marcar consulta antes da data atual!');
     } else if (index < new Date().getDate() && currentMonth <= new Date().getMonth()) {
       toast.warning('Marque um dia valido');
@@ -158,7 +159,7 @@ const Calendar = () => {
               <S.Date
                 key={index}
                 className={
-                  currentMonth < new Date().getMonth()
+                  currentMonth < new Date().getMonth() || currentYear < new Date().getFullYear()
                     ? 'blankDark'
                     : index + 1 < new Date().getDate() && currentMonth <= new Date().getMonth()
                     ? 'blankDark'
