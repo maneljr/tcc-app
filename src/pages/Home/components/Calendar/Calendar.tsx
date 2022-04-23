@@ -33,9 +33,6 @@ const Calendar = () => {
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
 
-  // console.log(addDays(startOfWeek(date), date.getDay()));
-  // console.log(endOfWeek(date));
-
   const handleChangeLocal = (event: SelectChangeEvent) => {
     setLocal(event.target.value);
   };
@@ -52,9 +49,13 @@ const Calendar = () => {
     if (verifyUser()) {
       setDay(index);
       setRulesOpen(true);
-    } else if (currentMonth < new Date().getMonth() || currentYear < new Date().getFullYear()) {
+    } else if (currentMonth < new Date().getMonth() && currentYear <= new Date().getFullYear()) {
       toast.warning('não pode marcar consulta antes da data atual!');
-    } else if (index < new Date().getDate() && currentMonth <= new Date().getMonth()) {
+    } else if (
+      index < new Date().getDate() &&
+      currentMonth <= new Date().getMonth() &&
+      currentYear <= new Date().getFullYear()
+    ) {
       toast.warning('Marque um dia valido');
     } else if (
       `${format(addDays(startOfWeek(date), date.getDay() + index - 1), 'EEEE', { locale: ptBR })}` === 'sábado' ||
@@ -183,15 +184,28 @@ const Calendar = () => {
               <S.Date
                 key={index}
                 className={
-                  currentMonth < new Date().getMonth() || currentYear < new Date().getFullYear()
+                  currentYear < new Date().getFullYear()
                     ? 'blankDark'
-                    : index + 1 < new Date().getDate() && currentMonth <= new Date().getMonth()
+                    : currentMonth < new Date().getMonth() && currentYear <= new Date().getFullYear()
+                    ? 'blankDark'
+                    : index + 1 < new Date().getDate() &&
+                      currentMonth <= new Date().getMonth() &&
+                      currentYear <= new Date().getFullYear()
+                    ? 'blankDark'
+                    : `${format(addDays(startOfWeek(date), date.getDay() + index), 'EEEE', { locale: ptBR })}` ===
+                        'sábado' ||
+                      `${format(addDays(startOfWeek(date), date.getDay() + index), 'EEEE', { locale: ptBR })}` ===
+                        'domingo'
                     ? 'blankDark'
                     : 'blank'
                 }
                 style={{
                   borderColor:
-                    index + 1 === new Date().getDate() && currentMonth === new Date().getMonth() ? 'black' : '',
+                    index + 1 === new Date().getDate() &&
+                    currentMonth === new Date().getMonth() &&
+                    currentYear <= new Date().getFullYear()
+                      ? 'black'
+                      : '',
                 }}
                 onClick={() => {
                   check(index + 1);
