@@ -33,6 +33,9 @@ const Calendar = () => {
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
 
+  // console.log(addDays(startOfWeek(date), date.getDay()));
+  // console.log(endOfWeek(date));
+
   const handleChangeLocal = (event: SelectChangeEvent) => {
     setLocal(event.target.value);
   };
@@ -53,6 +56,11 @@ const Calendar = () => {
       toast.warning('não pode marcar consulta antes da data atual!');
     } else if (index < new Date().getDate() && currentMonth <= new Date().getMonth()) {
       toast.warning('Marque um dia valido');
+    } else if (
+      `${format(addDays(startOfWeek(date), date.getDay() + index - 1), 'EEEE', { locale: ptBR })}` === 'sábado' ||
+      `${format(addDays(startOfWeek(date), date.getDay() + index - 1), 'EEEE', { locale: ptBR })}` === 'domingo'
+    ) {
+      toast.warning('Posto fechado aos sábados e domingos');
     } else if (!verifySolicitations(index)) {
       setDay(index);
       setOpenRegister(true);
@@ -63,7 +71,7 @@ const Calendar = () => {
 
   function verifySolicitations(daySelected: number) {
     for (const s of solicitations) {
-      if (s.dia === daySelected) {
+      if (s.dia === daySelected && currentMonth === new Date().getMonth()) {
         if (s.uid === user?.uid) {
           return true;
         }
@@ -149,6 +157,7 @@ const Calendar = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
+
         <Grid item xs={12} style={{ minHeight: 40 }}>
           <S.Calendarweek>
             {Array.from({ length: 7 }).map((_, index) => (
@@ -160,9 +169,11 @@ const Calendar = () => {
             ))}
           </S.Calendarweek>
         </Grid>
+
         <Grid item xs={12}>
           <Divider />
         </Grid>
+
         <Grid item xs={12} style={{ minHeight: '100%', display: 'flex' }}>
           <S.CalendarContainer>
             {Array.from({ length: weekDayStart }).map((_, index) => (
@@ -178,7 +189,10 @@ const Calendar = () => {
                     ? 'blankDark'
                     : 'blank'
                 }
-                style={{ borderColor: index + 1 === new Date().getDate() ? 'black' : '' }}
+                style={{
+                  borderColor:
+                    index + 1 === new Date().getDate() && currentMonth === new Date().getMonth() ? 'black' : '',
+                }}
                 onClick={() => {
                   check(index + 1);
                 }}
