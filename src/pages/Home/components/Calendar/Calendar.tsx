@@ -24,7 +24,7 @@ import { ModalRegister } from '../ModalRegister/ModalRegister';
 import { colors } from './../../../../styles';
 
 const Calendar = () => {
-  const { user, solicitations, places, local, setLocal } = useContext(SessionContext);
+  const { dataCurrentUser, user, solicitations, places, local, setLocal } = useContext(SessionContext);
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const currentMonth = React.useMemo(() => date.getMonth(), [date]);
@@ -38,7 +38,7 @@ const Calendar = () => {
   };
 
   function verifyUser() {
-    if (user?.email?.split('@').slice(-1)[0].trim() === 'admin.com') {
+    if (dataCurrentUser?.admin) {
       return true;
     } else {
       return false;

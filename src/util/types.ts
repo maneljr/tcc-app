@@ -8,4 +8,5 @@ export interface IDataUsers {
   sus: string;
   uid: string;
   id: string;
+  admin: boolean;
 }

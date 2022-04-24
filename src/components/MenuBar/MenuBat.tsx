@@ -19,7 +19,7 @@ import { ModalSolicitations } from './components';
 
 const MenuBar = () => {
   const history = useHistory();
-  const { user, badge } = useContext(SessionContext);
+  const { dataCurrentUser, badge } = useContext(SessionContext);
   const [openModal, setOpenModal] = useState(false);
 
   function logOut() {
@@ -33,8 +33,8 @@ const MenuBar = () => {
       });
   }
 
-  function verify() {
-    if (user?.email?.split('@').slice(-1)[0].trim() === 'admin.com') {
+  function verifyUser() {
+    if (dataCurrentUser?.admin) {
       return true;
     } else {
       return false;
@@ -52,7 +52,7 @@ const MenuBar = () => {
             </IconButton>
           </Tooltip>
         </Grid>
-        {verify() ? (
+        {verifyUser() ? (
           <Grid item container spacing={1}>
             <Grid item>
               <Tooltip title="Casdastrar Posto" placement="right-end">
