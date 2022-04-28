@@ -157,9 +157,9 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                         {option.horario}
                       </li>
                     )}
-                    renderInput={(params) => (
+                    renderInput={(options) => (
                       <TextField
-                        {...params}
+                        {...options}
                         {...getFieldProps('atendimento')}
                         label="Horario de Atendimento"
                         fullWidth

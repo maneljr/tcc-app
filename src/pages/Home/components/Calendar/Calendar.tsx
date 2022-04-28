@@ -11,6 +11,7 @@ import {
   MenuItem,
   SelectChangeEvent,
   Tooltip,
+  Button,
 } from '@material-ui/core';
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Delete } from '@material-ui/icons';
 import { getDaysInMonth, format, addDays, startOfWeek, startOfMonth, addMonths, subMonths } from 'date-fns';
@@ -21,20 +22,26 @@ import * as S from './styles';
 import { ModalCheck } from '../ModalCheck/ModalCheck';
 import { SessionContext } from 'contexts';
 import { ModalRegister } from '../ModalRegister/ModalRegister';
-import { colors } from './../../../../styles';
+import { ModalCheckUser } from '../ModalCheckUser';
 
 const Calendar = () => {
-  const { dataCurrentUser, user, solicitations, places, local, setLocal } = useContext(SessionContext);
+  const { dataCurrentUser, user, solicitations, places, doctors, local, setLocal, setFilterDoctor, filterDoctor } =
+    useContext(SessionContext);
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const currentMonth = React.useMemo(() => date.getMonth(), [date]);
   const currentYear = React.useMemo(() => date.getFullYear(), [date]);
   const [rulesOpen, setRulesOpen] = useState(false);
+  const [modalDeletUser, setModalDeletUser] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
 
   const handleChangeLocal = (event: SelectChangeEvent) => {
     setLocal(event.target.value);
+  };
+
+  const handleChangeDoctor = (event: SelectChangeEvent) => {
+    setFilterDoctor(event.target.value);
   };
 
   function verifyUser() {
@@ -45,7 +52,7 @@ const Calendar = () => {
     }
   }
 
-  function check(index: number) {
+  function checkCalender(index: number) {
     if (verifyUser()) {
       setDay(index);
       setRulesOpen(true);
@@ -66,7 +73,8 @@ const Calendar = () => {
       setDay(index);
       setOpenRegister(true);
     } else {
-      toast.warning('Já existe solicitação para este dia!');
+      setDay(index);
+      setModalDeletUser(true);
     }
   }
 
@@ -90,14 +98,22 @@ const Calendar = () => {
         day={day}
         month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
       />
+      <ModalCheckUser
+        open={modalDeletUser}
+        onClose={() => setModalDeletUser(false)}
+        solicitations={solicitations}
+        day={day}
+        month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
+      />
       <ModalRegister
         open={openRegister}
         onClose={() => setOpenRegister(false)}
         day={day}
         month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
       />
-      <Grid container>
-        <Grid item container justifyContent="flex-start" alignItems="center" xs={2}>
+
+      <Grid container alignItems="center">
+        <Grid item container justifyContent="flex-start" alignItems="center" xs={3}>
           <Grid item>
             <IconButton onClick={() => setDate(subMonths(date, 1))}>
               <ChevronLeftIcon />
@@ -113,23 +129,35 @@ const Calendar = () => {
               <ChevronRightIcon />
             </IconButton>
           </Grid>
+          <Grid item>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setDate(startOfMonth(new Date()));
+              }}
+            >
+              Hoje
+            </Button>
+          </Grid>
         </Grid>
 
-        <Grid
-          item
-          container
-          alignItems="center"
-          justifyContent="flex-end"
-          xs={10}
-          style={{ paddingRight: 13 }}
-          spacing={1}
-        >
+        <Grid item container alignItems="center" justifyContent="flex-end" xs={9} spacing={2}>
           {verifyUser() ? (
             <>
               <Grid item>
-                <Typography className="capitalize-phrase" variant="body2" style={{ fontWeight: 'bold' }}>
-                  Local:
-                </Typography>
+                <Typography variant="body2">Filtros:</Typography>
+              </Grid>
+              <Grid item>
+                <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
+                  <Select value={filterDoctor} label="Local" onChange={handleChangeDoctor}>
+                    {doctors.map((p, index) => (
+                      <MenuItem value={p.nome} key={index}>
+                        <Typography variant="body2"> {p.nome}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item>
                 <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
@@ -143,11 +171,16 @@ const Calendar = () => {
                 </FormControl>
               </Grid>
               <Grid item>
-                <Tooltip title="Limpar filtro" placement="bottom" className="Light">
-                  <IconButton onClick={() => setLocal('')}>
-                    <Delete htmlColor={colors.mar} />
-                  </IconButton>
-                </Tooltip>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => {
+                    setLocal('');
+                    setFilterDoctor('');
+                  }}
+                >
+                  limpar
+                </Button>
               </Grid>
             </>
           ) : (
@@ -208,7 +241,7 @@ const Calendar = () => {
                       : '',
                 }}
                 onClick={() => {
-                  check(index + 1);
+                  checkCalender(index + 1);
                 }}
               >
                 <Grid container>
@@ -221,7 +254,8 @@ const Calendar = () => {
                         <AvatarGroup max={5} spacing={1}>
                           {solicitations.map((p) =>
                             p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
-                              local === p.local || local === '' ? (
+                              (local === p.local || local === '') &&
+                              (filterDoctor === p.medico || filterDoctor === '') ? (
                                 <Avatar
                                   src={p.foto}
                                   alt={p.nome}
@@ -251,6 +285,17 @@ const Calendar = () => {
                                       src={`${user?.photoURL}` === `${p.foto}` ? `${p.foto}` : ''}
                                       alt={p.nome}
                                       sx={{ width: 25, height: 25 }}
+                                      style={{
+                                        borderStyle: 'solid',
+                                        borderColor:
+                                          user?.photoURL === p.foto
+                                            ? p.status && p.verificado
+                                              ? 'green'
+                                              : !p.status && p.verificado
+                                              ? 'red'
+                                              : 'yellow'
+                                            : '',
+                                      }}
                                     />
                                   ) : (
                                     ''

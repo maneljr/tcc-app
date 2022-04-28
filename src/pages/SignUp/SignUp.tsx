@@ -238,7 +238,7 @@ const SignUp = () => {
           <Grid item container xs={12} justifyContent="center">
             <Grid item xs={12} md={4}>
               <S.TextSmall>
-                Não possui cadastro?{' '}
+                Já possui cadastro?{' '}
                 <span onClick={() => history.push('/signin')} className="text-action">
                   FAZER LOGIN
                 </span>

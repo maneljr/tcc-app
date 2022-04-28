@@ -102,7 +102,13 @@ const ModalRegister = (props: IModalRegister) => {
                   {places.map((p, index) => {
                     return (
                       <MenuItem value={p.nome} key={index}>
-                        <Typography variant="body2"> {p.nome} </Typography>
+                        <Typography variant="body2">
+                          {' '}
+                          {p.nome} : {'  '}
+                        </Typography>
+                        <Typography variant="body2" style={{ fontSize: 10 }}>
+                          {'  '}- Rua {p.rua}, bairro {p.bairro}, Nº {p.numero}{' '}
+                        </Typography>
                       </MenuItem>
                     );
                   })}

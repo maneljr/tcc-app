@@ -18,5 +18,7 @@ export interface ISessionContext {
   places: IPlace[];
   badge: number;
   local: string;
+  filterDoctor: string;
   setLocal: Dispatch<SetStateAction<string>>;
+  setFilterDoctor: Dispatch<SetStateAction<string>>;
 }
