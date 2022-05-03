@@ -4,7 +4,7 @@ import {
   Home as HomeIcon,
   Room as Location,
   LocalHospital as Doctor,
-  Assignment as Exame,
+  // Assignment as Exame,
   ExitToApp as SignOut,
   AccountCircle as UserName,
   NotificationsActive as Solicitation,
@@ -68,13 +68,13 @@ const MenuBar = () => {
                 </IconButton>
               </Tooltip>
             </Grid>
-            <Grid item>
+            {/* <Grid item>
               <Tooltip title="Cadastrar Exames" placement="right-end">
                 <IconButton onClick={() => history.push('/exams')} className="Light">
                   <Exame style={{ fontSize: 25 }} htmlColor={colors.mar} />
                 </IconButton>
               </Tooltip>
-            </Grid>
+            </Grid> */}
             <Grid item>
               <Tooltip title="Solicitações" placement="right-end">
                 <IconButton className="Light" onClick={() => setOpenModal(true)}>

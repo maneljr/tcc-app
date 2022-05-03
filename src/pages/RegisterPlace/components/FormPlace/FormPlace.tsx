@@ -1,16 +1,6 @@
 import React, { useContext, useState } from 'react';
-import {
-  Button,
-  Fab,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  TextField,
-} from '@material-ui/core';
-import { Delete, Add } from '@material-ui/icons';
+import { Button, Grid, IconButton, List, ListItem, ListItemButton, ListItemText, TextField } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 import { deleteDoc } from '@firebase/firestore';
 import { toast } from 'react-toastify';
 import { doc } from 'firebase/firestore';

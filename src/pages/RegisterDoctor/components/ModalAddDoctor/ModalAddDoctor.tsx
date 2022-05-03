@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Autocomplete,
   Button,
@@ -26,6 +26,7 @@ import { db } from 'services';
 const ModalAddDoctor = (props: ImodalAddDoctor) => {
   const { open, onClose } = props;
   const doctorsCollectionRef = collection(db, 'doctor');
+  const [point, setPoint] = useState<any[]>([]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -37,7 +38,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
       especialidade: '',
       crm: '',
       celular: '',
-      atendimento: '',
+      atendimento: point,
       cpf: '',
     },
     validateOnBlur: false,
@@ -48,7 +49,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
       especialidade: Yup.string().required('Campo Obrigatório'),
       crm: Yup.string().required('Campo Obrigatório'),
       celular: Yup.string(),
-      atendimento: Yup.string().required('Campo Obrigatório'),
+      atendimento: Yup.array().required('Campo Obrigatório'),
       cpf: Yup.string().required('Campo Obrigatório'),
     }),
     onSubmit: async (values) => {
@@ -157,14 +158,11 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                         {option.horario}
                       </li>
                     )}
-                    renderInput={(options) => (
-                      <TextField
-                        {...options}
-                        {...getFieldProps('atendimento')}
-                        label="Horario de Atendimento"
-                        fullWidth
-                        size="small"
-                      />
+                    onChange={(event, value) => {
+                      setPoint(value);
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Horario de Atendimento" fullWidth size="small" />
                     )}
                   />
                 </Grid>

@@ -22,7 +22,6 @@ import { toast } from 'react-toastify';
 import { IModalRegister, IRegister } from './types';
 import { db } from 'services';
 import { SessionContext } from 'contexts/SessionContext/SessionContext';
-import { setHours } from 'date-fns/esm';
 
 const ModalRegister = (props: IModalRegister) => {
   const dadosCollectionRef = collection(db, 'solicitation');

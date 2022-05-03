@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import {
   Button,
   Divider,
-  Fab,
   Grid,
   IconButton,
   List,
@@ -11,7 +10,7 @@ import {
   ListItemText,
   TextField,
 } from '@material-ui/core';
-import { Delete, Add } from '@material-ui/icons';
+import { Delete } from '@material-ui/icons';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 

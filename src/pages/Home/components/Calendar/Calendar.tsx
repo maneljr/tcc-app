@@ -13,7 +13,7 @@ import {
   Tooltip,
   Button,
 } from '@material-ui/core';
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Delete } from '@material-ui/icons';
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { getDaysInMonth, format, addDays, startOfWeek, startOfMonth, addMonths, subMonths } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { toast } from 'react-toastify';
@@ -252,11 +252,12 @@ const Calendar = () => {
                     <Grid item>
                       {verifyUser() ? (
                         <AvatarGroup max={5} spacing={1}>
-                          {solicitations.map((p) =>
+                          {solicitations.map((p, aux1) =>
                             p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
                               (local === p.local || local === '') &&
                               (filterDoctor === p.medico || filterDoctor === '') ? (
                                 <Avatar
+                                  key={aux1}
                                   src={p.foto}
                                   alt={p.nome}
                                   sx={{ width: 25, height: 25 }}
@@ -278,10 +279,11 @@ const Calendar = () => {
                         <>
                           <Tooltip title="Pacientes agendados" placement="right-end">
                             <AvatarGroup max={5} spacing={1}>
-                              {solicitations.map((p) =>
+                              {solicitations.map((p, aux) =>
                                 p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
                                   local === p.local || local === '' ? (
                                     <Avatar
+                                      key={aux}
                                       src={`${user?.photoURL}` === `${p.foto}` ? `${p.foto}` : ''}
                                       alt={p.nome}
                                       sx={{ width: 25, height: 25 }}
