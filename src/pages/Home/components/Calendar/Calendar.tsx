@@ -150,7 +150,7 @@ const Calendar = () => {
               </Grid>
               <Grid item>
                 <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-                  <Select value={filterDoctor} label="Local" onChange={handleChangeDoctor}>
+                  <Select value={filterDoctor} label="Doctor" onChange={handleChangeDoctor}>
                     {doctors.map((p, index) => (
                       <MenuItem value={p.nome} key={index}>
                         <Typography variant="body2"> {p.nome}</Typography>

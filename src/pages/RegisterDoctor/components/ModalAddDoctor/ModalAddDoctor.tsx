@@ -1,22 +1,23 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
-  Autocomplete,
   Button,
-  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  FormControl,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ReactInputMask from 'react-input-mask';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 import * as S from './styles';
 import { IAddDoctor, ImodalAddDoctor } from './types';
@@ -26,7 +27,6 @@ import { db } from 'services';
 const ModalAddDoctor = (props: ImodalAddDoctor) => {
   const { open, onClose } = props;
   const doctorsCollectionRef = collection(db, 'doctor');
-  const [point, setPoint] = useState<any[]>([]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -38,7 +38,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
       especialidade: '',
       crm: '',
       celular: '',
-      atendimento: point,
+      atendimento: [],
       cpf: '',
     },
     validateOnBlur: false,
@@ -56,6 +56,12 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
       try {
         await addDoc(doctorsCollectionRef, values);
         toast.success('Cadastro realizado!');
+        values.nome = '';
+        values.especialidade = '';
+        values.crm = '';
+        values.celular = '';
+
+        values.cpf = '';
         onClose();
       } catch (error: any) {
         toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao criar registro'}`);
@@ -67,19 +73,20 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
   const { getFieldProps } = formik;
 
   const availableTime = [
+    { horario: '07:00' },
+    { horario: '08:00' },
+    { horario: '09:00' },
     { horario: '13:00' },
-    { horario: '13:30' },
     { horario: '14:00' },
-    { horario: '14:30' },
     { horario: '15:00' },
-    { horario: '15:30' },
-    { horario: '16:00' },
-    { horario: '16:30' },
-    { horario: '17:00' },
   ];
-
-  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-  const checkedIcon = <CheckBoxIcon />;
+  const daysWeek = [
+    { nome: 'Segunda-feira' },
+    { nome: 'Terça-feira' },
+    { nome: 'Quarta-feira' },
+    { nome: 'Quinta-feira' },
+    { nome: 'Sexta-feira' },
+  ];
 
   return (
     <S.Container>
@@ -146,25 +153,38 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                     helperText={formik.errors.crm}
                   ></TextField>
                 </Grid>
+
                 <Grid item xs={12} md={12}>
-                  <Autocomplete
-                    multiple
-                    options={availableTime}
-                    disableCloseOnSelect
-                    getOptionLabel={(option) => option.horario}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
-                        {option.horario}
-                      </li>
-                    )}
-                    onChange={(event, value) => {
-                      setPoint(value);
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Horario de Atendimento" fullWidth size="small" />
-                    )}
-                  />
+                  <Typography variant="body2">Horário de atendimento :</Typography>
+                </Grid>
+                <Grid item>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <>
+                      <Grid item key={index}>
+                        <FormControl sx={{ m: 1, minWidth: 200, maxHeight: 22 }} variant="outlined" size="small">
+                          <InputLabel>Dia da semana</InputLabel>
+                          <Select label="Dia da semana">
+                            {daysWeek.map((p, auxOne) => (
+                              <MenuItem value={p.nome} key={auxOne}>
+                                <Typography variant="body2"> {p.nome}</Typography>
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <FormControl sx={{ m: 1, minWidth: 120, maxHeight: 22 }} variant="outlined" size="small">
+                          <InputLabel>Hórario</InputLabel>
+                          <Select label="Dia da semana">
+                            {availableTime.map((p, auxTwo) => (
+                              <MenuItem value={p.horario} key={auxTwo}>
+                                <Typography variant="body2"> {p.horario}</Typography>
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <TextField label="Max" size="small" type="number" sx={{ m: 1, maxWidth: 70 }} />
+                      </Grid>
+                    </>
+                  ))}
                 </Grid>
               </Grid>
             </Grid>

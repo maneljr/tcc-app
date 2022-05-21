@@ -8,6 +8,12 @@ export interface IAddDoctor {
   especialidade: string;
   crm: string;
   celular: string;
-  atendimento: string[];
+  atendimento: any[];
   cpf: string;
+}
+
+export interface IAtendimento {
+  semana: string;
+  horario: number;
+  max: number;
 }
