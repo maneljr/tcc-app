@@ -16,9 +16,7 @@ const HomePageComponent = () => {
         </Grid>
         <Divider orientation="vertical" variant="middle" flexItem />
         <Grid item container xs={10} md={11} style={{ maxHeight: 500, minWidth: '96%' }}>
-          <Grid item xs={12}>
-            <Calendar />
-          </Grid>
+          <Calendar />
         </Grid>
       </Grid>
     </S.Container>
