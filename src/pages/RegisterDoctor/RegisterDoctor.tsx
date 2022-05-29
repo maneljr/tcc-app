@@ -93,9 +93,7 @@ const RegisterDoctor = () => {
                           }}
                           id={`${index}`}
                           primary={`${p.nome}`}
-                          secondary={`CRM ${''}${p.crm}, Especialidade ${
-                            p.especialidade
-                          }, horario de atendimento ${''}${p.atendimento} `}
+                          secondary={` Especialidade: ${p.especialidade}, CRM: ${p.crm}, Celular: ${p.celular}`}
                         />
                       </ListItemButton>
                     </ListItem>

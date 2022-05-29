@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment } from 'react';
 import {
   Button,
   Dialog,
@@ -8,6 +8,7 @@ import {
   Divider,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -18,6 +19,7 @@ import { toast } from 'react-toastify';
 import { FormikProvider, FieldArray, useFormik } from 'formik';
 import * as Yup from 'yup';
 import ReactInputMask from 'react-input-mask';
+import { Delete } from '@material-ui/icons';
 
 import * as S from './styles';
 import { IAddDoctor, ImodalAddDoctor } from './types';
@@ -28,9 +30,10 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
   const { open, onClose } = props;
   const doctorsCollectionRef = collection(db, 'doctor');
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
+    clearFildes();
     onClose();
-  }, [onClose]);
+  };
 
   const formik = useFormik<IAddDoctor>({
     initialValues: {
@@ -68,11 +71,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
       try {
         await addDoc(doctorsCollectionRef, values);
         toast.success('Cadastro realizado!');
-        values.nome = '';
-        values.especialidade = '';
-        values.crm = '';
-        values.celular = '';
-        values.cpf = '';
+        clearFildes();
         onClose();
       } catch (error: any) {
         toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro ao criar registro'}`);
@@ -82,6 +81,15 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
   });
 
   const { getFieldProps, values } = formik;
+
+  const clearFildes = () => {
+    values.nome = '';
+    values.especialidade = '';
+    values.crm = '';
+    values.celular = '';
+    values.cpf = '';
+    values.atendimento = [];
+  };
 
   const availableTime = [
     { horario: '07:00' },
@@ -99,8 +107,6 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
     { nome: 'Quinta-feira' },
     { nome: 'Sexta-feira' },
   ];
-
-  console.log(values);
 
   return (
     <S.Container>
@@ -175,7 +181,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                   <Grid item xs={12}>
                     <FieldArray
                       name="atendimento"
-                      render={({ push }) => {
+                      render={({ push, pop }) => {
                         return (
                           <div>
                             <div>
@@ -217,6 +223,11 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                                       sx={{ m: 1, maxWidth: 70 }}
                                       {...getFieldProps(`atendimento[${index}].max`)}
                                     />
+                                  </Grid>
+                                  <Grid item>
+                                    <IconButton edge="end" onClick={() => {}}>
+                                      <Delete />
+                                    </IconButton>
                                   </Grid>
                                 </Fragment>
                               ))}

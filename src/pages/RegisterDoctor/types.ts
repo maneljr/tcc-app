@@ -1,6 +1,8 @@
+import { IAtendimento } from './components/ModalAddDoctor/types';
+
 export interface IDoctor {
   id: string;
-  atendimento: string;
+  atendimento: IAtendimento[];
   cpf: string;
   celular: string;
   nome: string;
@@ -8,7 +10,14 @@ export interface IDoctor {
   especialidade: string;
 }
 
-export type IDoctorUpdate = Omit<IDoctor, 'id'>;
+export interface IDoctorUpdate {
+  atendimento: IAtendimento[];
+  cpf: string;
+  celular: string;
+  nome: string;
+  crm: string;
+  especialidade: string;
+}
 
 export interface IModalUpdateDoctor {
   doctor?: IDoctor;
