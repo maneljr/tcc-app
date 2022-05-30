@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from 'react';
+import React, { Fragment, useCallback, useContext } from 'react';
 import {
   Button,
   Dialog,
@@ -8,6 +8,7 @@ import {
   Divider,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -18,6 +19,7 @@ import { doc } from '@firebase/firestore';
 import { updateDoc } from 'firebase/firestore';
 import { FieldArray, FormikProvider, useFormik } from 'formik';
 import * as Yup from 'yup';
+import { Delete } from '@material-ui/icons';
 
 import * as S from './styles';
 
@@ -25,9 +27,11 @@ import { db } from 'services';
 import { IModalUpdateDoctor, IDoctorUpdate } from 'pages/RegisterDoctor/types';
 import { toast } from 'react-toastify';
 import ReactInputMask from 'react-input-mask';
+import { SessionContext } from 'contexts';
 
 const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
   const { open, onClose, doctor } = props;
+  const { places } = useContext(SessionContext);
 
   const formik = useFormik<IDoctorUpdate>({
     initialValues: {
@@ -37,6 +41,7 @@ const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
       cpf: doctor?.cpf ?? '',
       crm: doctor?.crm ?? '',
       especialidade: doctor?.especialidade ?? '',
+      local: doctor?.local ?? '',
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -54,12 +59,13 @@ const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
       cpf: Yup.string().required('Campo obrigatório'),
       crm: Yup.string().required('Campo obrigatório'),
       especialidade: Yup.string().required('Campo obrigatório'),
+      local: Yup.string().required('Campo obrigatório'),
     }),
     onSubmit: async (values) => {
       if (doctor?.id) {
         try {
           const doctorDoc = doc(db, 'doctor', doctor.id);
-          await updateDoc(doctorDoc, { values });
+          await updateDoc(doctorDoc, { ...values });
           toast.success('Registro alterado!');
           onClose();
         } catch (error: any) {
@@ -100,134 +106,162 @@ const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
       <Dialog open={open} onClose={onClose}>
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
-            <DialogTitle>Editar Medicos</DialogTitle>
+            <DialogTitle>Editar Cadastro</DialogTitle>
             <Divider />
             <DialogContent>
-              <Grid container>
-                <Grid item container spacing={2}>
-                  <Grid item container xs={12} md={12}>
-                    <TextField
-                      label="Nome do Medico"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      {...getFieldProps('nome')}
-                      error={!!formik.errors.nome}
-                      helperText={formik.errors.nome}
-                    ></TextField>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      label="Especialidade"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      {...getFieldProps('especialidade')}
-                      error={!!formik.errors.especialidade}
-                      helperText={formik.errors.especialidade}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <ReactInputMask mask="999.999.999-99" {...getFieldProps('cpf')}>
-                      {(inputProps: any) => (
-                        <TextField
-                          label="CPF"
-                          variant="outlined"
-                          size="small"
-                          fullWidth
-                          {...inputProps}
-                          error={!!formik.errors.cpf}
-                          helperText={formik.errors.cpf}
-                        />
-                      )}
-                    </ReactInputMask>
-                  </Grid>
+              <Grid container spacing={2}>
+                <Grid item container xs={12} md={12}>
+                  <TextField
+                    label="Nome do Medico"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    {...getFieldProps('nome')}
+                    error={!!formik.errors.nome}
+                    helperText={formik.errors.nome}
+                  ></TextField>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="Especialidade"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    {...getFieldProps('especialidade')}
+                    error={!!formik.errors.especialidade}
+                    helperText={formik.errors.especialidade}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <ReactInputMask mask="999.999.999-99" {...getFieldProps('cpf')}>
+                    {(inputProps: any) => (
+                      <TextField
+                        label="CPF"
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        {...inputProps}
+                        error={!!formik.errors.cpf}
+                        helperText={formik.errors.cpf}
+                      />
+                    )}
+                  </ReactInputMask>
+                </Grid>
 
-                  <Grid item xs={12} md={6}>
-                    <ReactInputMask mask="(99)99999-9999" {...getFieldProps('celular')}>
-                      {(inputProps: any) => (
-                        <TextField label="Celular" variant="outlined" size="small" fullWidth {...inputProps} />
-                      )}
-                    </ReactInputMask>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      label="CRM"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      {...getFieldProps('crm')}
-                      error={!!formik.errors.crm}
-                      helperText={formik.errors.crm}
-                    ></TextField>
-                  </Grid>
+                <Grid item xs={12} md={6}>
+                  <ReactInputMask mask="(99)99999-9999" {...getFieldProps('celular')}>
+                    {(inputProps: any) => (
+                      <TextField label="Celular" variant="outlined" size="small" fullWidth {...inputProps} />
+                    )}
+                  </ReactInputMask>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    label="CRM"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    {...getFieldProps('crm')}
+                    error={!!formik.errors.crm}
+                    helperText={formik.errors.crm}
+                  ></TextField>
+                </Grid>
 
-                  <Grid item xs={12} md={12}>
-                    <Typography variant="body2">Horário de atendimento :</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FieldArray
-                      name="atendimento"
-                      render={({ push }) => {
-                        return (
+                <FieldArray
+                  name="local"
+                  render={() => {
+                    return (
+                      <FormControl
+                        sx={{ m: 1, minWidth: 270, maxHeight: 22, marginLeft: 2 }}
+                        variant="outlined"
+                        size="small"
+                      >
+                        <InputLabel>Local atendimento</InputLabel>
+                        <Select label="local atendimento" {...getFieldProps('local')}>
+                          {places.map((p, auxOne) => (
+                            <MenuItem value={p.nome} key={auxOne}>
+                              <Typography variant="body2"> {p.nome}</Typography>
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    );
+                  }}
+                />
+
+                <Grid item xs={12} md={12}>
+                  <Typography variant="body2">Horário de atendimento :</Typography>
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <FieldArray
+                    name="atendimento"
+                    render={({ push, remove }) => {
+                      return (
+                        <div>
                           <div>
-                            <div>
-                              {values?.atendimento.map((_, index) => (
-                                <Fragment key={index}>
-                                  <Grid item>
-                                    <FormControl
-                                      sx={{ m: 1, minWidth: 200, maxHeight: 22 }}
-                                      variant="outlined"
-                                      size="small"
-                                    >
-                                      <InputLabel>Dia da semana</InputLabel>
-                                      <Select label="Dia da semana" {...getFieldProps(`atendimento[${index}].dia`)}>
-                                        {daysWeek.map((d, auxOne) => (
-                                          <MenuItem value={d.nome} key={auxOne}>
-                                            <Typography variant="body2"> {d.nome}</Typography>
-                                          </MenuItem>
-                                        ))}
-                                      </Select>
-                                    </FormControl>
-                                    <FormControl
-                                      sx={{ m: 1, minWidth: 120, maxHeight: 22 }}
-                                      variant="outlined"
-                                      size="small"
-                                    >
-                                      <InputLabel>Hórario</InputLabel>
-                                      <Select label="Horário" {...getFieldProps(`atendimento[${index}].horario`)}>
-                                        {availableTime.map((p, auxTwo) => (
-                                          <MenuItem value={p.horario} key={auxTwo}>
-                                            <Typography variant="body2"> {p.horario}</Typography>
-                                          </MenuItem>
-                                        ))}
-                                      </Select>
-                                    </FormControl>
-                                    <TextField
-                                      label="Max"
-                                      size="small"
-                                      type="number"
-                                      sx={{ m: 1, maxWidth: 70 }}
-                                      {...getFieldProps(`atendimento[${index}].max`)}
-                                    />
-                                  </Grid>
-                                </Fragment>
-                              ))}
-                            </div>
-                            <div>
-                              <Button
-                                onClick={() => {
-                                  push({ horario: availableTime[0].horario, dia: daysWeek[0].nome, max: 1 });
-                                }}
-                              >
-                                Adicionar
-                              </Button>
-                            </div>
+                            {values.atendimento.map((_, index) => (
+                              <Fragment key={index}>
+                                <Grid item>
+                                  <FormControl
+                                    sx={{ m: 1, minWidth: 200, maxHeight: 22 }}
+                                    variant="outlined"
+                                    size="small"
+                                  >
+                                    <InputLabel>Dia da semana</InputLabel>
+                                    <Select label="Dia da semana" {...getFieldProps(`atendimento[${index}].dia`)}>
+                                      {daysWeek.map((p, auxOne) => (
+                                        <MenuItem value={p.nome} key={auxOne}>
+                                          <Typography variant="body2"> {p.nome}</Typography>
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                  <FormControl
+                                    sx={{ m: 1, minWidth: 120, maxHeight: 22 }}
+                                    variant="outlined"
+                                    size="small"
+                                  >
+                                    <InputLabel>Hórario</InputLabel>
+                                    <Select label="Horário" {...getFieldProps(`atendimento[${index}].horario`)}>
+                                      {availableTime.map((p, auxTwo) => (
+                                        <MenuItem value={p.horario} key={auxTwo}>
+                                          <Typography variant="body2"> {p.horario}</Typography>
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                  <TextField
+                                    label="Max"
+                                    size="small"
+                                    type="number"
+                                    sx={{ m: 1, maxWidth: 70 }}
+                                    {...getFieldProps(`atendimento[${index}].max`)}
+                                  />
+                                  <IconButton
+                                    edge="end"
+                                    onClick={() => {
+                                      remove(index);
+                                    }}
+                                  >
+                                    <Delete />
+                                  </IconButton>
+                                </Grid>
+                              </Fragment>
+                            ))}
                           </div>
-                        );
-                      }}
-                    />
-                  </Grid>
+                          <div>
+                            <Button
+                              onClick={() => {
+                                push({ horario: availableTime[0].horario, dia: daysWeek[0].nome, max: 1 });
+                              }}
+                            >
+                              Adicionar
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    }}
+                  />
                 </Grid>
               </Grid>
             </DialogContent>
@@ -235,7 +269,6 @@ const ModalUpdateDoctor = (props: IModalUpdateDoctor) => {
               <Button variant="outlined" color="error" onClick={handleClose}>
                 Cancelar
               </Button>
-
               <Button variant="contained" type="submit" color="success">
                 Salvar
               </Button>

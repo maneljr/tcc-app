@@ -4,6 +4,7 @@ export interface ImodalAddDoctor {
 }
 
 export interface IAddDoctor {
+  local: string;
   nome: string;
   especialidade: string;
   crm: string;

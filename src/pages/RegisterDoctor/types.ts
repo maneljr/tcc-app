@@ -8,9 +8,11 @@ export interface IDoctor {
   nome: string;
   crm: string;
   especialidade: string;
+  local: string;
 }
 
 export interface IDoctorUpdate {
+  local: string;
   atendimento: IAtendimento[];
   cpf: string;
   celular: string;

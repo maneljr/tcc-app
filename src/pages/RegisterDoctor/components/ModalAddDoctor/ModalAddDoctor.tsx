@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import {
   Button,
   Dialog,
@@ -25,10 +25,12 @@ import * as S from './styles';
 import { IAddDoctor, ImodalAddDoctor } from './types';
 import { addDoc, collection } from '@firebase/firestore';
 import { db } from 'services';
+import { SessionContext } from 'contexts';
 
 const ModalAddDoctor = (props: ImodalAddDoctor) => {
   const { open, onClose } = props;
   const doctorsCollectionRef = collection(db, 'doctor');
+  const { places } = useContext(SessionContext);
 
   const handleClose = () => {
     clearFildes();
@@ -49,6 +51,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
         },
       ],
       cpf: '',
+      local: '',
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -66,6 +69,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
         })
       ),
       cpf: Yup.string().required('Campo Obrigatório'),
+      local: Yup.string().required('Campo Obrigatório'),
     }),
     onSubmit: async (values) => {
       try {
@@ -175,13 +179,35 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                     ></TextField>
                   </Grid>
 
+                  <FieldArray
+                    name="local"
+                    render={() => {
+                      return (
+                        <FormControl
+                          sx={{ m: 1, minWidth: 270, maxHeight: 22, marginLeft: 2 }}
+                          variant="outlined"
+                          size="small"
+                        >
+                          <InputLabel>Local atendimento</InputLabel>
+                          <Select label="local atendimento" {...getFieldProps('local')}>
+                            {places.map((p, auxOne) => (
+                              <MenuItem value={p.nome} key={auxOne}>
+                                <Typography variant="body2"> {p.nome}</Typography>
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      );
+                    }}
+                  />
+
                   <Grid item xs={12} md={12}>
                     <Typography variant="body2">Horário de atendimento :</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <FieldArray
                       name="atendimento"
-                      render={({ push, pop }) => {
+                      render={({ push, remove }) => {
                         return (
                           <div>
                             <div>
@@ -223,9 +249,12 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                                       sx={{ m: 1, maxWidth: 70 }}
                                       {...getFieldProps(`atendimento[${index}].max`)}
                                     />
-                                  </Grid>
-                                  <Grid item>
-                                    <IconButton edge="end" onClick={() => {}}>
+                                    <IconButton
+                                      edge="end"
+                                      onClick={() => {
+                                        remove(index);
+                                      }}
+                                    >
                                       <Delete />
                                     </IconButton>
                                   </Grid>
