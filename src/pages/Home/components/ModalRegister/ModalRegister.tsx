@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -22,11 +22,15 @@ import { toast } from 'react-toastify';
 import { IModalRegister, IRegister } from './types';
 import { db } from 'services';
 import { SessionContext } from 'contexts/SessionContext/SessionContext';
+import { IAtendimento } from 'pages/RegisterDoctor/components/ModalAddDoctor/types';
+import { IPlace } from 'pages/RegisterPlace/components/ModalUpdatePlace/types';
 
 const ModalRegister = (props: IModalRegister) => {
   const dadosCollectionRef = collection(db, 'solicitation');
   const { open, onClose, day, month } = props;
   const { user, dataCurrentUser, doctors, places } = useContext(SessionContext);
+  const [doctorTime, setDoctorTime] = useState<IAtendimento[]>([]);
+  const [doctorPlace, setdoctorPlace] = useState<IPlace>();
 
   const handleClose = useCallback(() => {
     onClose();
@@ -49,9 +53,9 @@ const ModalRegister = (props: IModalRegister) => {
 
   const formik = useFormik<IRegister>({
     initialValues: {
-      horario: `${time}`,
-      medico: `${doctor}`,
-      local: `${place}`,
+      horario: time,
+      medico: doctor,
+      local: place,
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -87,41 +91,38 @@ const ModalRegister = (props: IModalRegister) => {
     },
   });
 
+  useEffect(() => {
+    const medico = doctors.find((d) => d.nome === formik.values.medico);
+
+    if (medico) {
+      setDoctorTime(medico.atendimento);
+
+      const local = places.find((p) => p.nome === medico.local);
+
+      if (local) {
+        setdoctorPlace(local);
+        formik.setFieldValue('local', `${local.nome} - Rua ${local.rua} ${local.numero}, ${local.cidade}`);
+      }
+    }
+  }, [formik.values.medico]);
+
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Solicitações</DialogTitle>
+      <DialogTitle>Solicitação</DialogTitle>
       <Divider />
       <form onSubmit={formik.handleSubmit}>
         <DialogContent>
           <Grid container>
             <Grid item xs={12}>
-              <FormControl sx={{ m: 1, minWidth: 150 }} variant="outlined" size="small" fullWidth>
-                <InputLabel>Local</InputLabel>
-                <Select value={formik.values.local} label="Local" onChange={handleChangePlace}>
-                  {places.map((p, index) => {
-                    return (
-                      <MenuItem value={p.nome} key={index}>
-                        <Typography variant="body2">
-                          {' '}
-                          {p.nome} : {'  '}
-                        </Typography>
-                        <Typography variant="body2" style={{ fontSize: 10 }}>
-                          {'  '}- Rua {p.rua}, bairro {p.bairro}, Nº {p.numero}{' '}
-                        </Typography>
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Médico</InputLabel>
-                <Select value={formik.values.medico} label="medico" onChange={handleChangeDoctor}>
+                <Select value={doctor} label="medico" onChange={handleChangeDoctor}>
                   {doctors.map((d, index) => {
                     return (
                       <MenuItem value={d.nome} key={index}>
-                        <Typography variant="body2">{d.nome}</Typography>
+                        <Typography variant="body2">
+                          {d.nome} - {d.especialidade}
+                        </Typography>
                       </MenuItem>
                     );
                   })}
@@ -130,20 +131,28 @@ const ModalRegister = (props: IModalRegister) => {
             </Grid>
             <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
+                <InputLabel>Local</InputLabel>
+                <Select value={place} label="local" onChange={handleChangePlace}>
+                  <MenuItem
+                    value={`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}, ${doctorPlace?.cidade}`}
+                  >
+                    <Typography variant="body2">{`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}, ${doctorPlace?.cidade}`}</Typography>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Horario</InputLabel>
-                <Select value={formik.values.horario} label="horario" onChange={handleChangeTime}>
-                  <MenuItem value="13:00">
-                    <Typography variant="body2">13:00</Typography>
-                  </MenuItem>
-                  <MenuItem value="13:30">
-                    <Typography variant="body2">13:30</Typography>
-                  </MenuItem>
-                  <MenuItem value="14:00">
-                    <Typography variant="body2">14:00</Typography>
-                  </MenuItem>
-                  <MenuItem value="14:30">
-                    <Typography variant="body2">14:30</Typography>
-                  </MenuItem>
+                <Select value={time} label="horario" onChange={handleChangeTime}>
+                  {doctorTime.map((d, index) => {
+                    return (
+                      <MenuItem value={`${d.dia} as ${d.horario} Horas`} key={index}>
+                        <Typography variant="body2">{`${d.dia} as ${d.horario} Horas`}</Typography>
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </FormControl>
             </Grid>

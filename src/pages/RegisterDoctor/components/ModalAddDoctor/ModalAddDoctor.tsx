@@ -243,7 +243,7 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                                       </Select>
                                     </FormControl>
                                     <TextField
-                                      label="Max"
+                                      label="Vagas"
                                       size="small"
                                       type="number"
                                       sx={{ m: 1, maxWidth: 70 }}

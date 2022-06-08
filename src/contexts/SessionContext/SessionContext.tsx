@@ -20,6 +20,7 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
   const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [places, setPlaces] = useState<IPlace[]>([]);
   const [local, setLocal] = useState<string>('');
+
   const [filterDoctor, setFilterDoctor] = useState<string>('');
 
   const badge = useMemo(
