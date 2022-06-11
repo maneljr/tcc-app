@@ -27,12 +27,18 @@ import { IPlace } from 'pages/RegisterPlace/components/ModalUpdatePlace/types';
 
 const ModalRegister = (props: IModalRegister) => {
   const dadosCollectionRef = collection(db, 'solicitation');
-  const { open, onClose, day, month } = props;
+  const { open, onClose, day, month, week } = props;
   const { user, dataCurrentUser, doctors, places } = useContext(SessionContext);
-  const [doctorTime, setDoctorTime] = useState<IAtendimento[]>([]);
   const [doctorPlace, setdoctorPlace] = useState<IPlace>();
+  const [timeDoctor, setTimeDoctor] = useState<IAtendimento>();
+
+  const noTime = 'O médico desejado não atende neste dia da semana';
+  const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
 
   const handleClose = useCallback(() => {
+    setTime('');
+    setPlace('');
+    setDoctor('');
     onClose();
   }, [onClose]);
 
@@ -43,6 +49,8 @@ const ModalRegister = (props: IModalRegister) => {
 
   const [doctor, setDoctor] = React.useState('');
   const handleChangeDoctor = (event: SelectChangeEvent) => {
+    setTime('');
+    setPlace('');
     setDoctor(event.target.value);
   };
 
@@ -92,19 +100,25 @@ const ModalRegister = (props: IModalRegister) => {
   });
 
   useEffect(() => {
-    const medico = doctors.find((d) => d.nome === formik.values.medico);
+    console.log('passei userEffect');
+    const medico = doctors.find((d) => d.nome === doctor);
 
     if (medico) {
-      setDoctorTime(medico.atendimento);
-
+      console.log(medico.nome);
       const local = places.find((p) => p.nome === medico.local);
-
       if (local) {
         setdoctorPlace(local);
-        formik.setFieldValue('local', `${local.nome} - Rua ${local.rua} ${local.numero}, ${local.cidade}`);
+      }
+
+      const findweek = medico.atendimento.find((t) => t.dia === weekUp);
+      console.log(findweek?.dia, weekUp);
+      if (findweek) {
+        setTimeDoctor(findweek);
+      } else {
+        setTimeDoctor({ dia: '', horario: noTime, max: 0 });
       }
     }
-  }, [formik.values.medico]);
+  }, [doctor]);
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -133,10 +147,8 @@ const ModalRegister = (props: IModalRegister) => {
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Local</InputLabel>
                 <Select value={place} label="local" onChange={handleChangePlace}>
-                  <MenuItem
-                    value={`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}, ${doctorPlace?.cidade}`}
-                  >
-                    <Typography variant="body2">{`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}, ${doctorPlace?.cidade}`}</Typography>
+                  <MenuItem value={`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}`}>
+                    <Typography variant="body2">{`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}`}</Typography>
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -146,13 +158,9 @@ const ModalRegister = (props: IModalRegister) => {
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Horario</InputLabel>
                 <Select value={time} label="horario" onChange={handleChangeTime}>
-                  {doctorTime.map((d, index) => {
-                    return (
-                      <MenuItem value={`${d.dia} as ${d.horario} Horas`} key={index}>
-                        <Typography variant="body2">{`${d.dia} as ${d.horario} Horas`}</Typography>
-                      </MenuItem>
-                    );
-                  })}
+                  <MenuItem value={`${timeDoctor?.horario}`}>
+                    <Typography variant="body2">{`${timeDoctor?.horario}`}</Typography>
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>

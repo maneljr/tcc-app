@@ -3,6 +3,7 @@ export interface IModalRegister {
   onClose: () => void;
   day: number;
   month: string;
+  week: string;
 }
 
 export interface IRegister {

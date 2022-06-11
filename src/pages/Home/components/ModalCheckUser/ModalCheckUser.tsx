@@ -51,7 +51,7 @@ const ModalCheckUser = (props: IModalCheckUser) => {
                   <Avatar src={s.foto} alt={s.nome} />
                 </Grid>
 
-                <Grid item container xs={8}>
+                <Grid item container xs={10}>
                   <Grid item container alignItems="center" spacing={1}>
                     <Grid item>
                       <Typography variant="body1" style={{ fontWeight: 'bold' }}>
@@ -93,7 +93,7 @@ const ModalCheckUser = (props: IModalCheckUser) => {
                     </Grid>
                     <Grid item>
                       <Typography variant="body2">
-                        {s.horario} dia {s.dia} de {''}
+                        As {s.horario} horas, dia {s.dia} de {''}
                         {s.mes}
                       </Typography>
                     </Grid>
@@ -116,7 +116,7 @@ const ModalCheckUser = (props: IModalCheckUser) => {
                   </Grid>
                 </Grid>
 
-                <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
+                <Grid item container xs={1} alignItems="center" justifyContent="flex-end">
                   <IconButton onClick={() => deleteRegister(s.id)}>
                     <Delete htmlColor="black" />
                   </IconButton>

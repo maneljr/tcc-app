@@ -35,6 +35,7 @@ const Calendar = () => {
   const [modalDeletUser, setModalDeletUser] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
+  const [indexWeek, setIndexWeek] = useState<number>(0);
 
   const handleChangeLocal = (event: SelectChangeEvent) => {
     setLocal(event.target.value);
@@ -110,6 +111,7 @@ const Calendar = () => {
         onClose={() => setOpenRegister(false)}
         day={day}
         month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
+        week={format(addDays(startOfWeek(date), indexWeek + 2), 'EEEE', { locale: ptBR })}
       />
 
       <Grid container alignItems="center">
@@ -242,6 +244,7 @@ const Calendar = () => {
                 }}
                 onClick={() => {
                   checkCalender(index + 1);
+                  setIndexWeek(index + 1);
                 }}
               >
                 <Grid container>
