@@ -91,7 +91,7 @@ const ModalCheck = (props: IModalCheck) => {
                   <Avatar src={s.foto} alt={s.nome} />
                 </Grid>
 
-                <Grid item container xs={8}>
+                <Grid item container xs={9}>
                   <Grid item container alignItems="center" spacing={1}>
                     <Grid item>
                       <Typography variant="body1" style={{ fontWeight: 'bold' }}>
@@ -140,7 +140,7 @@ const ModalCheck = (props: IModalCheck) => {
                   </Grid>
                 </Grid>
                 {s.verificado ? (
-                  <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
+                  <Grid item container xs={2} alignItems="center" justifyContent="flex-end">
                     <IconButton onClick={() => updateEdit(s.id)}>
                       <Edit htmlColor={s.status ? '#316F3D' : '#E75A5F'} />
                     </IconButton>
@@ -149,7 +149,7 @@ const ModalCheck = (props: IModalCheck) => {
                     </IconButton>
                   </Grid>
                 ) : (
-                  <Grid item container xs={3} alignItems="center" justifyContent="flex-end">
+                  <Grid item container xs={2} alignItems="center" justifyContent="flex-end">
                     <IconButton onClick={() => updateConfirmed(s.id)}>
                       <ThumbUpAlt htmlColor="#316F3D" />
                     </IconButton>

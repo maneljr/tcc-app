@@ -31,11 +31,15 @@ const ModalRegister = (props: IModalRegister) => {
   const { user, dataCurrentUser, doctors, places } = useContext(SessionContext);
   const [doctorPlace, setdoctorPlace] = useState<IPlace>();
   const [timeDoctor, setTimeDoctor] = useState<IAtendimento>();
+  const [visibleFieldPlace, setVisibleFieldPlace] = useState<boolean>(true);
+  const [visibleFieldTime, setVisibleFieldTime] = useState<boolean>(true);
 
   const noTime = 'O médico desejado não atende neste dia da semana';
   const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
 
   const handleClose = useCallback(() => {
+    setVisibleFieldPlace(true);
+    setVisibleFieldTime(true);
     setTime('');
     setPlace('');
     setDoctor('');
@@ -49,6 +53,8 @@ const ModalRegister = (props: IModalRegister) => {
 
   const [doctor, setDoctor] = React.useState('');
   const handleChangeDoctor = (event: SelectChangeEvent) => {
+    setVisibleFieldPlace(false);
+    setVisibleFieldTime(false);
     setTime('');
     setPlace('');
     setDoctor(event.target.value);
@@ -69,7 +75,7 @@ const ModalRegister = (props: IModalRegister) => {
     validateOnChange: false,
     enableReinitialize: true,
     validationSchema: Yup.object().shape({
-      horario: Yup.string().required('Campo Obrigatório'),
+      horario: Yup.string().max(5, 'Não pussi horario disponivel neste dia ').required('Campo Obrigatório'),
       medico: Yup.string().required('Campo Obrigatório'),
       local: Yup.string().required('Campo Obrigatório'),
     }),
@@ -146,7 +152,7 @@ const ModalRegister = (props: IModalRegister) => {
             <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Local</InputLabel>
-                <Select value={place} label="local" onChange={handleChangePlace}>
+                <Select disabled={visibleFieldPlace} value={place} label="local" onChange={handleChangePlace}>
                   <MenuItem value={`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}`}>
                     <Typography variant="body2">{`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}`}</Typography>
                   </MenuItem>
@@ -157,7 +163,7 @@ const ModalRegister = (props: IModalRegister) => {
             <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Horario</InputLabel>
-                <Select value={time} label="horario" onChange={handleChangeTime}>
+                <Select disabled={visibleFieldTime} value={time} label="horario" onChange={handleChangeTime}>
                   <MenuItem value={`${timeDoctor?.horario}`}>
                     <Typography variant="body2">{`${timeDoctor?.horario}`}</Typography>
                   </MenuItem>

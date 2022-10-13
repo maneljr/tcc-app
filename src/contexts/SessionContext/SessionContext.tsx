@@ -41,7 +41,6 @@ const SessionProvider = ({ children }: { children?: React.ReactNode }) => {
     auth.onAuthStateChanged((userData) => {
       if (userData) {
         setUser(userData);
-        console.log('tem alguem locado');
 
         history.push('/');
       } else {

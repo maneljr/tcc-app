@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Grid,
   Typography,
@@ -23,10 +23,10 @@ import { ModalCheck } from '../ModalCheck/ModalCheck';
 import { SessionContext } from 'contexts';
 import { ModalRegister } from '../ModalRegister/ModalRegister';
 import { ModalCheckUser } from '../ModalCheckUser';
+import { IDoctor } from 'pages/RegisterDoctor/types';
 
 const Calendar = () => {
-  const { dataCurrentUser, user, solicitations, places, doctors, local, setLocal, setFilterDoctor, filterDoctor } =
-    useContext(SessionContext);
+  const { dataCurrentUser, user, solicitations, places, doctors, local, setLocal } = useContext(SessionContext);
   const [date, setDate] = React.useState<Date>(startOfMonth(new Date()));
   const weekDayStart = React.useMemo(() => date.getDay(), [date]);
   const currentMonth = React.useMemo(() => date.getMonth(), [date]);
@@ -36,13 +36,27 @@ const Calendar = () => {
   const [openRegister, setOpenRegister] = useState(false);
   const [day, setDay] = useState<number>(0);
   const [indexWeek, setIndexWeek] = useState<number>(0);
+  const [filterDoctor, setFilterDoctor] = useState<IDoctor>({
+    id: '',
+    atendimento: [],
+    cpf: '',
+    celular: '',
+    nome: '',
+    crm: '',
+    especialidade: '',
+    local: '',
+  });
+
+  useEffect(() => {
+    console.log(filterDoctor.nome);
+  }, [filterDoctor]);
 
   const handleChangeLocal = (event: SelectChangeEvent) => {
     setLocal(event.target.value);
   };
 
   const handleChangeDoctor = (event: SelectChangeEvent) => {
-    setFilterDoctor(event.target.value);
+    setFilterDoctor(event.target.value as unknown as IDoctor);
   };
 
   function verifyUser() {
@@ -81,7 +95,7 @@ const Calendar = () => {
 
   function verifySolicitations(daySelected: number) {
     for (const s of solicitations) {
-      if (s.dia === daySelected && currentMonth === new Date().getMonth()) {
+      if (s.dia === daySelected && s.mes === format(new Date().getMonth(), 'MMMM')) {
         if (s.uid === user?.uid) {
           return true;
         }
@@ -143,51 +157,54 @@ const Calendar = () => {
             </Button>
           </Grid>
         </Grid>
-
         <Grid item container alignItems="center" justifyContent="flex-end" xs={9} spacing={2}>
-          {verifyUser() ? (
-            <>
-              <Grid item>
-                <Typography variant="body2">Filtros:</Typography>
-              </Grid>
-              <Grid item>
-                <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-                  <Select value={filterDoctor} label="Doctor" onChange={handleChangeDoctor}>
-                    {doctors.map((p, index) => (
-                      <MenuItem value={p.nome} key={index}>
-                        <Typography variant="body2"> {p.nome}</Typography>
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item>
-                <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-                  <Select value={local} label="Local" onChange={handleChangeLocal}>
-                    {places.map((p, index) => (
-                      <MenuItem value={p.nome} key={index}>
-                        <Typography variant="body2"> {p.nome}</Typography>
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => {
-                    setLocal('');
-                    setFilterDoctor('');
-                  }}
-                >
-                  limpar
-                </Button>
-              </Grid>
-            </>
-          ) : (
-            ''
-          )}
+          <Grid item>
+            <Typography variant="body2">Filtros:</Typography>
+          </Grid>
+          <Grid item>
+            <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
+              <Select value={'sempre'} label="Doctor" onChange={handleChangeDoctor}>
+                {doctors.map((p, index) => (
+                  //@ts-ignore - necessary to load object into value
+                  <MenuItem value={p} key={index}>
+                    <Typography variant="body2"> {p.nome}</Typography>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
+              <Select value={local} label="Local" onChange={handleChangeLocal}>
+                {places.map((p, index) => (
+                  <MenuItem value={p.nome} key={index}>
+                    <Typography variant="body2"> {p.nome}</Typography>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setLocal('');
+                setFilterDoctor({
+                  id: '',
+                  atendimento: [],
+                  cpf: '',
+                  celular: '',
+                  nome: '',
+                  crm: '',
+                  especialidade: '',
+                  local: '',
+                });
+              }}
+            >
+              limpar
+            </Button>
+          </Grid>
         </Grid>
 
         <Grid item xs={12}>
@@ -258,7 +275,7 @@ const Calendar = () => {
                           {solicitations.map((p, aux1) =>
                             p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
                               (local === p.local || local === '') &&
-                              (filterDoctor === p.medico || filterDoctor === '') ? (
+                              (filterDoctor.nome === p.medico || filterDoctor.nome === '') ? (
                                 <Avatar
                                   key={aux1}
                                   src={p.foto}
