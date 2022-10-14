@@ -16,7 +16,10 @@ const Container = styled.div`
 
   .blankDark {
     background-color: #e4e4e4;
-    disable: true;
+  }
+
+  .green {
+    background-color: #c6f2c5;
   }
 
   .Light {

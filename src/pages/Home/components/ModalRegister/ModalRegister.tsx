@@ -35,7 +35,9 @@ const ModalRegister = (props: IModalRegister) => {
   const [visibleFieldTime, setVisibleFieldTime] = useState<boolean>(true);
 
   const noTime = 'O médico desejado não atende neste dia da semana';
-  const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
+  const [weekUp, setWeekUp] = useState('');
+
+  console.log(week);
 
   const handleClose = useCallback(() => {
     setVisibleFieldPlace(true);
@@ -105,8 +107,29 @@ const ModalRegister = (props: IModalRegister) => {
     },
   });
 
+  // verificar se o medico atende no dia selecionado la no calendario
+  const dayOfDoctor = () => {
+    console.log('passei dayOfDoctor', weekUp);
+    doctors.forEach((d) => {
+      d.atendimento.forEach((a) => {
+        if (a.dia === weekUp) {
+          console.log('achei um medico', d.nome, a.dia, week);
+          return true;
+        }
+      });
+    });
+  };
+
+  useEffect(() => {
+    setWeekUp(week.charAt(0).toUpperCase() + week.slice(1));
+    dayOfDoctor();
+  }, [dayOfDoctor]);
+
+  dayOfDoctor();
+
   useEffect(() => {
     console.log('passei userEffect');
+
     const medico = doctors.find((d) => d.nome === doctor);
 
     if (medico) {

@@ -48,7 +48,7 @@ const Calendar = () => {
   });
 
   useEffect(() => {
-    console.log(filterDoctor.nome);
+    console.log(filterDoctor.atendimento.map((d) => d.dia));
   }, [filterDoctor]);
 
   const handleChangeLocal = (event: SelectChangeEvent) => {
@@ -95,7 +95,7 @@ const Calendar = () => {
 
   function verifySolicitations(daySelected: number) {
     for (const s of solicitations) {
-      if (s.dia === daySelected && s.mes === format(new Date().getMonth(), 'MMMM')) {
+      if (s.dia === daySelected && s.mes === format(new Date(), "MMMM 'de' YYY", { locale: ptBR })) {
         if (s.uid === user?.uid) {
           return true;
         }
@@ -103,6 +103,31 @@ const Calendar = () => {
     }
     return false;
   }
+
+  const upperToCaseWeek = (dayOfWeek: string) => {
+    const weekUp = dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
+    return weekUp;
+  };
+
+  const dayOfWeek = (day: number) => {
+    return format(addDays(startOfWeek(date), date.getDay() + day), 'EEEE', { locale: ptBR });
+  };
+
+  const defineCalendarColor = (day: number) => {
+    return currentYear < new Date().getFullYear()
+      ? 'blankDark'
+      : currentMonth < new Date().getMonth() && currentYear <= new Date().getFullYear()
+      ? 'blankDark'
+      : day + 1 < new Date().getDate() &&
+        currentMonth <= new Date().getMonth() &&
+        currentYear <= new Date().getFullYear()
+      ? 'blankDark'
+      : `${dayOfWeek(day)}` === 'sábado' || `${dayOfWeek(day)}` === 'domingo'
+      ? 'blankDark'
+      : filterDoctor.atendimento.map((d) => d.dia).includes(upperToCaseWeek(dayOfWeek(day)))
+      ? 'green'
+      : 'blank';
+  };
 
   return (
     <S.Container>
@@ -125,7 +150,7 @@ const Calendar = () => {
         onClose={() => setOpenRegister(false)}
         day={day}
         month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
-        week={format(addDays(startOfWeek(date), indexWeek + 2), 'EEEE', { locale: ptBR })}
+        week={format(addDays(startOfWeek(date), indexWeek - 1), 'EEEE', { locale: ptBR })}
       />
 
       <Grid container alignItems="center">
@@ -159,11 +184,11 @@ const Calendar = () => {
         </Grid>
         <Grid item container alignItems="center" justifyContent="flex-end" xs={9} spacing={2}>
           <Grid item>
-            <Typography variant="body2">Filtros:</Typography>
+            <Typography variant="body2">{verifyUser() ? 'Filtros:' : 'Filtro:'}</Typography>
           </Grid>
           <Grid item>
             <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-              <Select value={'sempre'} label="Doctor" onChange={handleChangeDoctor}>
+              <Select value={filterDoctor.nome} label="Doctor" onChange={handleChangeDoctor}>
                 {doctors.map((p, index) => (
                   //@ts-ignore - necessary to load object into value
                   <MenuItem value={p} key={index}>
@@ -173,17 +198,22 @@ const Calendar = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-              <Select value={local} label="Local" onChange={handleChangeLocal}>
-                {places.map((p, index) => (
-                  <MenuItem value={p.nome} key={index}>
-                    <Typography variant="body2"> {p.nome}</Typography>
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          {verifyUser() ? (
+            <Grid item>
+              <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
+                <Select value={local} label="Local" onChange={handleChangeLocal}>
+                  {places.map((p, index) => (
+                    <MenuItem value={p.nome} key={index}>
+                      <Typography variant="body2"> {p.nome}</Typography>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          ) : (
+            ''
+          )}
+
           <Grid item>
             <Button
               variant="outlined"
@@ -235,22 +265,7 @@ const Calendar = () => {
             {Array.from({ length: getDaysInMonth(date) }).map((_, index) => (
               <S.Date
                 key={index}
-                className={
-                  currentYear < new Date().getFullYear()
-                    ? 'blankDark'
-                    : currentMonth < new Date().getMonth() && currentYear <= new Date().getFullYear()
-                    ? 'blankDark'
-                    : index + 1 < new Date().getDate() &&
-                      currentMonth <= new Date().getMonth() &&
-                      currentYear <= new Date().getFullYear()
-                    ? 'blankDark'
-                    : `${format(addDays(startOfWeek(date), date.getDay() + index), 'EEEE', { locale: ptBR })}` ===
-                        'sábado' ||
-                      `${format(addDays(startOfWeek(date), date.getDay() + index), 'EEEE', { locale: ptBR })}` ===
-                        'domingo'
-                    ? 'blankDark'
-                    : 'blank'
-                }
+                className={defineCalendarColor(index)}
                 style={{
                   borderColor:
                     index + 1 === new Date().getDate() &&
@@ -261,7 +276,7 @@ const Calendar = () => {
                 }}
                 onClick={() => {
                   checkCalender(index + 1);
-                  setIndexWeek(index + 1);
+                  setIndexWeek(index);
                 }}
               >
                 <Grid container>
@@ -274,7 +289,7 @@ const Calendar = () => {
                         <AvatarGroup max={5} spacing={1}>
                           {solicitations.map((p, aux1) =>
                             p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
-                              (local === p.local || local === '') &&
+                              (p.local.includes(local) || local === '') &&
                               (filterDoctor.nome === p.medico || filterDoctor.nome === '') ? (
                                 <Avatar
                                   key={aux1}
@@ -301,27 +316,23 @@ const Calendar = () => {
                             <AvatarGroup max={5} spacing={1}>
                               {solicitations.map((p, aux) =>
                                 p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
-                                  local === p.local || local === '' ? (
-                                    <Avatar
-                                      key={aux}
-                                      src={`${user?.photoURL}` === `${p.foto}` ? `${p.foto}` : ''}
-                                      alt={p.nome}
-                                      sx={{ width: 25, height: 25 }}
-                                      style={{
-                                        borderStyle: 'solid',
-                                        borderColor:
-                                          user?.photoURL === p.foto
-                                            ? p.status && p.verificado
-                                              ? 'green'
-                                              : !p.status && p.verificado
-                                              ? 'red'
-                                              : 'yellow'
-                                            : '',
-                                      }}
-                                    />
-                                  ) : (
-                                    ''
-                                  )
+                                  <Avatar
+                                    key={aux}
+                                    src={`${user?.photoURL}` === `${p.foto}` ? `${p.foto}` : ''}
+                                    alt={p.nome}
+                                    sx={{ width: 25, height: 25 }}
+                                    style={{
+                                      borderStyle: 'solid',
+                                      borderColor:
+                                        user?.photoURL === p.foto
+                                          ? p.status && p.verificado
+                                            ? 'green'
+                                            : !p.status && p.verificado
+                                            ? 'red'
+                                            : 'yellow'
+                                          : '',
+                                    }}
+                                  />
                                 ) : (
                                   ''
                                 )
