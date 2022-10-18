@@ -5,6 +5,8 @@ import { colors } from '../../../../styles';
 const Container = styled.div`
   display: flex;
   min-height: 100%;
+  max-width: 100vh;
+  overflow: auto;
 
   .capitalize-phrase:first-letter {
     text-transform: uppercase;
@@ -36,6 +38,7 @@ const Container = styled.div`
 const CalendarContainer = styled.div`
   flex: 1;
   display: grid;
+
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 0px 0px;

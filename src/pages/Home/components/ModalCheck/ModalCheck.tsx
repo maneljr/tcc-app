@@ -87,7 +87,7 @@ const ModalCheck = (props: IModalCheck) => {
             (local === s.local || local === '') &&
             (filterDoctor === s.medico || filterDoctor === '') ? (
               <Grid item container xs={12} spacing={2} alignItems="center" key={index}>
-                <Grid item xs={1}>
+                <Grid item container xs={12} md={1} alignItems="center" justifyContent="center">
                   <Avatar src={s.foto} alt={s.nome} />
                 </Grid>
 

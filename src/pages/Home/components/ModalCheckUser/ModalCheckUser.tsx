@@ -47,7 +47,7 @@ const ModalCheckUser = (props: IModalCheckUser) => {
           {solicitations.map((s, index) =>
             s.dia === day && s.mes === month && s.uid === user?.uid ? (
               <Grid item container xs={12} spacing={2} alignItems="center" key={index}>
-                <Grid item xs={1}>
+                <Grid item container xs={12} md={1} alignItems="center" justifyContent="center">
                   <Avatar src={s.foto} alt={s.nome} />
                 </Grid>
 

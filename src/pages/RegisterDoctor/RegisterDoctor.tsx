@@ -26,6 +26,16 @@ const RegisterDoctor = () => {
   const [doctorToUpdate, setDoctorToUpdate] = useState<IDoctor>();
   const [addOpen, setaddOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
+  const [search, setSearch] = useState<string>('');
+
+  const filterDoctors = doctors.map((doctor) => {
+    if (search != '') {
+      if (doctor.nome.includes(search)) {
+        return doctor;
+      }
+    }
+    return doctor;
+  });
 
   const deleteDoctor = async (id: string) => {
     try {
@@ -57,20 +67,21 @@ const RegisterDoctor = () => {
 
         <Grid item container xs={10} md={11} justifyContent="flex-end" style={{ maxHeight: '30vh', padding: '16px' }}>
           <Grid item container xs={12} spacing={1} alignItems="center">
-            <Grid item xs={12} md={5}>
-              <TextField variant="outlined" size="small" label="Buscar..." fullWidth />
-            </Grid>
-            <Grid item xs={12} md={1}>
-              <Button variant="contained" fullWidth size="small">
-                Pesquisar
-              </Button>
+            <Grid item xs={12} md={6}>
+              <TextField
+                variant="outlined"
+                size="small"
+                label="Buscar..."
+                fullWidth
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </Grid>
           </Grid>
 
           <Grid item container xs={12} md={12}>
             <Grid item xs={12} md={6}>
               <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {doctors.map((p, index) => {
+                {filterDoctors.map((p, index) => {
                   return (
                     <ListItem
                       key={index}

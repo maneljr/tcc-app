@@ -213,50 +213,52 @@ const ModalAddDoctor = (props: ImodalAddDoctor) => {
                             <div>
                               {values.atendimento.map((_, index) => (
                                 <Fragment key={index}>
-                                  <Grid item>
-                                    <FormControl
-                                      sx={{ m: 1, minWidth: 200, maxHeight: 22 }}
-                                      variant="outlined"
-                                      size="small"
-                                    >
-                                      <InputLabel>Dia da semana</InputLabel>
-                                      <Select label="Dia da semana" {...getFieldProps(`atendimento[${index}].dia`)}>
-                                        {daysWeek.map((p, auxOne) => (
-                                          <MenuItem value={p.nome} key={auxOne}>
-                                            <Typography variant="body2"> {p.nome}</Typography>
-                                          </MenuItem>
-                                        ))}
-                                      </Select>
-                                    </FormControl>
-                                    <FormControl
-                                      sx={{ m: 1, minWidth: 120, maxHeight: 22 }}
-                                      variant="outlined"
-                                      size="small"
-                                    >
-                                      <InputLabel>Hórario</InputLabel>
-                                      <Select label="Horário" {...getFieldProps(`atendimento[${index}].horario`)}>
-                                        {availableTime.map((p, auxTwo) => (
-                                          <MenuItem value={p.horario} key={auxTwo}>
-                                            <Typography variant="body2"> {p.horario}</Typography>
-                                          </MenuItem>
-                                        ))}
-                                      </Select>
-                                    </FormControl>
-                                    <TextField
-                                      label="Vagas"
-                                      size="small"
-                                      type="number"
-                                      sx={{ m: 1, maxWidth: 70 }}
-                                      {...getFieldProps(`atendimento[${index}].max`)}
-                                    />
-                                    <IconButton
-                                      edge="end"
-                                      onClick={() => {
-                                        remove(index);
-                                      }}
-                                    >
-                                      <Delete />
-                                    </IconButton>
+                                  <Grid item container spacing={1}>
+                                    <Grid item xs={12} md={4}>
+                                      <FormControl fullWidth sx={{ m: 1 }} variant="outlined" size="small">
+                                        <InputLabel>Dia da semana</InputLabel>
+                                        <Select label="Dia da semana" {...getFieldProps(`atendimento[${index}].dia`)}>
+                                          {daysWeek.map((p, auxOne) => (
+                                            <MenuItem value={p.nome} key={auxOne}>
+                                              <Typography variant="body2"> {p.nome}</Typography>
+                                            </MenuItem>
+                                          ))}
+                                        </Select>
+                                      </FormControl>
+                                    </Grid>
+                                    <Grid item xs={6} md={3}>
+                                      <FormControl fullWidth sx={{ m: 1 }} variant="outlined" size="small">
+                                        <InputLabel>Hórario</InputLabel>
+                                        <Select label="Horário" {...getFieldProps(`atendimento[${index}].horario`)}>
+                                          {availableTime.map((p, auxTwo) => (
+                                            <MenuItem value={p.horario} key={auxTwo}>
+                                              <Typography variant="body2"> {p.horario}</Typography>
+                                            </MenuItem>
+                                          ))}
+                                        </Select>
+                                      </FormControl>
+                                    </Grid>
+                                    <Grid item xs={3} md={3}>
+                                      <TextField
+                                        label="Vagas"
+                                        size="small"
+                                        type="number"
+                                        fullWidth
+                                        sx={{ m: 1 }}
+                                        {...getFieldProps(`atendimento[${index}].max`)}
+                                      />
+                                    </Grid>
+                                    <Grid item xs={3} md={1}>
+                                      <IconButton
+                                        sx={{ m: 1 }}
+                                        edge="end"
+                                        onClick={() => {
+                                          remove(index);
+                                        }}
+                                      >
+                                        <Delete />
+                                      </IconButton>
+                                    </Grid>
                                   </Grid>
                                 </Fragment>
                               ))}

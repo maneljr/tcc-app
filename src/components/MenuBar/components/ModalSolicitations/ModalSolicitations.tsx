@@ -65,9 +65,9 @@ const ModalSolicitations = (props: IModalSolicitations) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <Grid container alignItems="center" spacing={1} justifyContent="space-around">
-        <Grid item>
-          <FormControl sx={{ m: 1, minWidth: 150 }} variant="standard" size="small" fullWidth>
+      <Grid container alignItems="center" spacing={2} justifyContent="space-around">
+        <Grid item xs={10} md={4}>
+          <FormControl variant="standard" size="small" fullWidth>
             <InputLabel>POSTO</InputLabel>
             <Select value={local} label="Local" onChange={handleChangeLocal}>
               {places.map((p, index) => (
@@ -79,8 +79,8 @@ const ModalSolicitations = (props: IModalSolicitations) => {
           </FormControl>
         </Grid>
 
-        <Grid item>
-          <FormControl sx={{ m: 1, minWidth: 150 }} variant="standard" size="small" fullWidth>
+        <Grid item xs={10} md={4}>
+          <FormControl variant="standard" size="small" fullWidth>
             <InputLabel>MEDICO</InputLabel>
             <Select value={filterDoctor} label="Medico" onChange={handleChangeFilterDoctor}>
               {doctors.map((p, index) => (
@@ -92,8 +92,9 @@ const ModalSolicitations = (props: IModalSolicitations) => {
           </FormControl>
         </Grid>
 
-        <Grid item>
+        <Grid item xs={10} md={3}>
           <Button
+            fullWidth
             variant="outlined"
             size="small"
             onClick={() => {
@@ -105,7 +106,9 @@ const ModalSolicitations = (props: IModalSolicitations) => {
           </Button>
         </Grid>
       </Grid>
-      <Divider />
+      <Grid item style={{ marginTop: '10px' }}>
+        <Divider />
+      </Grid>
       <DialogContent>
         <Grid container spacing={2}>
           {solicitations.map((s, index) =>
@@ -113,8 +116,10 @@ const ModalSolicitations = (props: IModalSolicitations) => {
               ''
             ) : (local === s.local || local === '') && (filterDoctor === s.medico || filterDoctor === '') ? (
               <Grid item container xs={12} spacing={2} alignItems="center" key={index}>
-                <Grid item xs={1}>
-                  <Avatar src={s.foto} alt={s.nome} />
+                <Grid item container xs={12} md={1} alignItems="center" justifyContent="center">
+                  <Grid item>
+                    <Avatar src={s.foto} alt={s.nome} />
+                  </Grid>
                 </Grid>
 
                 <Grid item container xs={8}>
