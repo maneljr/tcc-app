@@ -22,62 +22,45 @@ import { toast } from 'react-toastify';
 import { IModalRegister, IRegister } from './types';
 import { db } from 'services';
 import { SessionContext } from 'contexts/SessionContext/SessionContext';
-import { IAtendimento } from 'pages/RegisterDoctor/components/ModalAddDoctor/types';
-import { IPlace } from 'pages/RegisterPlace/components/ModalUpdatePlace/types';
+import { IDoctor } from 'pages/RegisterDoctor/types';
 
 const ModalRegister = (props: IModalRegister) => {
   const dadosCollectionRef = collection(db, 'solicitation');
   const { open, onClose, day, month, week } = props;
-  const { user, dataCurrentUser, doctors, places } = useContext(SessionContext);
-  const [doctorPlace, setdoctorPlace] = useState<IPlace>();
-  const [timeDoctor, setTimeDoctor] = useState<IAtendimento>();
+  const { user, dataCurrentUser, doctors } = useContext(SessionContext);
+  const [doctorPlace, setDoctorPlace] = useState<string>('');
+  const [doctorTime, setDoctorTime] = useState<string>('');
   const [visibleFieldPlace, setVisibleFieldPlace] = useState<boolean>(true);
   const [visibleFieldTime, setVisibleFieldTime] = useState<boolean>(true);
-
-  const noTime = 'O médico desejado não atende neste dia da semana';
-  const [weekUp, setWeekUp] = useState('');
+  const [doctorsWeek, setDoctorsWeek] = useState<IDoctor[]>([]);
 
   console.log(week);
 
   const handleClose = useCallback(() => {
     setVisibleFieldPlace(true);
     setVisibleFieldTime(true);
-    setTime('');
-    setPlace('');
-    setDoctor('');
+    formik.resetForm();
+
     onClose();
   }, [onClose]);
 
-  const [place, setPlace] = React.useState('');
-  const handleChangePlace = (event: SelectChangeEvent) => {
-    setPlace(event.target.value);
-  };
-
-  const [doctor, setDoctor] = React.useState('');
   const handleChangeDoctor = (event: SelectChangeEvent) => {
+    formik.setFieldValue('medico', event.target.value);
     setVisibleFieldPlace(false);
     setVisibleFieldTime(false);
-    setTime('');
-    setPlace('');
-    setDoctor(event.target.value);
-  };
-
-  const [time, setTime] = React.useState('');
-  const handleChangeTime = (event: SelectChangeEvent) => {
-    setTime(event.target.value);
   };
 
   const formik = useFormik<IRegister>({
     initialValues: {
-      horario: time,
-      medico: doctor,
-      local: place,
+      horario: '',
+      medico: '',
+      local: '',
     },
     validateOnBlur: false,
     validateOnChange: false,
     enableReinitialize: true,
     validationSchema: Yup.object().shape({
-      horario: Yup.string().max(5, 'Não pussi horario disponivel neste dia ').required('Campo Obrigatório'),
+      horario: Yup.string().required('Campo Obrigatório'),
       medico: Yup.string().required('Campo Obrigatório'),
       local: Yup.string().required('Campo Obrigatório'),
     }),
@@ -94,60 +77,59 @@ const ModalRegister = (props: IModalRegister) => {
           verificado: false,
         };
         await addDoc(dadosCollectionRef, userDoc);
+        console.log('sucesso');
         toast.success('Solicitação enviada com sucesso');
-        setPlace('');
-        setDoctor('');
-        setTime('');
       } catch (error: any) {
         toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro na solicitação'}`);
         console.log({ error });
       } finally {
         onClose();
+        formik.resetForm();
       }
     },
   });
 
   // verificar se o medico atende no dia selecionado la no calendario
   const dayOfDoctor = () => {
-    console.log('passei dayOfDoctor', weekUp);
-    doctors.forEach((d) => {
-      d.atendimento.forEach((a) => {
+    const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
+    const doctorsWeekArray: IDoctor[] | undefined = [];
+
+    doctors.map((d) => {
+      d.atendimento.map((a) => {
         if (a.dia === weekUp) {
-          console.log('achei um medico', d.nome, a.dia, week);
-          return true;
+          console.log('achei um medico', d.nome);
+          doctorsWeekArray.push(d);
         }
       });
     });
+
+    setDoctorsWeek(doctorsWeekArray);
   };
 
   useEffect(() => {
-    setWeekUp(week.charAt(0).toUpperCase() + week.slice(1));
     dayOfDoctor();
-  }, [dayOfDoctor]);
-
-  dayOfDoctor();
+  }, [week]);
 
   useEffect(() => {
-    console.log('passei userEffect');
+    console.log('passei effect modal register formik.values.medico');
+    const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
 
-    const medico = doctors.find((d) => d.nome === doctor);
+    if (formik.values.medico != '') {
+      doctorsWeek.map((medico) => {
+        if (medico.nome.includes(formik.values.medico)) {
+          setDoctorPlace(medico.local);
+          formik.setFieldValue('local', medico.local);
 
-    if (medico) {
-      console.log(medico.nome);
-      const local = places.find((p) => p.nome === medico.local);
-      if (local) {
-        setdoctorPlace(local);
-      }
-
-      const findweek = medico.atendimento.find((t) => t.dia === weekUp);
-      console.log(findweek?.dia, weekUp);
-      if (findweek) {
-        setTimeDoctor(findweek);
-      } else {
-        setTimeDoctor({ dia: '', horario: noTime, max: 0 });
-      }
+          medico.atendimento.map((a) => {
+            if (a.dia.includes(weekUp)) {
+              setDoctorTime(a.horario);
+              formik.setFieldValue('horario', a.horario);
+            }
+          });
+        }
+      });
     }
-  }, [doctor]);
+  }, [formik.values.medico]);
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -159,8 +141,8 @@ const ModalRegister = (props: IModalRegister) => {
             <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Médico</InputLabel>
-                <Select value={doctor} label="medico" onChange={handleChangeDoctor}>
-                  {doctors.map((d, index) => {
+                <Select value={formik.values.medico} label="medico" onChange={handleChangeDoctor}>
+                  {doctorsWeek.map((d, index) => {
                     return (
                       <MenuItem value={d.nome} key={index}>
                         <Typography variant="body2">
@@ -175,9 +157,9 @@ const ModalRegister = (props: IModalRegister) => {
             <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Local</InputLabel>
-                <Select disabled={visibleFieldPlace} value={place} label="local" onChange={handleChangePlace}>
-                  <MenuItem value={`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}`}>
-                    <Typography variant="body2">{`${doctorPlace?.nome} - Rua ${doctorPlace?.rua} ${doctorPlace?.numero}`}</Typography>
+                <Select disabled={visibleFieldPlace} value={formik.values.local} label="local">
+                  <MenuItem value={doctorPlace}>
+                    <Typography variant="body2">{doctorPlace}</Typography>
                   </MenuItem>
                 </Select>
               </FormControl>
@@ -186,10 +168,16 @@ const ModalRegister = (props: IModalRegister) => {
             <Grid item xs={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small" variant="outlined" fullWidth>
                 <InputLabel>Horario</InputLabel>
-                <Select disabled={visibleFieldTime} value={time} label="horario" onChange={handleChangeTime}>
-                  <MenuItem value={`${timeDoctor?.horario}`}>
-                    <Typography variant="body2">{`${timeDoctor?.horario}`}</Typography>
+                <Select
+                  disabled={visibleFieldTime}
+                  value={formik.values.horario}
+                  label="horario"
+                  onChange={(e) => formik.setFieldValue('horario', e.target.value)}
+                >
+                  <MenuItem value={doctorTime}>
+                    <Typography variant="body2">{doctorTime}</Typography>
                   </MenuItem>
+                  ;
                 </Select>
               </FormControl>
             </Grid>
