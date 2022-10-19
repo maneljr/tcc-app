@@ -12,7 +12,6 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: 45px 1fr;
   grid-template-rows: 1fr;
-  grid-column-gap: 8px;
   grid-row-gap: 0px;
 `;
 

@@ -1,17 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
 import {
   Grid,
   Typography,
   IconButton,
   Avatar,
-  Divider,
   AvatarGroup,
-  FormControl,
-  Select,
   MenuItem,
-  SelectChangeEvent,
   Tooltip,
   Button,
+  TextField,
 } from '@material-ui/core';
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { getDaysInMonth, format, addDays, startOfWeek, startOfMonth, addMonths, subMonths } from 'date-fns';
@@ -51,11 +48,11 @@ const Calendar = () => {
     console.log(filterDoctor.atendimento.map((d) => d.dia));
   }, [filterDoctor]);
 
-  const handleChangeLocal = (event: SelectChangeEvent) => {
+  const handleChangeLocal = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setLocal(event.target.value);
   };
 
-  const handleChangeDoctor = (event: SelectChangeEvent) => {
+  const handleChangeDoctor = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFilterDoctor(event.target.value as unknown as IDoctor);
   };
 
@@ -130,7 +127,7 @@ const Calendar = () => {
   };
 
   return (
-    <S.Container>
+    <Fragment>
       <ModalCheck
         open={rulesOpen}
         onClose={() => setRulesOpen(false)}
@@ -152,26 +149,28 @@ const Calendar = () => {
         month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
         week={format(addDays(startOfWeek(date), indexWeek - 1), 'EEEE', { locale: ptBR })}
       />
-
-      <Grid container alignItems="center">
-        <Grid item container justifyContent="flex-start" alignItems="center" xs={3}>
-          <Grid item>
-            <IconButton onClick={() => setDate(subMonths(date, 1))}>
+      <S.Container>
+        <Grid item container spacing={2} justifyContent="space-between" alignItems="center" xs={12}>
+          <Grid item xs={2} lg={1}>
+            <IconButton size="small" onClick={() => setDate(subMonths(date, 1))}>
               <ChevronLeftIcon />
             </IconButton>
           </Grid>
-          <Grid item>
-            <Typography className="capitalize-phrase" variant="body2" style={{ fontWeight: 'bold' }}>
+
+          <Grid item xs={4} lg={1}>
+            <Typography textAlign="center" className="capitalize-phrase" variant="body2" style={{ fontWeight: 'bold' }}>
               {format(date, "MMMM 'de' YYY", { locale: ptBR })}
             </Typography>
           </Grid>
-          <Grid item>
-            <IconButton onClick={() => setDate(addMonths(date, 1))}>
+
+          <Grid item xs={2} lg={1}>
+            <IconButton size="small" onClick={() => setDate(addMonths(date, 1))}>
               <ChevronRightIcon />
             </IconButton>
           </Grid>
-          <Grid item>
+          <Grid item xs={4} lg={2}>
             <Button
+              fullWidth
               variant="outlined"
               size="small"
               onClick={() => {
@@ -181,41 +180,49 @@ const Calendar = () => {
               Hoje
             </Button>
           </Grid>
-        </Grid>
-        <Grid item container alignItems="center" justifyContent="flex-end" xs={9} spacing={2}>
-          <Grid item>
-            <Typography variant="body2">{verifyUser() ? 'Filtros:' : 'Filtro:'}</Typography>
+
+          <Grid item xs={12} lg={2}>
+            <TextField
+              label="Selecione um doutor"
+              variant="standard"
+              size="small"
+              select
+              value={filterDoctor}
+              onChange={handleChangeDoctor}
+              fullWidth
+            >
+              {doctors.map((p, index) => (
+                //@ts-ignore - necessary to load object into value
+                <MenuItem value={p} key={index}>
+                  <Typography variant="body2"> {p.nome}</Typography>
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
-          <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-              <Select value={filterDoctor.nome} label="Doctor" onChange={handleChangeDoctor}>
-                {doctors.map((p, index) => (
-                  //@ts-ignore - necessary to load object into value
-                  <MenuItem value={p} key={index}>
+
+          {verifyUser() && (
+            <Grid item xs={12} lg={2}>
+              <TextField
+                variant="standard"
+                size="small"
+                select
+                fullWidth
+                label="Selecione um posto"
+                value={local}
+                onChange={handleChangeLocal}
+              >
+                {places.map((p, index) => (
+                  <MenuItem value={p.nome} key={index}>
                     <Typography variant="body2"> {p.nome}</Typography>
                   </MenuItem>
                 ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          {verifyUser() ? (
-            <Grid item>
-              <FormControl sx={{ m: 1, minWidth: 183, maxHeight: 22 }} variant="standard" size="small" fullWidth>
-                <Select value={local} label="Local" onChange={handleChangeLocal}>
-                  {places.map((p, index) => (
-                    <MenuItem value={p.nome} key={index}>
-                      <Typography variant="body2"> {p.nome}</Typography>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              </TextField>
             </Grid>
-          ) : (
-            ''
           )}
 
-          <Grid item>
+          <Grid item xs={12} lg={2}>
             <Button
+              fullWidth
               variant="outlined"
               size="small"
               onClick={() => {
@@ -237,12 +244,8 @@ const Calendar = () => {
           </Grid>
         </Grid>
 
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-
-        <Grid item xs={12} style={{ minHeight: 40 }}>
-          <S.Calendarweek>
+        <Grid item xs={12} style={{ minHeight: '100%', display: 'flex' }}>
+          <S.CalendarContainer>
             {Array.from({ length: 7 }).map((_, index) => (
               <S.WeekDay key={index}>
                 <Typography className="capitalize-phrase" variant="body2">
@@ -250,15 +253,6 @@ const Calendar = () => {
                 </Typography>
               </S.WeekDay>
             ))}
-          </S.Calendarweek>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-
-        <Grid item xs={12} style={{ minHeight: '100%', display: 'flex' }}>
-          <S.CalendarContainer>
             {Array.from({ length: weekDayStart }).map((_, index) => (
               <S.Date className="blankDark" key={index} />
             ))}
@@ -348,8 +342,8 @@ const Calendar = () => {
             ))}
           </S.CalendarContainer>
         </Grid>
-      </Grid>
-    </S.Container>
+      </S.Container>
+    </Fragment>
   );
 };
 

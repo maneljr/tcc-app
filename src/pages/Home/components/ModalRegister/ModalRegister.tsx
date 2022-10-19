@@ -40,7 +40,6 @@ const ModalRegister = (props: IModalRegister) => {
     setVisibleFieldPlace(true);
     setVisibleFieldTime(true);
     formik.resetForm();
-
     onClose();
   }, [onClose]);
 
@@ -90,12 +89,12 @@ const ModalRegister = (props: IModalRegister) => {
   });
 
   // verificar se o medico atende no dia selecionado la no calendario
-  const dayOfDoctor = () => {
+  const dayOfDoctor = useCallback(() => {
     const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
     const doctorsWeekArray: IDoctor[] | undefined = [];
 
-    doctors.map((d) => {
-      d.atendimento.map((a) => {
+    doctors.forEach((d) => {
+      d.atendimento.forEach((a) => {
         if (a.dia === weekUp) {
           console.log('achei um medico', d.nome);
           doctorsWeekArray.push(d);
@@ -104,23 +103,23 @@ const ModalRegister = (props: IModalRegister) => {
     });
 
     setDoctorsWeek(doctorsWeekArray);
-  };
+  }, [week, doctors]);
 
   useEffect(() => {
     dayOfDoctor();
-  }, [week]);
+  }, [dayOfDoctor]);
 
   useEffect(() => {
     console.log('passei effect modal register formik.values.medico');
     const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
 
-    if (formik.values.medico != '') {
-      doctorsWeek.map((medico) => {
+    if (formik.values.medico !== '') {
+      doctorsWeek.forEach((medico) => {
         if (medico.nome.includes(formik.values.medico)) {
           setDoctorPlace(medico.local);
           formik.setFieldValue('local', medico.local);
 
-          medico.atendimento.map((a) => {
+          medico.atendimento.forEach((a) => {
             if (a.dia.includes(weekUp)) {
               setDoctorTime(a.horario);
               formik.setFieldValue('horario', a.horario);

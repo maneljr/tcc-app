@@ -29,7 +29,7 @@ const RegisterDoctor = () => {
   const [search, setSearch] = useState<string>('');
 
   const filterDoctors = doctors.map((doctor) => {
-    if (search != '') {
+    if (search !== '') {
       if (doctor.nome.includes(search)) {
         return doctor;
       }

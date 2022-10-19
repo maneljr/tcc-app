@@ -1,10 +1,12 @@
 import styled from 'styled-components';
+import { Container as MatContainer } from '@mui/material';
 
 import { colors } from '../../../../styles';
 
-const Container = styled.div`
-  display: flex;
-
+const Container = styled(MatContainer).attrs({
+  container: true,
+  spacing: 2,
+})`
   .capitalize-phrase:first-letter {
     text-transform: uppercase;
   }
@@ -35,7 +37,8 @@ const Container = styled.div`
 const CalendarContainer = styled.div`
   flex: 1;
   display: grid;
-  min-width: 500px;
+  max-width: 90vw;
+  overflow-x: auto;
 
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -77,6 +80,8 @@ const Date = styled.div`
   padding-left: 15px;
   padding-top: 6px;
   font-size: 14px;
+  min-height: 100px;
+  min-width: 100px;
 
   &:hover {
     font-weight: bold;

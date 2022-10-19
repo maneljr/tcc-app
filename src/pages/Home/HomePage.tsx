@@ -1,5 +1,4 @@
 import React from 'react';
-import { Divider, Grid } from '@material-ui/core';
 
 import * as S from './styles';
 import { Header, MenuBar } from 'components';
@@ -12,7 +11,7 @@ const HomePageComponent = () => {
       <Header />
       <S.Content>
         <MenuBar />
-        <span style={{ overflowX: 'auto', minWidth: '500px' }}>
+        <span style={{ width: '90vw', padding: 16 }}>
           <Calendar />
         </span>
       </S.Content>
