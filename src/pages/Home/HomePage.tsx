@@ -10,15 +10,12 @@ const HomePageComponent = () => {
   return (
     <S.Container>
       <Header />
-      <Grid container spacing={1}>
-        <Grid item container xs={2} md={1} style={{ maxWidth: 53 }}>
-          <MenuBar />
-        </Grid>
-        <Divider orientation="vertical" variant="middle" flexItem />
-        <Grid item container xs={10} md={11} style={{ maxHeight: 500, minWidth: '96%' }}>
+      <S.Content>
+        <MenuBar />
+        <span style={{ overflowX: 'auto', minWidth: '500px' }}>
           <Calendar />
-        </Grid>
-      </Grid>
+        </span>
+      </S.Content>
     </S.Container>
   );
 };
