@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, Fragment } from 'react';
+import React, { useState, useContext, Fragment, useEffect } from 'react';
 import {
   Grid,
   Typography,
@@ -43,10 +43,6 @@ const Calendar = () => {
     especialidade: '',
     local: '',
   });
-
-  useEffect(() => {
-    console.log(filterDoctor.atendimento.map((d) => d.dia));
-  }, [filterDoctor]);
 
   const handleChangeLocal = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setLocal(event.target.value);
@@ -121,7 +117,7 @@ const Calendar = () => {
       ? 'blankDark'
       : `${dayOfWeek(day)}` === 'sábado' || `${dayOfWeek(day)}` === 'domingo'
       ? 'blankDark'
-      : filterDoctor.atendimento.map((d) => d.dia).includes(upperToCaseWeek(dayOfWeek(day)))
+      : filterDoctor.atendimento.map((d) => d.dia).includes(upperToCaseWeek(dayOfWeek(day))) && !verifyUser()
       ? 'green'
       : 'blank';
   };
@@ -157,7 +153,7 @@ const Calendar = () => {
             </IconButton>
           </Grid>
 
-          <Grid item xs={4} lg={1}>
+          <Grid item xs={4} lg={2}>
             <Typography textAlign="center" className="capitalize-phrase" variant="body2" style={{ fontWeight: 'bold' }}>
               {format(date, "MMMM 'de' YYY", { locale: ptBR })}
             </Typography>
@@ -168,7 +164,8 @@ const Calendar = () => {
               <ChevronRightIcon />
             </IconButton>
           </Grid>
-          <Grid item xs={4} lg={2}>
+
+          <Grid item xs={4} lg={1}>
             <Button
               fullWidth
               variant="outlined"
@@ -181,7 +178,7 @@ const Calendar = () => {
             </Button>
           </Grid>
 
-          <Grid item xs={12} lg={2}>
+          <Grid item xs={12} lg={3}>
             <TextField
               label="Selecione um doutor"
               variant="standard"
@@ -201,7 +198,7 @@ const Calendar = () => {
           </Grid>
 
           {verifyUser() && (
-            <Grid item xs={12} lg={2}>
+            <Grid item xs={12} lg={3}>
               <TextField
                 variant="standard"
                 size="small"
@@ -220,7 +217,7 @@ const Calendar = () => {
             </Grid>
           )}
 
-          <Grid item xs={12} lg={2}>
+          <Grid item xs={12} lg={1}>
             <Button
               fullWidth
               variant="outlined"
@@ -284,7 +281,7 @@ const Calendar = () => {
                           {solicitations.map((p, aux1) =>
                             p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
                               (p.local.includes(local) || local === '') &&
-                              (filterDoctor.nome === p.medico || filterDoctor.nome === '') ? (
+                              (filterDoctor?.nome === p.medico || filterDoctor?.nome === '') ? (
                                 <Avatar
                                   key={aux1}
                                   src={p.foto}
