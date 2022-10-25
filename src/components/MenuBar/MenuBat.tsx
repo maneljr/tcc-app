@@ -89,13 +89,13 @@ const MenuBar = () => {
           ''
         )}
 
-        <Grid item>
+        {/* <Grid item>
           <Tooltip title="Usuario" placement="right-end">
             <IconButton className="Light">
               <UserName style={{ fontSize: 25 }} htmlColor={colors.mar} />
             </IconButton>
           </Tooltip>
-        </Grid>
+        </Grid> */}
         <Grid item>
           <Tooltip title="Sair" placement="right-end">
             <IconButton onClick={() => logOut()} className="Light">

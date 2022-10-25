@@ -14,7 +14,7 @@ const Recover = () => {
   const forgotPassword = async () => {
     try {
       await sendPasswordResetEmail(auth, email, {
-        url: `www.medcenternovaera.com.br/signin`,
+        url: `www.medpointnovaera.com.br/signin`,
       });
       toast.success(`As instruções para alterar a senha foram enviadas para ${email}`);
       history.push('/signin');

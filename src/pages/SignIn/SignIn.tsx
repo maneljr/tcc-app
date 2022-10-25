@@ -139,7 +139,7 @@ const SignIn = () => {
               <S.Facebook fullWidth startIcon={<Facebook />} onClick={signInWithFacebook}>
                 <Typography variant="subtitle2" style={{ fontSize: 10 }}>
                   {' '}
-                  Logar com Facebook{' '}
+                  Login com Facebook{' '}
                 </Typography>
               </S.Facebook>
             </Grid>
@@ -147,7 +147,7 @@ const SignIn = () => {
             <Grid item xs={12} md={2}>
               <S.ButtonGoogle fullWidth startIcon={<S.LogoGoogle />} onClick={signInWithGoogle}>
                 <Typography variant="subtitle2" style={{ fontSize: 10 }}>
-                  Logar com Google
+                  Login com Google
                 </Typography>
               </S.ButtonGoogle>
             </Grid>
