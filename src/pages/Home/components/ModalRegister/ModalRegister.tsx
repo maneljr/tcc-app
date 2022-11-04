@@ -27,14 +27,14 @@ import { IDoctor } from 'pages/RegisterDoctor/types';
 const ModalRegister = (props: IModalRegister) => {
   const dadosCollectionRef = collection(db, 'solicitation');
   const { open, onClose, day, month, week } = props;
-  const { user, dataCurrentUser, doctors } = useContext(SessionContext);
+  const { user, dataCurrentUser, doctors, solicitations } = useContext(SessionContext);
   const [doctorPlace, setDoctorPlace] = useState<string>('');
   const [doctorTime, setDoctorTime] = useState<string>('');
   const [visibleFieldPlace, setVisibleFieldPlace] = useState<boolean>(true);
   const [visibleFieldTime, setVisibleFieldTime] = useState<boolean>(true);
   const [doctorsWeek, setDoctorsWeek] = useState<IDoctor[]>([]);
 
-  console.log(week);
+  console.log('dia selecionado', week);
 
   const handleClose = useCallback(() => {
     setVisibleFieldPlace(true);
@@ -75,8 +75,8 @@ const ModalRegister = (props: IModalRegister) => {
           status: true,
           verificado: false,
         };
+        verifyAppointments();
         await addDoc(dadosCollectionRef, userDoc);
-        console.log('sucesso');
         toast.success('Solicitação enviada com sucesso');
       } catch (error: any) {
         toast.error(`${error?.message?.split(':').slice(-1)[0].trim() ?? 'Erro na solicitação'}`);
@@ -88,6 +88,32 @@ const ModalRegister = (props: IModalRegister) => {
     },
   });
 
+  // verificar se ainda tem vaga no medico desejado
+  const verifyAppointments = useCallback(() => {
+    const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
+    console.log(formik.values.medico);
+    doctors.map((doctor) => {
+      if (doctor.nome.includes(formik.values.medico)) {
+        console.log('achei o medico', formik.values.medico);
+        doctor.atendimento.map((a) => {
+          console.log(a.dia, weekUp);
+          if (a.dia === weekUp) {
+            console.log('achei o dia', a.dia, weekUp);
+            const appointments = solicitations.map((s) => {
+              if (s.medico.includes(formik.values.medico)) {
+                return s.dia;
+              }
+            });
+            console.log('quantidade de atendimentos', appointments.length);
+            if (a.max > appointments.length) {
+              return true;
+            }
+          }
+        });
+      }
+    });
+  }, [formik.values.medico]);
+
   // verificar se o medico atende no dia selecionado la no calendario
   const dayOfDoctor = useCallback(() => {
     const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
@@ -96,7 +122,6 @@ const ModalRegister = (props: IModalRegister) => {
     doctors.forEach((d) => {
       d.atendimento.forEach((a) => {
         if (a.dia === weekUp) {
-          console.log('achei um medico', d.nome);
           doctorsWeekArray.push(d);
         }
       });
@@ -110,7 +135,6 @@ const ModalRegister = (props: IModalRegister) => {
   }, [dayOfDoctor]);
 
   useEffect(() => {
-    console.log('passei effect modal register formik.values.medico');
     const weekUp = week.charAt(0).toUpperCase() + week.slice(1);
 
     if (formik.values.medico !== '') {

@@ -143,7 +143,7 @@ const Calendar = () => {
         onClose={() => setOpenRegister(false)}
         day={day}
         month={format(date, "MMMM 'de' YYY", { locale: ptBR })}
-        week={format(addDays(startOfWeek(date), indexWeek - 1), 'EEEE', { locale: ptBR })}
+        week={format(addDays(startOfWeek(date), indexWeek + 2), 'EEEE', { locale: ptBR })}
       />
       <S.Container>
         <Grid item container spacing={2} justifyContent="space-between" alignItems="center" xs={12}>
@@ -278,10 +278,12 @@ const Calendar = () => {
                     <Grid item>
                       {verifyUser() ? (
                         <AvatarGroup max={5} spacing={1}>
-                          {solicitations.map((p, aux1) =>
-                            p.dia === index + 1 && p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) ? (
+                          {solicitations.map(
+                            (p, aux1) =>
+                              p.dia === index + 1 &&
+                              p.mes === format(date, "MMMM 'de' YYY", { locale: ptBR }) &&
                               (p.local.includes(local) || local === '') &&
-                              (filterDoctor?.nome === p.medico || filterDoctor?.nome === '') ? (
+                              (filterDoctor?.nome === p.medico || filterDoctor?.nome === '') && (
                                 <Avatar
                                   key={aux1}
                                   src={p.foto}
@@ -293,12 +295,7 @@ const Calendar = () => {
                                       p.status && p.verificado ? 'green' : !p.status && p.verificado ? 'red' : 'yellow',
                                   }}
                                 />
-                              ) : (
-                                ''
                               )
-                            ) : (
-                              ''
-                            )
                           )}
                         </AvatarGroup>
                       ) : (
